@@ -1,29 +1,83 @@
 {
   "expo": {
-    "name": "motolink",
+    "name": "MotoLink",
     "slug": "motolink",
+    "scheme": "motolink",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1A1A1A"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.gerarddev.motolink"
     },
     "android": {
+      "package": "com.gerarddev.motolink",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#1A1A1A"
       },
-      "edgeToEdgeEnabled": true
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET",
+        "FOREGROUND_SERVICE",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#D4AF37",
+          "sounds": []
+        }
+      ],
+      "expo-location",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "PassengerWidget",
+              "label": "MotoLink Passenger",
+              "description": "Active trip status and wallet balance",
+              "minWidth": "180dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 3,
+              "targetCellHeight": 2,
+              "updatePeriodMillis": 1800000,
+              "previewImage": "./assets/icon.png",
+              "resizeMode": "horizontal|vertical"
+            },
+            {
+              "name": "DriverWidget",
+              "label": "MotoLink Driver",
+              "description": "Earnings today and active job status",
+              "minWidth": "180dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 3,
+              "targetCellHeight": 2,
+              "updatePeriodMillis": 1800000,
+              "previewImage": "./assets/icon.png",
+              "resizeMode": "horizontal|vertical"
+            }
+          ]
+        }
+      ],
+      "expo-font",
+      "expo-sharing"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "876ad48e-7a98-47a9-be9f-58430b2c7577"
+      }
     }
   }
 }

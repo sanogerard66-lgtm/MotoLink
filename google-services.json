@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "543772977961",
+    "project_id": "motolink-69101",
+    "storage_bucket": "motolink-69101.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543772977961:android:1cf6ddac4867dc6032a538",
+        "android_client_info": {
+          "package_name": "com.gerarddev.motolink"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCrRv0Hor08tKXfLpUENkTvC7B0KLReKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

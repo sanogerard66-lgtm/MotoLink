@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerLift Rwanda</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+</head>
+<body>
+<div id="notification-bar"></div>
+<section id="hero-screen" class="screen active">
+  <div class="hero">
+    <h1>CareerLift Rwanda</h1>
+    <p>Empowering graduates to find opportunities</p>
+    <button onclick="showScreen('login-screen')">Get Started</button>
+  </div>
+</section>
+  <!-- Onboarding/Login -->
+  <section id="login-screen" class="screen active">
+    <h1>CareerLift Rwanda</h1>
+    <p>Empowering graduates to find jobs</p>
+    <form id="login-form">
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </section>
+  
+  <section id="admin-screen" class="screen">
+  <h2>Admin Dashboard</h2>
+  <div class="admin-section">
+    <h3>Manage Jobs</h3>
+    <div id="admin-job-list"></div>
+  </div>
+  <div class="admin-section">
+    <h3>Manage Challenges</h3>
+    <div id="admin-challenge-list"></div>
+  </div>
+  <div class="admin-section">
+    <h3>Manage Users</h3>
+    <div id="admin-user-list"></div>
+  </div>
+</section>
+
+
+
+  <!-- CV Builder -->
+  <section id="cv-screen" class="screen">
+    <h2>Build Your CV</h2>
+    <form id="cv-form">
+      <input type="text" placeholder="Full Name" required>
+      <input type="text" placeholder="Degree" required>
+      <input type="text" placeholder="University" required>
+      <textarea placeholder="Projects / Experience"></textarea>
+      <button type="submit">Save CV</button>
+    </form>
+    <button id="export-btn">Export as PDF</button>
+  </section>
+
+  <!-- Job Feed -->
+  <section id="jobs-screen" class="screen">
+  <h2>Job Feed</h2>
+  <div id="job-list"></div>
+</section>
+
+  <section id="chat-screen" class="screen">
+  <h2>Mentorship Chat</h2>
+  <div id="chat-box"></div>
+  <form id="chat-form">
+    <input type="text" id="chat-input" placeholder="Type your message..." required>
+    <button type="submit">Send</button>
+  </form>
+</section>
+
+<section id="challenges-screen" class="screen">
+  <h2>Career Challenges</h2>
+  <ul id="challenge-list"></ul>
+</section>
+<section id="employer-screen" class="screen">
+  <h2>Employer Portal</h2>
+  <form id="job-form">
+    <input type="text" id="job-title" placeholder="Job Title" required>
+    <input type="text" id="job-company" placeholder="Company Name" required>
+    <input type="text" id="job-location" placeholder="Location" required>
+    <input type="url" id="job-link" placeholder="Application Link" required>
+    <button type="submit">Post Job</button>
+  </form>
+  <h3>Posted Jobs</h3>
+  <div id="employer-job-list"></div>
+</section>
+
+
+<nav>
+  <button onclick="showScreen('login-screen')"><i class="fas fa-sign-in-alt"></i> Login</button>
+  <button onclick="showScreen('cv-screen')"><i class="fas fa-file-alt"></i> CV</button>
+  <button onclick="showScreen('jobs-screen')"><i class="fas fa-briefcase"></i> Jobs</button>
+  <button onclick="showScreen('chat-screen')"><i class="fas fa-comments"></i> Chat</button>
+  <button onclick="showScreen('challenges-screen')"><i class="fas fa-trophy"></i> Challenges</button>
+  <button onclick="showScreen('employer-screen')"><i class="fas fa-user-tie"></i> Employer</button>
+  <button onclick="showScreen('admin-screen')"><i class="fas fa-cogs"></i> Admin</button>
+</nav>
+</nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

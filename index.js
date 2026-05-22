@@ -1,8 +1,13 @@
+// index.js
 import { registerRootComponent } from 'expo';
-
 import App from './App';
+import AdminApp from './AdminApp';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+// Change this to 'true' to load the Admin App, or 'false' for the User App.
+const IS_ADMIN = false; 
+
+if (IS_ADMIN) {
+  registerRootComponent(AdminApp);
+} else {
+  registerRootComponent(App);
+}
