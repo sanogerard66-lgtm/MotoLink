@@ -12,6 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#1A1A1A"
     },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#1A1A1A"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gerarddev.motolink"
@@ -25,8 +29,10 @@
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
         "INTERNET",
         "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
         "RECEIVE_BOOT_COMPLETED"
       ]
     },
@@ -37,25 +43,27 @@
           "icon": "./assets/icon.png",
           "color": "#D4AF37",
           "sounds": []
-        }
-      ],
-      "expo-location",
+        }],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "MotoLink needs location access to track your ride."
+        }],
       [
         "react-native-android-widget",
         {
-          "widgets": [
-            {
-              "name": "PassengerWidget",
-              "label": "MotoLink Passenger",
-              "description": "Active trip status and wallet balance",
-              "minWidth": "180dp",
-              "minHeight": "110dp",
-              "targetCellWidth": 3,
-              "targetCellHeight": 2,
-              "updatePeriodMillis": 1800000,
-              "previewImage": "./assets/icon.png",
-              "resizeMode": "horizontal|vertical"
-            },
+          "widgets": [{
+            "name": "PassengerWidget",
+            "label": "MotoLink Passenger",
+            "description": "Active trip status and wallet balance",
+            "minWidth": "180dp",
+            "minHeight": "110dp",
+            "targetCellWidth": 3,
+            "targetCellHeight": 2,
+            "updatePeriodMillis": 1800000,
+            "previewImage": "./assets/icon.png",
+            "resizeMode": "horizontal|vertical"
+          },
             {
               "name": "DriverWidget",
               "label": "MotoLink Driver",
@@ -67,10 +75,8 @@
               "updatePeriodMillis": 1800000,
               "previewImage": "./assets/icon.png",
               "resizeMode": "horizontal|vertical"
-            }
-          ]
-        }
-      ],
+            }]
+        }],
       "expo-font",
       "expo-sharing"
     ],
