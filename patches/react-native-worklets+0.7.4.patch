@@ -1,5 +1,0 @@
---- a/node_modules/react-native-worklets/android/CMakeLists.txt
-+++ b/node_modules/react-native-worklets/android/CMakeLists.txt
-@@ -60,7 +60,7 @@
--target_link_libraries(worklets ReactAndroid::hermes ReactAndroid::jsctooling)
-+target_link_libraries(worklets ReactAndroid::hermes)
