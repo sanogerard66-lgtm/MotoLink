@@ -34,8 +34,7 @@
         "FOREGROUND_SERVICE",
         "FOREGROUND_SERVICE_LOCATION",
         "RECEIVE_BOOT_COMPLETED"
-      ],
-      "jsEngine": "jsc"
+      ]
     },
     "plugins": [
       [
