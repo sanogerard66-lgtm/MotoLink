@@ -2,13 +2,9 @@ const { getDefaultConfig } = require('expo/metro-config');
 
 const config = getDefaultConfig(__dirname);
 
-// Optimized exclusion: We only block the specific platforms 
-// and deep internals that exhaust the Android file limit.
+config.watchFolders = [__dirname]; // only watch the project root
 config.resolver.blockList = [
-  /.*\/ios\/.*/,
-  /.*\/android\/.*/,
-  /node_modules\/.*\/node_modules\/react-native\/.*/,
+  /node_modules\/.*\/node_modules/,  // skip nested node_modules
 ];
 
 module.exports = config;
-
