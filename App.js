@@ -165,7 +165,6 @@ const C = {
   orange: '#F39C12', orangeDim: 'rgba(243,156,18,0.15)',
   gray: '#A0A0A0', grayDark: '#555',
   mtn: '#FFCC00', airtel: '#FF4444',
-  purple: '#9B59B6', purpleDim: 'rgba(155,89,182,0.15)',
 };
 
 // ══════════════════════════════════════════════
@@ -345,6 +344,36 @@ const LANG = {
     offlineMode: '📡 Offline Mode',
     offlineMsg: 'No internet connection. Using cached data.',
     queuedRequest: 'Ride request queued — will send when online.',
+    // ── In-app notification strings ──
+    notif_wrongCreds: 'Incorrect phone number or password. Please try again.',
+    notif_noPhone: 'Please enter your phone number.',
+    notif_noPass: 'Please enter your password.',
+    notif_noName: 'Please enter your full name.',
+    notif_passMismatch2: 'Passwords do not match. Please check and retry.',
+    notif_passShort: 'Password must be at least 6 characters.',
+    notif_phoneExists: 'This phone number is already registered. Sign in instead.',
+    notif_allFields: 'Please fill in all required fields.',
+    notif_noInternet: 'No internet connection. Please check your network.',
+    notif_backOnline: 'Back online! Your queued requests have been sent.',
+    notif_locDenied: 'Location access denied. Enable it in Settings to use MotoLink.',
+    notif_locOff: 'Location services are off. Please turn on GPS.',
+    notif_locGranted: '📍 Location found. Welcome to MotoLink!',
+    notif_searchFail: 'Could not find that place. Try a different search term.',
+    notif_noGPS: 'Waiting for your GPS location...',
+    notif_profileSaved: 'Profile saved successfully.',
+    notif_paySetupDone: 'Payment info saved! You can now accept trips.',
+    notif_promoInvalid: 'Invalid or expired promo code.',
+    notif_promoUsed: 'You have already used this promo code.',
+    notif_promoOk: 'Promo code applied! Discount added to your fare.',
+    notif_scheduleNoTime: 'Please select a date and time for your ride.',
+    notif_schedulePast: 'Please choose a future time for your ride.',
+    notif_rideQueued: 'No connection — ride queued for when you\'re online.',
+    notif_signupOk: 'Welcome to MotoLink! Your account is ready.',
+    notif_signoutOk: 'Signed out successfully. See you soon!',
+    notif_deleteOk: 'Account deleted. Sorry to see you go.',
+    notif_sosTitle: '🚨 SOS Sent',
+    notif_sosSent: 'Safety team notified. Help is on the way.',
+    notif_cameraOff: 'Camera access denied. Enable it in Settings.',
   },
 
   rw: {
@@ -484,6 +513,36 @@ const LANG = {
     yourRank: 'Aho Uri mu Rutonde',
     offlineMode: '📡 Nta Murandasi', offlineMsg: 'Nta murandasi. Ukoresha amakuru yabitswe.',
     queuedRequest: 'Isaba ryategerejwe — rizohererezwa mugihe murandasi uboneka.',
+    // ── In-app notification strings ──
+    notif_wrongCreds: 'Nomero ya telefone cyangwa ijambo banga si ryo. Ongera ugerageze.',
+    notif_noPhone: 'Shyiraho nomero yawe ya telefone.',
+    notif_noPass: 'Shyiraho ijambo banga ryawe.',
+    notif_noName: 'Shyiraho amazina yawe yombi.',
+    notif_passMismatch2: 'Amagambo banga ntahuye. Reba hanyuma ugerageze.',
+    notif_passShort: 'Ijambo banga rigomba kuba nibura inyuguti 6.',
+    notif_phoneExists: 'Iyi nomero isanzwe yiyandikishije. Injira.',
+    notif_allFields: 'Uzuza ibice byose bisabwa.',
+    notif_noInternet: 'Nta murandasi. Reba iyunganira ryawe.',
+    notif_backOnline: 'Wasubiye online! Ibisabwa byawe birahererejwe.',
+    notif_locDenied: 'Kwemera aho uri byanze. Shyiraho muri Igenamiterere.',
+    notif_locOff: 'Serivisi za GPS zifunze. Fungura GPS yawe.',
+    notif_locGranted: '📍 Aho uri babonye. Murakaza neza kuri MotoLink!',
+    notif_searchFail: 'Aho washakaga ntiboneka. Gerageza amagambo ahindutse.',
+    notif_noGPS: 'Gutegereza GPS yawe...',
+    notif_profileSaved: 'Umwirondoro wabitswe neza.',
+    notif_paySetupDone: 'Amakuru y\'ubwishyu yabitswe! Ubu urashobora kwemera inzira.',
+    notif_promoInvalid: 'Kode ntibaho cyangwa yarangiye.',
+    notif_promoUsed: 'Warakoresheje kode iyi.',
+    notif_promoOk: 'Kode ya promo yashyizweho! Igabanyizo ryongewe.',
+    notif_scheduleNoTime: 'Hitamo itariki n\'amasaa y\'urugendo rwawe.',
+    notif_schedulePast: 'Hitamo igihe kizaza k\'urugendo rwawe.',
+    notif_rideQueued: 'Nta murandasi — isaba ryategerejwe.',
+    notif_signupOk: 'Murakaza neza kuri MotoLink! Konti yawe iteguye.',
+    notif_signoutOk: 'Wasohutse neza. Tuzabonana!',
+    notif_deleteOk: 'Konti yasibwe. Murakaza neza gusubira.',
+    notif_sosTitle: '🚨 SOS Yoherejwe',
+    notif_sosSent: 'Itsinda ry\'umutekano ryamenyeshejwe. Ubufasha buragenda.',
+    notif_cameraOff: 'Kamera ntiyemerewe. Shyiraho muri Igenamiterere.',
   },
 
   fr: {
@@ -623,6 +682,36 @@ const LANG = {
     yourRank: 'Votre classement',
     offlineMode: '📡 Mode hors ligne', offlineMsg: 'Pas de connexion. Utilisation des données en cache.',
     queuedRequest: 'Demande mise en file — sera envoyée dès la reconnexion.',
+    // ── In-app notification strings ──
+    notif_wrongCreds: 'Numéro ou mot de passe incorrect. Veuillez réessayer.',
+    notif_noPhone: 'Veuillez saisir votre numéro de téléphone.',
+    notif_noPass: 'Veuillez saisir votre mot de passe.',
+    notif_noName: 'Veuillez saisir votre nom complet.',
+    notif_passMismatch2: 'Les mots de passe ne correspondent pas.',
+    notif_passShort: 'Le mot de passe doit contenir au moins 6 caractères.',
+    notif_phoneExists: 'Ce numéro est déjà enregistré. Connectez-vous.',
+    notif_allFields: 'Veuillez remplir tous les champs requis.',
+    notif_noInternet: 'Pas de connexion internet. Vérifiez votre réseau.',
+    notif_backOnline: 'Reconnecté! Vos demandes en attente ont été envoyées.',
+    notif_locDenied: 'Localisation refusée. Activez-la dans les Paramètres.',
+    notif_locOff: 'Services de localisation désactivés. Activez le GPS.',
+    notif_locGranted: '📍 Position trouvée. Bienvenue sur MotoLink!',
+    notif_searchFail: 'Lieu introuvable. Essayez un autre terme.',
+    notif_noGPS: 'En attente de votre position GPS...',
+    notif_profileSaved: 'Profil enregistré avec succès.',
+    notif_paySetupDone: 'Infos de paiement enregistrées! Vous pouvez accepter des trajets.',
+    notif_promoInvalid: 'Code promo invalide ou expiré.',
+    notif_promoUsed: 'Vous avez déjà utilisé ce code promo.',
+    notif_promoOk: 'Code promo appliqué! Réduction ajoutée.',
+    notif_scheduleNoTime: 'Veuillez choisir une date et heure pour votre trajet.',
+    notif_schedulePast: 'Veuillez choisir une heure future.',
+    notif_rideQueued: 'Hors connexion — trajet mis en file d\'attente.',
+    notif_signupOk: 'Bienvenue sur MotoLink! Votre compte est prêt.',
+    notif_signoutOk: 'Déconnecté. À bientôt!',
+    notif_deleteOk: 'Compte supprimé.',
+    notif_sosTitle: '🚨 SOS Envoyé',
+    notif_sosSent: 'Équipe de sécurité notifiée. L\'aide est en route.',
+    notif_cameraOff: 'Accès caméra refusé. Activez-le dans les Paramètres.',
   },
 };
 
@@ -900,83 +989,219 @@ const MapComponent = ({
   </script></body></html>`;
 
   return (
-    Platform.OS === 'web' ? (
-      <View style={styles.map}>
-        <iframe
-          srcDoc={html}
-          style={ { width: '100%', height: '100%', border: 'none', background: C.black }}
-          title="MotoLink Map"
-          />
-      </View>
-    ): (
-      <WebView ref={webViewRef} originWhitelist={['*']} source={ { html }} style={styles.map}
-        scrollEnabled={false} bounces={false} overScrollMode="never"
-        javaScriptEnabled domStorageEnabled startInLoadingState={false}
-        renderLoading={()=><View style={[styles.map,
-          { backgroundColor: C.black }]} />}
-        onMessage={e=> {
-          try {
-            const m = JSON.parse(e.nativeEvent.data); if (m.type === 'MAP_READY')onReady();
-          }catch {}
-        }}
-        onError={()=> {
-          mapReady.current = false;
-        }} />
-    )
+    <WebView ref={webViewRef} originWhitelist={['*']} source={ { html }} style={styles.map}
+      scrollEnabled={false} bounces={false} overScrollMode="never"
+      javaScriptEnabled domStorageEnabled startInLoadingState={false}
+      renderLoading={()=><View style={[styles.map,
+        { backgroundColor: C.black }]} />}
+      onMessage={e=> {
+        try {
+          const m = JSON.parse(e.nativeEvent.data); if (m.type === 'MAP_READY')onReady();
+        }catch {}
+      }}
+      onError={()=> {
+        mapReady.current = false;
+      }} />
   );
 };
 
 // ══════════════════════════════════════════════
-// 10. NOTIFICATION BANNER
+// 10. MOTOLINK IN-APP NOTIFICATION SYSTEM
+//     Premium branded banners with animations,
+//     progress bar, swipe-to-dismiss, all types
 // ══════════════════════════════════════════════
-const NotificationBanner = ({
-  data,
-  onHide
-}) => {
-  const sy = useRef(new Animated.Value(-140)).current;
-  const op = useRef(new Animated.Value(0)).current;
-  useEffect(()=> {
+
+// Notification type configuration
+const NOTIF_CONFIG = {
+  ride:      { icon: '🛵', accent: C.gold,   label: 'RIDE'    },
+  accepted:  { icon: '✅', accent: C.green,  label: 'ACCEPTED' },
+  cancelled: { icon: '❌', accent: C.red,    label: 'ALERT'   },
+  completed: { icon: '🎉', accent: C.green,  label: 'DONE'    },
+  search:    { icon: '🔍', accent: C.blue,   label: 'INFO'    },
+  rated:     { icon: '⭐', accent: C.gold,   label: 'RATING'  },
+  payment:   { icon: '💰', accent: C.blue,   label: 'PAYMENT' },
+  sos:       { icon: '🚨', accent: C.red,    label: 'SOS'     },
+  error:     { icon: '⚠️', accent: C.red,    label: 'ERROR'   },
+  warning:   { icon: '⚠️', accent: C.orange, label: 'WARNING' },
+  success:   { icon: '✓',  accent: C.green,  label: 'SUCCESS' },
+  location:  { icon: '📍', accent: C.blue,   label: 'GPS'     },
+  offline:   { icon: '📡', accent: C.orange, label: 'OFFLINE' },
+  online:    { icon: '🌐', accent: C.green,  label: 'ONLINE'  },
+  wallet:    { icon: '💳', accent: C.gold,   label: 'WALLET'  },
+  default:   { icon: '🔔', accent: C.gold,   label: 'MOTOLINK'},
+};
+
+const NOTIF_DURATION = 4200; // ms before auto-dismiss
+
+const NotificationBanner = ({ data, onHide }) => {
+  const translateY = useRef(new Animated.Value(-160)).current;
+  const opacity    = useRef(new Animated.Value(0)).current;
+  const scale      = useRef(new Animated.Value(0.92)).current;
+  const progress   = useRef(new Animated.Value(1)).current;
+  const shimmerX   = useRef(new Animated.Value(-width)).current;
+  const dismissTimer = useRef(null);
+  const panY = useRef(new Animated.Value(0)).current;
+
+  // Swipe-up-to-dismiss pan responder
+  const pan = useRef(PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 4,
+    onPanResponderMove: (_, g) => {
+      if (g.dy < 0) panY.setValue(g.dy);
+    },
+    onPanResponderRelease: (_, g) => {
+      if (g.dy < -40 || g.vy < -0.5) {
+        // Fast swipe up — dismiss
+        clearTimeout(dismissTimer.current);
+        Animated.parallel([
+          Animated.timing(panY, { toValue: -200, duration: 220, useNativeDriver: true }),
+          Animated.timing(opacity, { toValue: 0, duration: 220, useNativeDriver: true }),
+        ]).start(() => onHide());
+      } else {
+        // Snap back
+        Animated.spring(panY, { toValue: 0, useNativeDriver: true, friction: 8 }).start();
+      }
+    },
+  })).current;
+
+  useEffect(() => {
     if (!data) return;
-    Animated.parallel([Animated.spring(sy, {
-      toValue: 0, useNativeDriver: true, friction: 8, tension: 80
-    }), Animated.timing(op, {
-      toValue: 1, duration: 250, useNativeDriver: true
-    })]).start();
-    const t = setTimeout(()=> {
-      Animated.parallel([Animated.timing(sy, {
-        toValue: -140, duration: 400, useNativeDriver: true
-      }), Animated.timing(op, {
-        toValue: 0, duration: 400, useNativeDriver: true
-      })]).start(()=>onHide());
-    }, 4500);
-    return ()=>clearTimeout(t);
-  },
-    [data]);
+
+    // Reset
+    translateY.setValue(-160);
+    opacity.setValue(0);
+    scale.setValue(0.92);
+    progress.setValue(1);
+    shimmerX.setValue(-width);
+    panY.setValue(0);
+    clearTimeout(dismissTimer.current);
+
+    // Entrance: spring slide-down + fade + scale
+    Animated.parallel([
+      Animated.spring(translateY, {
+        toValue: 0, useNativeDriver: true,
+        friction: 9, tension: 85,
+      }),
+      Animated.timing(opacity, {
+        toValue: 1, duration: 200, useNativeDriver: true,
+      }),
+      Animated.spring(scale, {
+        toValue: 1, useNativeDriver: true,
+        friction: 7, tension: 100,
+      }),
+    ]).start(() => {
+      // Shimmer sweep after entrance
+      Animated.timing(shimmerX, {
+        toValue: width * 2, duration: 700,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.quad),
+      }).start();
+    });
+
+    // Progress bar drains over NOTIF_DURATION
+    Animated.timing(progress, {
+      toValue: 0,
+      duration: NOTIF_DURATION,
+      useNativeDriver: false,
+      easing: Easing.linear,
+    }).start();
+
+    // Auto-dismiss
+    dismissTimer.current = setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(translateY, { toValue: -160, duration: 320, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0, duration: 320, useNativeDriver: true }),
+        Animated.timing(scale, { toValue: 0.94, duration: 320, useNativeDriver: true }),
+      ]).start(() => onHide());
+    }, NOTIF_DURATION);
+
+    return () => clearTimeout(dismissTimer.current);
+  }, [data]);
+
   if (!data) return null;
-  const icons = {
-    ride: '🛵',
-    accepted: '✅',
-    cancelled: '❌',
-    completed: '🎉',
-    search: '🔍',
-    rated: '⭐',
-    payment: '💰',
-    sos: '🚨',
-    default: '🔔'
-    };
-    const accent = data.type === 'accepted'?C.green: data.type === 'cancelled'?C.red: data.type === 'payment'?C.blue: data.type === 'sos'?C.red: C.gold;
-    return (
-      <Animated.View style={[styles.notifyBanner, { transform: [{ translateY: sy }], opacity: op }]}>
-        <View style={[styles.notifyAccent, { backgroundColor: accent }]} />
-        <View style={styles.notifyLogoWrap}><Text style={styles.notifyLogoTxt}>ML</Text></View>
-        <View style={styles.notifyContent}>
-          <Text style={styles.notifyTitle}>{data.title}</Text>
-          <Text style={styles.notifyBody} numberOfLines={2}>{data.body}</Text>
+
+  const cfg = NOTIF_CONFIG[data.type] || NOTIF_CONFIG.default;
+  const accent = cfg.accent;
+
+  const progressWidth = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.notifyBanner,
+        {
+          transform: [
+            { translateY: Animated.add(translateY, panY) },
+            { scale },
+          ],
+          opacity,
+          borderColor: accent + '40',
+          shadowColor: accent,
+        },
+      ]}
+      {...pan.panHandlers}
+    >
+      {/* Left accent stripe */}
+      <View style={[styles.notifyAccent, { backgroundColor: accent }]} />
+
+      {/* ML Logo mark */}
+      <View style={[styles.notifyLogoWrap, { backgroundColor: accent + '20', borderColor: accent + '50' }]}>
+        <Text style={[styles.notifyLogoTxt, { color: accent }]}>ML</Text>
+      </View>
+
+      {/* Content */}
+      <View style={styles.notifyContent}>
+        {/* Type label + title row */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+          <View style={{ backgroundColor: accent + '22', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1 }}>
+            <Text style={{ color: accent, fontSize: 8, fontWeight: '900', letterSpacing: 1 }}>{cfg.label}</Text>
+          </View>
+          <Text style={styles.notifyTitle} numberOfLines={1}>{data.title}</Text>
         </View>
-        <Text style={styles.notifyIcon}>{icons[data.type] || icons.default}</Text>
+        <Text style={styles.notifyBody} numberOfLines={2}>{data.body}</Text>
+      </View>
+
+      {/* Icon */}
+      <View style={{ paddingRight: 4, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ fontSize: 22 }}>{cfg.icon}</Text>
+      </View>
+
+      {/* Shimmer overlay */}
+      <Animated.View
+        pointerEvents="none"
+        style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          borderRadius: 20, overflow: 'hidden',
+        }}
+      >
+        <Animated.View
+          style={{
+            position: 'absolute', top: 0, bottom: 0, width: 80,
+            transform: [{ translateX: shimmerX }],
+            backgroundColor: 'rgba(255,255,255,0.07)',
+            skewX: '-20deg',
+          }}
+        />
       </Animated.View>
-    );
-  };
+
+      {/* Progress bar at bottom */}
+      <View style={styles.notifyProgressTrack}>
+        <Animated.View
+          style={[
+            styles.notifyProgressBar,
+            { width: progressWidth, backgroundColor: accent },
+          ]}
+        />
+      </View>
+
+      {/* Swipe hint */}
+      <View style={styles.notifyDragHandle} />
+    </Animated.View>
+  );
+};
 
   // ══════════════════════════════════════════════
   // 11. RATING MODAL
@@ -999,47 +1224,39 @@ const NotificationBanner = ({
     const ratedPerson = role === 'passenger'?(trip?.driver_name || 'Driver'): (trip?.passenger_name || 'Passenger');
     const label = stars === 0?t.tapStar: stars === 1?t.poor: stars === 2?t.fair: stars === 3?t.good: stars === 4?t.great: t.excellent;
     return (
-      <Modal visible={visible} transparent animationType="fade" onRequestClose={onSkip}>
+      <Modal visible={visible} transparent animationType="fade">
         <KeyboardAvoidingView behavior={Platform.OS === 'ios'?'padding': 'height'} style={ { flex: 1 }}>
-          <TouchableOpacity style={styles.modalBg} activeOpacity={1} onPress={onSkip}>
-            <TouchableOpacity activeOpacity={1} onPress={()=> {}}>
-              <ScrollView contentContainerStyle={[styles.glassModal, { alignItems: 'center' }]} keyboardShouldPersistTaps="handled">
-                <View style={ { flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 8 }}>
-                  <View style={ { flex: 1 }} />
-                  <TouchableOpacity onPress={onSkip} style={styles.closeBtn}>
-                    <Text style={ { color: C.gray, fontSize: 18, fontWeight: '700' }}>✕</Text>
+          <View style={styles.modalBg}>
+            <ScrollView contentContainerStyle={[styles.glassModal, { alignItems: 'center' }]} keyboardShouldPersistTaps="handled">
+              <View style={styles.splashLogoRing}><Text style={styles.splashLogoTxt}>ML</Text></View>
+              <Text style={styles.rateTitle}>{t.rateTrip}</Text>
+              <Text style={styles.rateSub}>{ratedPerson}</Text>
+              {trip && (
+                <View style={styles.rateTripSummary}>
+                  <View style={styles.routeBlock}><View style={styles.routeDot} /><Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.pickup_address}</Text></View>
+                  <View style={styles.routeLine_} />
+                  <View style={styles.routeBlock}><View style={[styles.routeDot, { backgroundColor: C.green }]} /><Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.destination_address}</Text></View>
+                  <Text style={ { color: C.gold, fontSize: 12, marginTop: 8 }}>{fmtFRW(trip.price)} · {fmtDateTime(trip.created_at)}</Text>
+                </View>
+              )}
+              <View style={styles.starsRow}>
+                {[1, 2, 3, 4, 5].map(i => (
+                  <TouchableOpacity key={i} onPress={()=>tap(i)} activeOpacity={0.8}>
+                    <Animated.Text style={[styles.rateStar, { color: i <= stars?C.gold: C.grayDark, transform: [{ scale: sa[i-1]}]}]}>★</Animated.Text>
                   </TouchableOpacity>
-                </View>
-                <View style={styles.splashLogoRing}><Text style={styles.splashLogoTxt}>ML</Text></View>
-                <Text style={styles.rateTitle}>{t.rateTrip}</Text>
-                <Text style={styles.rateSub}>{ratedPerson}</Text>
-                {trip && (
-                  <View style={styles.rateTripSummary}>
-                    <View style={styles.routeBlock}><View style={styles.routeDot} /><Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.pickup_address}</Text></View>
-                    <View style={styles.routeLine_} />
-                    <View style={styles.routeBlock}><View style={[styles.routeDot, { backgroundColor: C.green }]} /><Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.destination_address}</Text></View>
-                    <Text style={ { color: C.gold, fontSize: 12, marginTop: 8 }}>{fmtFRW(trip.price)} · {fmtDateTime(trip.created_at)}</Text>
-                  </View>
-                )}
-                <View style={styles.starsRow}>
-                  {[1, 2, 3, 4, 5].map(i => (
-                    <TouchableOpacity key={i} onPress={()=>tap(i)} activeOpacity={0.8}>
-                      <Animated.Text style={[styles.rateStar, { color: i <= stars?C.gold: C.grayDark, transform: [{ scale: sa[i-1]}]}]}>★</Animated.Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                <Text style={styles.rateLabel}>{label}</Text>
-                <TextInput style={styles.reviewInput} placeholder={t.reviewPlaceholder} placeholderTextColor={C.grayDark} value={review} onChangeText={setReview} multiline maxLength={200} />
-                <TouchableOpacity style={[styles.mainBtn, { width: '100%', opacity: stars === 0?0.45: 1 }]} onPress={()=> { if (stars > 0) { onSubmit(stars, review); setStars(0); setReview(''); }}} disabled={stars === 0}>
-                  <Text style={styles.mainBtnTxt}>⭐ {t.submitRating}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=> { setStars(0); setReview(''); onSkip(); }} style={ { marginTop: 14 }}>
-                  <Text style={ { color: C.gray,
-                    fontSize: 13 }}>{t.skipRating}</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </TouchableOpacity>
-          </TouchableOpacity>
+                ))}
+              </View>
+              <Text style={styles.rateLabel}>{label}</Text>
+              <TextInput style={styles.reviewInput} placeholder={t.reviewPlaceholder} placeholderTextColor={C.grayDark} value={review} onChangeText={setReview} multiline maxLength={200} />
+              <TouchableOpacity style={[styles.mainBtn, { width: '100%', opacity: stars === 0?0.45: 1 }]} onPress={()=> { if (stars > 0) { onSubmit(stars, review); setStars(0); setReview(''); }}} disabled={stars === 0}>
+                <Text style={styles.mainBtnTxt}>⭐ {t.submitRating}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=> { setStars(0); setReview(''); onSkip(); }} style={ { marginTop: 14 }}>
+                <Text style={ { color: C.gray,
+                  fontSize: 13 }}>{t.skipRating}</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
     );
@@ -1070,7 +1287,7 @@ const NotificationBanner = ({
 
     const handleMomoTap = () => {
       if (!driverProfile?.momo_number && !driverProfile?.momo_merchant_code) {
-        Alert.alert('Error', 'Driver has not set up MoMo payment.');
+        showBanner('⚠️ MotoLink', t.noPaymentWarning, 'warning');
         return;
       }
       const ussd = buildUSSD(
@@ -1079,7 +1296,7 @@ const NotificationBanner = ({
         driverProfile.momo_merchant_code,
         trip?.price || 0
       );
-      Linking.openURL(ussd).catch(()=>Alert.alert('Error', 'Could not open USSD. Please dial manually.'));
+      Linking.openURL(ussd).catch(() => showBanner('MotoLink', 'Could not open USSD. Please dial manually.', 'error'));
       setPaid(true);
     };
 
@@ -1087,89 +1304,82 @@ const NotificationBanner = ({
     ? `${t.payMerchant}\n${driverProfile?.momo_merchant_code}`: `${t.payMomo}\n${driverProfile?.momo_number}`;
 
     return (
-      <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-        <TouchableOpacity style={styles.modalBg} activeOpacity={1} onPress={onClose}>
-          <TouchableOpacity activeOpacity={1} onPress={()=> {}}>
-            <View style={styles.payModal}>
-              {/* Header */}
-              <View style={ { flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-                <View style={ { flex: 1, alignItems: 'center' }}>
-                  <View style={styles.splashLogoRing}><Text style={styles.splashLogoTxt}>ML</Text></View>
-                  <Text style={styles.payModalTitle}>{t.choosePayment}</Text>
-                  <Text style={ { color: C.gold, fontSize: 24, fontWeight: '900', marginTop: 8 }}>{fmtFRW(trip?.price || 0)}</Text>
-                </View>
-                <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { position: 'absolute', top: 0, right: 0 }]}>
-                  <Text style={ { color: C.gray, fontSize: 18, fontWeight: '700' }}>✕</Text>
+      <Modal visible={visible} transparent animationType="slide">
+        <View style={styles.modalBg}>
+          <View style={styles.payModal}>
+            {/* Header */}
+            <View style={ { alignItems: 'center', marginBottom: 20 }}>
+              <View style={styles.splashLogoRing}><Text style={styles.splashLogoTxt}>ML</Text></View>
+              <Text style={styles.payModalTitle}>{t.choosePayment}</Text>
+              <Text style={ { color: C.gold, fontSize: 24, fontWeight: '900', marginTop: 8 }}>{fmtFRW(trip?.price || 0)}</Text>
+            </View>
+
+            {/* Route summary */}
+            {trip && (
+              <View style={[styles.rateTripSummary, { marginBottom: 20 }]}>
+                <View style={styles.routeBlock}><View style={styles.routeDot} /><Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.pickup_address}</Text></View>
+                <View style={styles.routeLine_} />
+                <View style={styles.routeBlock}><View style={[styles.routeDot, { backgroundColor: C.green }]} /><Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.destination_address}</Text></View>
+              </View>
+            )}
+
+            {/* Driver payment info */}
+            {driverProfile && (
+              <View style={styles.driverPayInfo}>
+                <Text style={styles.driverPayLabel}>{t.paymentInfo}</Text>
+                <Text style={ { color: C.white, fontWeight: '800', fontSize: 14, marginTop: 4 }}>{driverProfile.momo_name}</Text>
+                <Text style={ { color: C.gray, fontSize: 12, marginTop: 2 }}>
+                  {driverProfile.momo_type === 'merchant'
+                  ? `${t.merchantCode}: ${driverProfile.momo_merchant_code}`: `${t.momoNumber}: ${driverProfile.momo_number}`}
+                </Text>
+              </View>
+            )}
+
+            {/* Payment choice */}
+            {!method && (
+              <View style={ { gap: 12, marginTop: 8 }}>
+                {/* MoMo Tap */}
+                <TouchableOpacity style={styles.payOptionBtn} onPress={()=> { setMethod('momo'); handleMomoTap(); }}>
+                  <View style={ { flex: 1 }}>
+                    <Text style={styles.payOptionTitle}>{t.momoTap}</Text>
+                    <Text style={styles.payOptionSub}>{momoLabel}</Text>
+                  </View>
+                  <View style={[styles.payOptionBadge, { backgroundColor: 'rgba(255,204,0,0.15)', borderColor: C.mtn }]}>
+                    <Text style={ { color: C.mtn, fontWeight: '900', fontSize: 11 }}>MTN</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Cash */}
+                <TouchableOpacity style={[styles.payOptionBtn, { borderColor: C.borderFaint }]} onPress={()=> { setMethod('cash'); onCash(); }}>
+                  <View style={ { flex: 1 }}>
+                    <Text style={styles.payOptionTitle}>{t.cash}</Text>
+                    <Text style={styles.payOptionSub}>{t.fareLabel}: {fmtFRW(trip?.price || 0)}</Text>
+                  </View>
+                  <Text style={ { fontSize: 24 }}>💵</Text>
                 </TouchableOpacity>
               </View>
+            )}
 
-              {/* Route summary */}
-              {trip && (
-                <View style={[styles.rateTripSummary, { marginBottom: 20 }]}>
-                  <View style={styles.routeBlock}><View style={styles.routeDot} /><Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.pickup_address}</Text></View>
-                  <View style={styles.routeLine_} />
-                  <View style={styles.routeBlock}><View style={[styles.routeDot, { backgroundColor: C.green }]} /><Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.destination_address}</Text></View>
-                </View>
-              )}
-
-              {/* Driver payment info */}
-              {driverProfile && (
-                <View style={styles.driverPayInfo}>
-                  <Text style={styles.driverPayLabel}>{t.paymentInfo}</Text>
-                  <Text style={ { color: C.white, fontWeight: '800', fontSize: 14, marginTop: 4 }}>{driverProfile.momo_name}</Text>
-                  <Text style={ { color: C.gray, fontSize: 12, marginTop: 2 }}>
-                    {driverProfile.momo_type === 'merchant'
-                    ? `${t.merchantCode}: ${driverProfile.momo_merchant_code}`: `${t.momoNumber}: ${driverProfile.momo_number}`}
+            {/* After MoMo tap — confirm paid */}
+            {method === 'momo' && (
+              <View style={ { gap: 12, marginTop: 8 }}>
+                <View style={styles.ussdInfoBox}>
+                  <Text style={ { color: C.gold, fontWeight: '700', fontSize: 13 }}>📲 USSD {t.tapToPay}</Text>
+                  <Text style={ { color: C.gray, fontSize: 12, marginTop: 6, lineHeight: 18 }}>
+                    {driverProfile?.momo_type === 'merchant'
+                    ? `*182*8*1*${driverProfile?.momo_merchant_code}*${trip?.price}#`: `*182*1*1*${driverProfile?.momo_number}*${trip?.price}#`}
                   </Text>
-                </View>
-              )}
-
-              {/* Payment choice */}
-              {!method && (
-                <View style={ { gap: 12, marginTop: 8 }}>
-                  {/* MoMo Tap */}
-                  <TouchableOpacity style={styles.payOptionBtn} onPress={()=> { setMethod('momo'); handleMomoTap(); }}>
-                    <View style={ { flex: 1 }}>
-                      <Text style={styles.payOptionTitle}>{t.momoTap}</Text>
-                      <Text style={styles.payOptionSub}>{momoLabel}</Text>
-                    </View>
-                    <View style={[styles.payOptionBadge, { backgroundColor: 'rgba(255,204,0,0.15)', borderColor: C.mtn }]}>
-                      <Text style={ { color: C.mtn, fontWeight: '900', fontSize: 11 }}>MTN</Text>
-                    </View>
-                  </TouchableOpacity>
-
-                  {/* Cash */}
-                  <TouchableOpacity style={[styles.payOptionBtn, { borderColor: C.borderFaint }]} onPress={()=> { setMethod('cash'); onCash(); }}>
-                    <View style={ { flex: 1 }}>
-                      <Text style={styles.payOptionTitle}>{t.cash}</Text>
-                      <Text style={styles.payOptionSub}>{t.fareLabel}: {fmtFRW(trip?.price || 0)}</Text>
-                    </View>
-                    <Text style={ { fontSize: 24 }}>💵</Text>
+                  <TouchableOpacity style={[styles.mainBtn, { marginTop: 12 }]} onPress={handleMomoTap}>
+                    <Text style={styles.mainBtnTxt}>{t.tapToPay} 📲</Text>
                   </TouchableOpacity>
                 </View>
-              )}
-
-              {/* After MoMo tap — confirm paid */}
-              {method === 'momo' && (
-                <View style={ { gap: 12, marginTop: 8 }}>
-                  <View style={styles.ussdInfoBox}>
-                    <Text style={ { color: C.gold, fontWeight: '700', fontSize: 13 }}>📲 USSD {t.tapToPay}</Text>
-                    <Text style={ { color: C.gray, fontSize: 12, marginTop: 6, lineHeight: 18 }}>
-                      {driverProfile?.momo_type === 'merchant'
-                      ? `*182*8*1*${driverProfile?.momo_merchant_code}*${trip?.price}#`: `*182*1*1*${driverProfile?.momo_number}*${trip?.price}#`}
-                    </Text>
-                    <TouchableOpacity style={[styles.mainBtn, { marginTop: 12 }]} onPress={handleMomoTap}>
-                      <Text style={styles.mainBtnTxt}>{t.tapToPay} 📲</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <TouchableOpacity style={[styles.mainBtn, { backgroundColor: C.green }]} onPress={()=> { setPaid(true); onPaid('momo'); }}>
-                    <Text style={[styles.mainBtnTxt, { color: C.white }]}>{t.paidBtn}</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>
-        </TouchableOpacity>
+                <TouchableOpacity style={[styles.mainBtn, { backgroundColor: C.green }]} onPress={()=> { setPaid(true); onPaid('momo'); }}>
+                  <Text style={[styles.mainBtnTxt, { color: C.white }]}>{t.paidBtn}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
       </Modal>
     );
   };
@@ -1192,9 +1402,9 @@ const NotificationBanner = ({
       setLoading] = useState(false);
 
     const handleSave = async()=> {
-      if (!momoName) return Alert.alert('Error', t.accountHolder+' '+t.loading.replace(t.loading, 'required'));
-      if (momoType === 'personal'&&!momoNum) return Alert.alert('Error', t.momoNumber+' required');
-      if (momoType === 'merchant'&&!merchantCode) return Alert.alert('Error', t.merchantCode+' required');
+      if (!momoName) return showBanner('MotoLink', t.accountHolder + ' required', 'warning');
+      if (momoType === 'personal' && !momoNum) return showBanner('MotoLink', t.momoNumber + ' required', 'warning');
+      if (momoType === 'merchant' && !merchantCode) return showBanner('MotoLink', t.merchantCode + ' required', 'warning');
       setLoading(true);
       await onSave( {
         momo_type: momoType, momo_number: momoNum, momo_merchant_code: merchantCode, momo_name: momoName
@@ -1204,68 +1414,61 @@ const NotificationBanner = ({
     };
 
     return (
-      <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <Modal visible={visible} transparent animationType="slide">
         <KeyboardAvoidingView behavior={Platform.OS === 'ios'?'padding': 'height'} style={ { flex: 1 }}>
-          <TouchableOpacity style={styles.modalBg} activeOpacity={1} onPress={onClose}>
-            <TouchableOpacity activeOpacity={1} onPress={()=> {}}>
-              <ScrollView contentContainerStyle={styles.glassModal} keyboardShouldPersistTaps="handled">
-                <View style={ { flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-                  <View style={ { flex: 1, alignItems: 'center' }}>
-                    <View style={styles.splashLogoRingSmall}><Text style={styles.splashLogoTxtSmall}>ML</Text></View>
-                    <Text style={[styles.splashTitle, { fontSize: 20 }]}>{t.paymentSetup}</Text>
-                    <Text style={ { color: C.gray, fontSize: 13, textAlign: 'center', marginTop: 6 }}>{t.paymentRequired}</Text>
-                  </View>
-                  <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { position: 'absolute', top: 0, right: 0 }]}>
-                    <Text style={ { color: C.gray, fontSize: 18, fontWeight: '700' }}>✕</Text>
+          <View style={styles.modalBg}>
+            <ScrollView contentContainerStyle={styles.glassModal} keyboardShouldPersistTaps="handled">
+              <View style={ { alignItems: 'center', marginBottom: 20 }}>
+                <View style={styles.splashLogoRingSmall}><Text style={styles.splashLogoTxtSmall}>ML</Text></View>
+                <Text style={[styles.splashTitle, { fontSize: 20 }]}>{t.paymentSetup}</Text>
+                <Text style={ { color: C.gray, fontSize: 13, textAlign: 'center', marginTop: 6 }}>{t.paymentRequired}</Text>
+              </View>
+
+              {/* Type toggle */}
+              <Text style={styles.inputLabel}>{t.momoType}</Text>
+              <View style={ { flexDirection: 'row', gap: 10, marginBottom: 20 }}>
+                {['personal', 'merchant'].map(tp => (
+                  <TouchableOpacity key={tp} style={[styles.methodBtn, momoType === tp && { borderColor: C.gold, backgroundColor: C.goldDim }]}
+                    onPress={()=>setMomoType(tp)}>
+                    <Text style={[styles.methodTxt, momoType === tp && { color: C.gold }]}>{tp === 'personal'?t.personal: t.merchant}</Text>
+                    {momoType === tp && <Text style={ { color: C.gold }}>✓</Text>}
                   </TouchableOpacity>
-                </View>
+                ))}
+              </View>
 
-                {/* Type toggle */}
-                <Text style={styles.inputLabel}>{t.momoType}</Text>
-                <View style={ { flexDirection: 'row', gap: 10, marginBottom: 20 }}>
-                  {['personal', 'merchant'].map(tp => (
-                    <TouchableOpacity key={tp} style={[styles.methodBtn, momoType === tp && { borderColor: C.gold, backgroundColor: C.goldDim }]}
-                      onPress={()=>setMomoType(tp)}>
-                      <Text style={[styles.methodTxt, momoType === tp && { color: C.gold }]}>{tp === 'personal'?t.personal: t.merchant}</Text>
-                      {momoType === tp && <Text style={ { color: C.gold }}>✓</Text>}
-                    </TouchableOpacity>
-                  ))}
-                </View>
+              <View style={styles.inputWrap}>
+                <Text style={styles.inputLabel}>{t.accountHolder}</Text>
+                <TextInput style={styles.input} placeholder="e.g. Jean Pierre" placeholderTextColor={C.grayDark} value={momoName} onChangeText={setMomoName} />
+              </View>
 
+              {momoType === 'personal'?(
                 <View style={styles.inputWrap}>
-                  <Text style={styles.inputLabel}>{t.accountHolder}</Text>
-                  <TextInput style={styles.input} placeholder="e.g. Jean Pierre" placeholderTextColor={C.grayDark} value={momoName} onChangeText={setMomoName} />
+                  <Text style={styles.inputLabel}>{t.momoNumber}</Text>
+                  <TextInput style={styles.input} placeholder="+250 78X XXX XXX" placeholderTextColor={C.grayDark} value={momoNum} onChangeText={setMomoNum} keyboardType="phone-pad" />
                 </View>
-
-                {momoType === 'personal'?(
-                  <View style={styles.inputWrap}>
-                    <Text style={styles.inputLabel}>{t.momoNumber}</Text>
-                    <TextInput style={styles.input} placeholder="+250 78X XXX XXX" placeholderTextColor={C.grayDark} value={momoNum} onChangeText={setMomoNum} keyboardType="phone-pad" />
-                  </View>
-                ): (
-                  <View style={styles.inputWrap}>
-                    <Text style={styles.inputLabel}>{t.merchantCode}</Text>
-                    <TextInput style={styles.input} placeholder="e.g. 123456" placeholderTextColor={C.grayDark} value={merchantCode} onChangeText={setMerchantCode} keyboardType="numeric" />
-                  </View>
-                )}
-
-                {/* Preview USSD */}
-                <View style={styles.ussdInfoBox}>
-                  <Text style={ { color: C.gold, fontWeight: '700', fontSize: 12 }}>USSD Preview</Text>
-                  <Text style={ { color: C.gray, fontSize: 12, marginTop: 4, fontFamily: 'monospace' }}>
-                    {momoType === 'merchant'?`*182*8*1*${merchantCode || 'CODE'}*AMOUNT#`: `*182*1*1*${momoNum || 'NUMBER'}*AMOUNT#`}
-                  </Text>
+              ): (
+                <View style={styles.inputWrap}>
+                  <Text style={styles.inputLabel}>{t.merchantCode}</Text>
+                  <TextInput style={styles.input} placeholder="e.g. 123456" placeholderTextColor={C.grayDark} value={merchantCode} onChangeText={setMerchantCode} keyboardType="numeric" />
                 </View>
+              )}
 
-                <TouchableOpacity style={styles.mainBtn} onPress={handleSave} disabled={loading}>
-                  {loading?<ActivityIndicator color={C.black} />: <Text style={styles.mainBtnTxt}>{t.savePayment.toUpperCase()}</Text>}
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onClose} style={ { marginTop: 14 }}>
-                  <Text style={ { color: C.gray, textAlign: 'center', fontSize: 13 }}>{t.close}</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </TouchableOpacity>
-          </TouchableOpacity>
+              {/* Preview USSD */}
+              <View style={styles.ussdInfoBox}>
+                <Text style={ { color: C.gold, fontWeight: '700', fontSize: 12 }}>USSD Preview</Text>
+                <Text style={ { color: C.gray, fontSize: 12, marginTop: 4, fontFamily: 'monospace' }}>
+                  {momoType === 'merchant'?`*182*8*1*${merchantCode || 'CODE'}*AMOUNT#`: `*182*1*1*${momoNum || 'NUMBER'}*AMOUNT#`}
+                </Text>
+              </View>
+
+              <TouchableOpacity style={styles.mainBtn} onPress={handleSave} disabled={loading}>
+                {loading?<ActivityIndicator color={C.black} />: <Text style={styles.mainBtnTxt}>{t.savePayment.toUpperCase()}</Text>}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onClose} style={ { marginTop: 14 }}>
+                <Text style={ { color: C.gray, textAlign: 'center', fontSize: 13 }}>{t.close}</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
     );
@@ -1375,7 +1578,7 @@ const NotificationBanner = ({
         UTI: 'com.adobe.pdf',
       });
     } catch (e) {
-      Alert.alert('Error', 'Could not generate PDF. Please try again.');
+      showBanner('MotoLink', 'Could not generate PDF. Please try again.', 'error');
     }
   };
 
@@ -1405,7 +1608,7 @@ const NotificationBanner = ({
       `_MotoLink — The Future of Ride-Hailing_`
     );
     Linking.openURL(`whatsapp://send?text=${msg}`)
-    .catch(()=>Alert.alert('WhatsApp not found', 'Please install WhatsApp to share receipts.'));
+    .catch(() => showBanner('MotoLink', 'WhatsApp not found. Please install WhatsApp.', 'error'));
   };
 
   // ══════════════════════════════════════════════
@@ -1522,7 +1725,7 @@ const NotificationBanner = ({
     };
 
     return (
-      <Modal visible={visible} animationType="slide" transparent={false} statusBarTranslucent onRequestClose={onClose}>
+      <Modal visible={visible} animationType="slide" transparent={false} statusBarTranslucent>
         <View style={styles.historyScreen}>
           <StatusBar barStyle="light-content" backgroundColor={C.black} />
           {/* Header */}
@@ -1680,124 +1883,123 @@ const NotificationBanner = ({
                     <Text style={styles.emptyText}>{t.noHistory}</Text>
                   </View>
                 )}
-                {trips.map(trip => {
-                  const isExpanded = expandedId === trip.id;
-                  const commission = trip.commission || Math.round((trip.price || 0)*0.10);
-                  const driverEarn = trip.driver_earnings || ((trip.price || 0)-commission);
-                  const myRating = role === 'driver' ? trip.driver_rating: trip.passenger_rating;
-                  const isCompleted = trip.status === 'completed';
+                const isExpanded   = expandedId === trip.id;
+                const commission   = trip.commission || Math.round((trip.price||0)*0.10);
+                const driverEarn   = trip.driver_earnings || ((trip.price||0)-commission);
+                const myRating     = role==='driver' ? trip.driver_rating : trip.passenger_rating;
+                const isCompleted  = trip.status === 'completed';
 
-                  return (
-                    <TouchableOpacity key={trip.id} style={styles.historyCard}
-                      onPress={()=>setExpandedId(isExpanded ? null: trip.id)} activeOpacity={0.85}>
-                      {/* Card top row */}
-                      <View style={ { flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-                        <View style={[styles.statusPill, {
-                          backgroundColor: isCompleted?C.greenDim: C.redDim,
-                          marginTop: 0, paddingVertical: 3, paddingHorizontal: 8,
-                        }]}>
-                          <Text style={[styles.statusPillTxt, { color: isCompleted?C.green: C.red }]}>
-                            {isCompleted?'✓': '✕'}
-                          </Text>
-                        </View>
-                        <View style={ { flex: 1 }}>
-                          <Text style={ { color: C.gold, fontWeight: '900', fontSize: 16 }}>
-                            {fmtFRW(trip.price)}
-                          </Text>
-                          <Text style={ { color: C.gray, fontSize: 11, marginTop: 1 }}>
-                            {fmtDate(trip.created_at)} · {fmtTime(trip.created_at)}
-                          </Text>
-                        </View>
-                        {role === 'driver' && isCompleted && (
-                          <Text style={ { color: C.green, fontWeight: '800', fontSize: 13 }}>
-                            +{fmtFRW(driverEarn)}
-                          </Text>
-                        )}
-                        <Text style={ { color: C.grayDark, fontSize: 16 }}>{isExpanded?'▲': '▼'}</Text>
-                      </View>
+                return (
+                <TouchableOpacity key={trip.id} style={styles.historyCard}
+                  onPress={()=>setExpandedId(isExpanded ? null: trip.id)} activeOpacity={0.85}>
+                  {/* Card top row */}
+                  <View style={ { flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                    <View style={[styles.statusPill, {
+                      backgroundColor: isCompleted?C.greenDim: C.redDim,
+                      marginTop: 0, paddingVertical: 3, paddingHorizontal: 8,
+                    }]}>
+                      <Text style={[styles.statusPillTxt, { color: isCompleted?C.green: C.red }]}>
+                        {isCompleted?'✓': '✕'}
+                      </Text>
+                    </View>
+                    <View style={ { flex: 1 }}>
+                      <Text style={ { color: C.gold, fontWeight: '900', fontSize: 16 }}>
+                        {fmtFRW(trip.price)}
+                      </Text>
+                      <Text style={ { color: C.gray, fontSize: 11, marginTop: 1 }}>
+                        {fmtDate(trip.created_at)} · {fmtTime(trip.created_at)}
+                      </Text>
+                    </View>
+                    {role === 'driver' && isCompleted && (
+                      <Text style={ { color: C.green, fontWeight: '800', fontSize: 13 }}>
+                        +{fmtFRW(driverEarn)}
+                      </Text>
+                    )}
+                    <Text style={ { color: C.grayDark, fontSize: 16 }}>{isExpanded?'▲': '▼'}</Text>
+                  </View>
 
-                      {/* Route */}
-                      <View style={[styles.routeBlock, { marginTop: 10 }]}>
-                        <View style={styles.routeDot} />
-                        <Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>
-                          {trip.pickup_address}
+                  {/* Route */}
+                  <View style={[styles.routeBlock, { marginTop: 10 }]}>
+                    <View style={styles.routeDot} />
+                    <Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>
+                      {trip.pickup_address}
+                    </Text>
+                  </View>
+                  <View style={styles.routeLine_} />
+                  <View style={styles.routeBlock}>
+                    <View style={[styles.routeDot, { backgroundColor: C.green }]} />
+                    <Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>
+                      {trip.destination_address}
+                    </Text>
+                  </View>
+
+                  {/* Expanded receipt view */}
+                  {isExpanded && (
+                    <View style={styles.receiptExpanded}>
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{t.tripId}</Text>
+                        <Text style={styles.receiptValue} numberOfLines={1}>
+                          {trip.id?.substring(0, 16)}...
                         </Text>
                       </View>
-                      <View style={styles.routeLine_} />
-                      <View style={styles.routeBlock}>
-                        <View style={[styles.routeDot, { backgroundColor: C.green }]} />
-                        <Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>
-                          {trip.destination_address}
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{role === 'passenger'?t.driver: t.pax}</Text>
+                        <Text style={styles.receiptValue}>
+                          {role === 'passenger'?(trip.driver_name || '—'): (trip.passenger_name || '—')}
+                        </Text>
+                      </View>
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{t.payWith}</Text>
+                        <Text style={styles.receiptValue}>
+                          {trip.payment_method === 'momo'?'📲 MTN MoMo': '💵 Cash'}
+                        </Text>
+                      </View>
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{t.fareLabel}</Text>
+                        <Text style={[styles.receiptValue, { color: C.gold, fontWeight: '900' }]}>
+                          {fmtFRW(trip.price)}
+                        </Text>
+                      </View>
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{t.commission}</Text>
+                        <Text style={[styles.receiptValue, { color: C.red }]}>
+                          -{fmtFRW(commission)}
+                        </Text>
+                      </View>
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{t.driverEarnings}</Text>
+                        <Text style={[styles.receiptValue, { color: C.green }]}>
+                          {fmtFRW(driverEarn)}
+                        </Text>
+                      </View>
+                      <View style={styles.receiptRow}>
+                        <Text style={styles.receiptLabel}>{t.ratingGiven}</Text>
+                        <Text style={styles.receiptValue}>
+                          {myRating ? '★'.repeat(myRating)+'☆'.repeat(5-myRating): t.notRated}
                         </Text>
                       </View>
 
-                      {/* Expanded receipt view */}
-                      {isExpanded && (
-                        <View style={styles.receiptExpanded}>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{t.tripId}</Text>
-                            <Text style={styles.receiptValue} numberOfLines={1}>
-                              {trip.id?.substring(0, 16)}...
-                            </Text>
-                          </View>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{role === 'passenger'?t.driver: t.pax}</Text>
-                            <Text style={styles.receiptValue}>
-                              {role === 'passenger'?(trip.driver_name || '—'): (trip.passenger_name || '—')}
-                            </Text>
-                          </View>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{t.payWith}</Text>
-                            <Text style={styles.receiptValue}>
-                              {trip.payment_method === 'momo'?'📲 MTN MoMo': '💵 Cash'}
-                            </Text>
-                          </View>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{t.fareLabel}</Text>
-                            <Text style={[styles.receiptValue, { color: C.gold, fontWeight: '900' }]}>
-                              {fmtFRW(trip.price)}
-                            </Text>
-                          </View>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{t.commission}</Text>
-                            <Text style={[styles.receiptValue, { color: C.red }]}>
-                              -{fmtFRW(commission)}
-                            </Text>
-                          </View>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{t.driverEarnings}</Text>
-                            <Text style={[styles.receiptValue, { color: C.green }]}>
-                              {fmtFRW(driverEarn)}
-                            </Text>
-                          </View>
-                          <View style={styles.receiptRow}>
-                            <Text style={styles.receiptLabel}>{t.ratingGiven}</Text>
-                            <Text style={styles.receiptValue}>
-                              {myRating ? '★'.repeat(myRating)+'☆'.repeat(5-myRating): t.notRated}
-                            </Text>
-                          </View>
-
-                          {/* Share buttons */}
-                          <View style={ { flexDirection: 'row', gap: 10, marginTop: 14 }}>
-                            <TouchableOpacity
-                              style={[styles.receiptShareBtn, { borderColor: C.green }]}
-                              onPress={()=>shareReceiptWhatsApp(trip, role)}>
-                              <Text style={[styles.receiptShareTxt, { color: C.green }]}>
-                                📲 {t.shareWhatsApp}
-                              </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={[styles.receiptShareBtn, { borderColor: C.gold }]}
-                              onPress={()=>shareReceiptPDF(trip, role)}>
-                              <Text style={[styles.receiptShareTxt, { color: C.gold }]}>
-                                📄 {t.downloadPDF}
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  );
+                      {/* Share buttons */}
+                      <View style={ { flexDirection: 'row', gap: 10, marginTop: 14 }}>
+                        <TouchableOpacity
+                          style={[styles.receiptShareBtn, { borderColor: C.green }]}
+                          onPress={()=>shareReceiptWhatsApp(trip, role)}>
+                          <Text style={[styles.receiptShareTxt, { color: C.green }]}>
+                            📲 {t.shareWhatsApp}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.receiptShareBtn, { borderColor: C.gold }]}
+                          onPress={()=>shareReceiptPDF(trip, role)}>
+                          <Text style={[styles.receiptShareTxt, { color: C.gold }]}>
+                            📄 {t.downloadPDF}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+                </TouchableOpacity>
+                );
                 })}
 
                 {/* Load more */}
@@ -2061,185 +2263,6 @@ const NotificationBanner = ({
   };
 
   // ══════════════════════════════════════════════
-  // ══════════════════════════════════════════════
-  // SCHEDULED TRIPS MODAL — both passenger and driver
-  // ══════════════════════════════════════════════
-  const ScheduledTripsModal = ({
-    visible, onClose, userId, role, t, onPreAccept, onCancel
-  }) => {
-    const [trips, setTrips] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const load = async () => {
-      setLoading(true);
-      let q = supabase.from('trips').select('*').eq('status', 'scheduled')
-      .order('scheduled_for', {
-        ascending: true
-      });
-      if (role === 'passenger') {
-        q = q.eq('passenger_id', userId);
-      }
-      // Drivers see ALL unaccepted scheduled trips + their pre-accepted ones
-      const {
-        data
-      } = await q;
-      setTrips(data || []);
-      setLoading(false);
-    };
-
-    useEffect(() => {
-      if (visible) load();
-    },
-      [visible]);
-
-    const getMinutesUntil = (iso) => {
-      const diff = new Date(iso) - Date.now();
-      return Math.max(0,
-        Math.round(diff / 60000));
-    };
-
-    const getCountdownColor = (min) => {
-      if (min <= 15) return C.red;
-      if (min <= 30) return C.orange;
-      if (min <= 45) return C.gold;
-      return C.green;
-    };
-
-    // Swipe-to-close via PanResponder
-    const translateY = useRef(new Animated.Value(0)).current;
-    const panResponder = useRef(PanResponder.create({
-      onStartShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 5,
-      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 5 && g.dy > 0,
-      onPanResponderMove: (_, g) => {
-        if (g.dy > 0) translateY.setValue(g.dy);
-      },
-      onPanResponderRelease: (_, g) => {
-        if (g.dy > 120) {
-          onClose();
-          setTimeout(() => translateY.setValue(0), 400);
-        } else {
-          Animated.spring(translateY, {
-            toValue: 0, useNativeDriver: true
-          }).start();
-        }
-      },
-    })).current;
-
-    return (
-      <Modal visible={visible} animationType="slide" transparent statusBarTranslucent onRequestClose={onClose}>
-        <TouchableOpacity style={ { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }} activeOpacity={1} onPress={onClose} />
-        <Animated.View style={[{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          backgroundColor: C.charcoal, borderTopLeftRadius: 24, borderTopRightRadius: 24,
-          maxHeight: height * 0.82,
-          borderTopWidth: 1, borderColor: C.border,
-          transform: [{ translateY }],
-        }]} {...panResponder.panHandlers}>
-          {/* Drag handle */}
-          <View style={ { alignItems: 'center', paddingTop: 12, paddingBottom: 4 }}>
-            <View style={ { width: 40, height: 4, borderRadius: 2, backgroundColor: C.grayDark }} />
-          </View>
-          {/* Header */}
-          <View style={ { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingBottom: 14, borderBottomWidth: 1, borderColor: C.borderFaint }}>
-            <Text style={ { color: C.gold, fontWeight: '900', fontSize: 16, letterSpacing: 1.5, flex: 1 }}>
-              📅 {t.upcomingRides}
-            </Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <Text style={ { color: C.gray, fontSize: 20, fontWeight: '700' }}>✕</Text>
-            </TouchableOpacity>
-          </View>
-          {/* Content */}
-          <ScrollView style={ { flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={ { padding: 16 }}>
-            {loading && <ActivityIndicator color={C.gold} size="large" style={ { marginTop: 40 }} />}
-            {!loading && trips.length === 0 && (
-              <View style={ { alignItems: 'center',
-                marginTop: 60 }}>
-                <Text style={ { fontSize: 48,
-                  marginBottom: 12 }}>📅</Text>
-                <Text style={ { color: C.gray,
-                  textAlign: 'center',
-                  fontSize: 14 }}>{t.noHistory}</Text>
-              </View>
-            )}
-            {!loading && trips.map(trip => {
-              const min = getMinutesUntil(trip.scheduled_for);
-              const col = getCountdownColor(min);
-              const isPreAcceptedByMe = trip.pre_accepted_by === userId;
-              const isMyTrip = role === 'passenger' ? trip.passenger_id === userId: trip.driver_id === userId;
-
-              return (
-                <View key={trip.id} style={ {
-                  backgroundColor: C.card, borderRadius: 18, padding: 16, marginBottom: 12,
-                  borderWidth: 1, borderColor: col + '44',
-                }}>
-                  {/* Countdown badge */}
-                  <View style={ { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <View style={ { backgroundColor: col + '22', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 5, borderWidth: 1, borderColor: col + '55' }}>
-                      <Text style={ { color: col, fontWeight: '900', fontSize: 13 }}>
-                        ⏰ {min > 0 ? `${min} min`: 'NOW'}
-                      </Text>
-                    </View>
-                    <Text style={ { color: C.gray, fontSize: 11 }}>
-                      {new Date(trip.scheduled_for).toLocaleDateString([], {
-                        weekday: 'short', day: '2-digit', month: 'short'
-                      })}
-                      {' · '}
-                      {new Date(trip.scheduled_for).toLocaleTimeString([], {
-                        hour: '2-digit', minute: '2-digit'
-                      })}
-                    </Text>
-                  </View>
-                  {/* Route */}
-                  <View style={styles.routeBlock}>
-                    <View style={styles.routeDot} />
-                    <Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>{trip.pickup_address}</Text>
-                  </View>
-                  <View style={styles.routeLine_} />
-                  <View style={styles.routeBlock}>
-                    <View style={[styles.routeDot, { backgroundColor: C.green }]} />
-                    <Text style={ { color: C.white, fontSize: 12, fontWeight: '700', flex: 1 }} numberOfLines={1}>{trip.destination_address}</Text>
-                  </View>
-                  {/* Fare + people */}
-                  <View style={ { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'center' }}>
-                    <Text style={ { color: C.gold, fontWeight: '900', fontSize: 16 }}>{fmtFRW(trip.price)}</Text>
-                    <Text style={ { color: C.gray, fontSize: 12 }}>
-                      {role === 'driver' ? `👤 ${trip.passenger_name || 'Passenger'}`: `🏍️ ${trip.driver_name || t.preAccept}`}
-                    </Text>
-                  </View>
-                  {/* Pre-accept status */}
-                  {trip.pre_accepted_by && (
-                    <View style={ { backgroundColor: C.greenDim, borderRadius: 10, paddingVertical: 6, paddingHorizontal: 12, marginTop: 10, borderWidth: 1, borderColor: C.green + '44' }}>
-                      <Text style={ { color: C.green, fontWeight: '800', fontSize: 12 }}>
-                        ✅ {isPreAcceptedByMe ? 'You pre-accepted this trip': `${trip.driver_name} will handle this`}
-                      </Text>
-                    </View>
-                  )}
-                  {/* Driver actions */}
-                  {role === 'driver' && !trip.pre_accepted_by && onPreAccept && (
-                    <TouchableOpacity
-                      style={[styles.mainBtn, { marginTop: 12, backgroundColor: C.goldDim, borderWidth: 1.5, borderColor: C.gold }]}
-                      onPress={() => { onPreAccept(trip.id); load(); }}>
-                      <Text style={[styles.mainBtnTxt, { color: C.gold }]}>📅 {t.preAccept}</Text>
-                    </TouchableOpacity>
-                  )}
-                  {/* Passenger cancel */}
-                  {role === 'passenger' && onCancel && (
-                    <TouchableOpacity
-                      style={[styles.mainBtn, { marginTop: 12, backgroundColor: C.redDim, borderWidth: 1.5, borderColor: C.red }]}
-                      onPress={() => { onCancel(trip.id, trip.driver_id); load(); }}>
-                      <Text style={[styles.mainBtnTxt, { color: C.red }]}>✕ {t.cancelTrip}</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            })}
-            <View style={ { height: 40 }} />
-          </ScrollView>
-        </Animated.View>
-      </Modal>
-    );
-  };
-
   const MorphingMenu = ({
     isOpen, onPress
   }) => {
@@ -2499,8 +2522,6 @@ const NotificationBanner = ({
       setSosModal] = useState(false);
     const [historyModal,
       setHistoryModal] = useState(false);
-    const [scheduledModal,
-      setScheduledModal] = useState(false);
     const [surgeMultiplier,
       setSurgeMultiplier] = useState(1.0);
     const [surgeActive,
@@ -2700,9 +2721,6 @@ const NotificationBanner = ({
     // ─── Hardware back ───────────────────────
     useEffect(()=> {
       const onBack = ()=> {
-        if (scheduledModal) {
-          setScheduledModal(false); return true;
-        }
         if (historyModal) {
           setHistoryModal(false); return true;
         }
@@ -2730,7 +2748,6 @@ const NotificationBanner = ({
         }
         return false;
       };
-      if (Platform.OS === 'web') return;
       const h = BackHandler.addEventListener('hardwareBackPress', onBack);
       return ()=>h.remove();
     },
@@ -2739,8 +2756,6 @@ const NotificationBanner = ({
         ratingModal,
         paySetupModal,
         profileModal,
-        scheduledModal,
-        historyModal,
         state.menuOpen,
         suggestions,
         destCoords,
@@ -2762,19 +2777,29 @@ const NotificationBanner = ({
 
     // ─── Offline / online monitor ────────────
     useEffect(() => {
+      let wasOffline = false;
       const checkNet = async () => {
         try {
           const net = await Network.getNetworkStateAsync();
-          const online = net.isConnected && net.isInternetReachable;
-          setIsOnline(!!online);
-          // Flush offline queue when back online
-          if (online && offlineQueue.length > 0) {
-            for (const req of offlineQueue) {
-              await supabase.from('trips').insert([req]);
+          const online = !!(net.isConnected && net.isInternetReachable);
+          const prevOnline = isOnline;
+          setIsOnline(online);
+          // Went offline
+          if (!online && prevOnline !== false) {
+            wasOffline = true;
+            showBanner(t.offlineMode, t.notif_noInternet, 'offline');
+          }
+          // Came back online
+          if (online && wasOffline) {
+            wasOffline = false;
+            if (offlineQueue.length > 0) {
+              for (const req of offlineQueue) {
+                await supabase.from('trips').insert([req]);
+              }
+              setOfflineQueue([]);
+              await AsyncStorage.removeItem(OFFLINE_TRIPS_KEY);
             }
-            setOfflineQueue([]);
-            await AsyncStorage.removeItem(OFFLINE_TRIPS_KEY);
-            showBanner('📡 Back Online', 'Queued ride request sent!', 'search');
+            showBanner('🌐 MotoLink', t.notif_backOnline, 'online');
           }
         } catch {
           setIsOnline(true);
@@ -2783,8 +2808,7 @@ const NotificationBanner = ({
       checkNet();
       const interval = setInterval(checkNet, 10000);
       return () => clearInterval(interval);
-    },
-      [offlineQueue]);
+    }, [offlineQueue, t]);
 
     // ─── Restore offline queue from storage ──
     useEffect(() => {
@@ -2796,78 +2820,33 @@ const NotificationBanner = ({
       })();
     }, []);
 
-    // ─── Scheduled trip notifier: 45-min warning + every 15 min countdown ─
-    // Fires for BOTH drivers (unaccepted trips) AND passengers (their scheduled trips)
+    // ─── Scheduled trip notifier (every minute) ─
     useEffect(() => {
-      if (state.step !== 'app' || !state.session) return;
-      // Track which trip+window combos we've already notified (avoid spamming)
-      const notifiedRef = new Set();
-
+      if (state.step !== 'app' || state.role !== 'driver') return;
       const checkScheduled = async () => {
-        const now = Date.now();
-        // Windows: 45 min, 30 min, 15 min before scheduled time
-        const WINDOWS = [45,
-          30,
-          15];
-
-        for (const minutesBefore of WINDOWS) {
-          const windowStart = new Date(now + (minutesBefore - 2) * 60 * 1000).toISOString();
-          const windowEnd = new Date(now + (minutesBefore + 2) * 60 * 1000).toISOString();
-
-          if (state.role === 'driver') {
-            // Drivers see upcoming unaccepted scheduled trips
-            const {
-              data: scheduled
-            } = await supabase.from('trips')
-            .select('*').eq('status', 'scheduled')
-            .gte('scheduled_for', windowStart).lte('scheduled_for', windowEnd);
-
-            if (scheduled?.length > 0) {
-              for (const trip of scheduled) {
-                const key = `${trip.id}-${minutesBefore}`;
-                if (notifiedRef.has(key)) continue;
-                notifiedRef.add(key);
-                notify(
-                  `📅 ${t.scheduledTrip} — ${minutesBefore} min`,
-                  `${trip.passenger_name}: ${trip.pickup_address} → ${trip.destination_address}`,
-                  'ride'
-                );
-              }
-            }
-          }
-
-          if (state.role === 'passenger') {
-            // Passengers see reminders for their own scheduled trips
-            const {
-              data: scheduled
-            } = await supabase.from('trips')
-            .select('*').eq('status', 'scheduled')
-            .eq('passenger_id', state.session.user.id)
-            .gte('scheduled_for', windowStart).lte('scheduled_for', windowEnd);
-
-            if (scheduled?.length > 0) {
-              for (const trip of scheduled) {
-                const key = `pax-${trip.id}-${minutesBefore}`;
-                if (notifiedRef.has(key)) continue;
-                notifiedRef.add(key);
-                notify(
-                  `🛵 ${t.scheduledTrip} — ${minutesBefore} min`,
-                  `${trip.pickup_address} → ${trip.destination_address}`,
-                  'search'
-                );
-              }
-            }
+        const soon = new Date(Date.now() + SCHEDULED_NOTIFY_MIN * 60 * 1000).toISOString();
+        const now = new Date().toISOString();
+        const {
+          data: scheduled
+        } = await supabase.from('trips')
+        .select('*').eq('status', 'scheduled').is('pre_accepted_by', null)
+        .gte('scheduled_for', now).lte('scheduled_for', soon);
+        if (scheduled?.length > 0) {
+          for (const trip of scheduled) {
+            notify(
+              `📅 ${t.scheduledTrip}`,
+              `${trip.passenger_name}: ${trip.pickup_address} → ${trip.destination_address} — in ${SCHEDULED_NOTIFY_MIN} min`,
+              'ride'
+            );
           }
         }
       };
-
       checkScheduled();
-      const interval = setInterval(checkScheduled, 5 * 60 * 1000); // check every 5 min
+      const interval = setInterval(checkScheduled, 60 * 1000);
       return () => clearInterval(interval);
     },
       [state.step,
         state.role,
-        state.session,
         t]);
 
     // ─── Load leaderboard ────────────────────
@@ -2944,41 +2923,39 @@ const NotificationBanner = ({
     // ══════════════════════════════════════════
     const normalisePhone = (r)=>r.replace(/\s+/g, '').trim();
 
-    const handleSignIn = async()=> {
-      if (!phone||!password) return Alert.alert('Error', t.phone+' & '+t.pass+' required.');
+    const handleSignIn = async () => {
+      if (!phone) return showBanner('MotoLink', t.notif_noPhone, 'warning');
+      if (!password) return showBanner('MotoLink', t.notif_noPass, 'warning');
+      if (!isOnline) return showBanner(t.offlineMode, t.notif_noInternet, 'offline');
       setAuthLoading(true);
       const np = normalisePhone(phone);
-      const {
-        data,
-        error
-      } = await supabase.from('profiles').select('*').eq('phone', np).eq('password', password).single();
+      const { data, error } = await supabase
+        .from('profiles').select('*').eq('phone', np).eq('password', password).single();
       setAuthLoading(false);
-      if (error||!data) {
-        Alert.alert(t.signIn+' Failed', 'Incorrect credentials.');
+      if (error || !data) {
+        showBanner(t.signIn, t.notif_wrongCreds, 'error');
       } else {
-        dispatch( {
-          type: 'SET_SESSION', p: {
-            session: {
-              user: {
-                id: data.id, phone: np
-              }}, profile: data
-          }}); dispatch( {
-          type: 'SET_ROLE', p: data.role
-        });
+        dispatch({ type: 'SET_SESSION', p: { session: { user: { id: data.id, phone: np } }, profile: data } });
+        dispatch({ type: 'SET_ROLE', p: data.role });
+        showBanner('MotoLink 🛵', `${t.welcome}, ${data.name}!`, 'success');
       }
     };
 
-    const handleSignUp = async()=> {
-      if (!phone||!password||!nameVal||!confirmPass) return Alert.alert('Error', 'All fields required.');
-      if (password.length < 6) return Alert.alert('Error', 'Min 6 characters.');
-      if (password !== confirmPass) return Alert.alert('Error', t.passMismatch);
+    const handleSignUp = async () => {
+      if (!phone || !password || !nameVal || !confirmPass)
+        return showBanner('MotoLink', t.notif_allFields, 'warning');
+      if (password.length < 6)
+        return showBanner('MotoLink', t.notif_passShort, 'warning');
+      if (password !== confirmPass)
+        return showBanner('MotoLink', t.notif_passMismatch2, 'warning');
+      if (!isOnline)
+        return showBanner(t.offlineMode, t.notif_noInternet, 'offline');
       setAuthLoading(true);
       const np = normalisePhone(phone);
-      const {
-        data: ex
-      } = await supabase.from('profiles').select('id').eq('phone', np).single();
+      const { data: ex } = await supabase.from('profiles').select('id').eq('phone', np).single();
       if (ex) {
-        setAuthLoading(false); return Alert.alert('Error', 'Phone already registered.');
+        setAuthLoading(false);
+        return showBanner('MotoLink', t.notif_phoneExists, 'warning');
       }
 
       // Generate unique referral code
@@ -3025,72 +3002,50 @@ const NotificationBanner = ({
       } = await supabase.from('profiles').insert([np2]);
       setAuthLoading(false);
       if (error) {
-        Alert.alert(t.signUp+' Failed', error.message);
+        showBanner(t.signUp, error.message, 'error');
       } else {
-        // Credit referrer 200 FRW if valid referral code used
+        // Credit referrer bonus
         if (referredById) {
-          const {
-            data: referrer
-          } = await supabase.from('profiles')
-          .select('wallet_balance, referral_earnings').eq('id', referredById).single();
+          const { data: referrer } = await supabase.from('profiles')
+            .select('wallet_balance, referral_earnings').eq('id', referredById).single();
           if (referrer) {
             const newBal = (referrer.wallet_balance || 0) + 200;
             const newRef = (referrer.referral_earnings || 0) + 200;
-            await supabase.from('profiles').update({
-              wallet_balance: newBal, referral_earnings: newRef
-            }).eq('id', referredById);
+            await supabase.from('profiles').update({ wallet_balance: newBal, referral_earnings: newRef }).eq('id', referredById);
             await supabase.from('transactions').insert([{
               user_id: referredById, type: 'referral', amount: 200,
               balance_after: newBal, description: `Referral bonus — ${nameVal} signed up`,
               status: 'completed', method: 'referral',
             }]);
             const tk = await getPushToken(referredById);
-            if (tk) await sendExpoPush(tk, '💰 Referral Bonus!', `${nameVal} used your code. 200 FRW added to your wallet.`, {
-              type: 'wallet'
-            });
+            if (tk) await sendExpoPush(tk, '💰 Referral Bonus!', `${nameVal} used your code. 200 FRW added.`, { type: 'wallet' });
           }
         }
-        Alert.alert('MotoLink 🛵', `${t.welcome}, ${nameVal}!\n\n🎁 Your referral code: ${refCode}`, [{
-          text: 'OK', onPress: ()=> {
-            dispatch( {
-              type: 'SET_SESSION', p: {
-                session: {
-                  user: {
-                    id: newId, phone: np
-                  }
-                }, profile: np2
-              }
-            });
-            dispatch( {
-              type: 'SET_ROLE', p: state.role
-            });
-          }}]);
+        showBanner('MotoLink 🛵', t.notif_signupOk + ` 🎁 ${refCode}`, 'success');
+        dispatch({ type: 'SET_SESSION', p: { session: { user: { id: newId, phone: np } }, profile: np2 } });
+        dispatch({ type: 'SET_ROLE', p: state.role });
       }
     };
 
     const handleAuth = ()=>authMode === 'signin'?handleSignIn(): handleSignUp();
 
-    const handleDeleteAccount = ()=> {
-      Alert.alert('⚠️ '+t.deleteAcc, 'This permanently deletes your account.',
-        [{
-          text: t.cancel, style: 'cancel'
-        }, {
-          text: t.deleteAcc, style: 'destructive', onPress: async()=> {
-            if (!state.session?.user?.id) return;
-            await supabase.from('trips').update({
-              status: 'cancelled'
-            }).eq(state.role === 'passenger'?'passenger_id': 'driver_id', state.session.user.id).in('status', ['searching', 'accepted']);
-            const {
-              error
-            } = await supabase.from('profiles').delete().eq('id', state.session.user.id);
-            if (error) {
-              Alert.alert('Error', 'Could not delete. Try again.');
-            } else {
-              await clearSession(); setProfileModal(false); dispatch( {
-                type: 'LOGOUT'
-              });
-            }
-          }}]
+    const handleDeleteAccount = () => {
+      // Use native Alert only for destructive confirm — no suitable showBanner alternative
+      Alert.alert('⚠️ ' + t.deleteAcc, 'This permanently deletes your account.',
+        [{ text: t.cancel, style: 'cancel' },
+         { text: t.deleteAcc, style: 'destructive', onPress: async () => {
+           if (!state.session?.user?.id) return;
+           await supabase.from('trips').update({ status: 'cancelled' })
+             .eq(state.role === 'passenger' ? 'passenger_id' : 'driver_id', state.session.user.id)
+             .in('status', ['searching', 'accepted']);
+           const { error } = await supabase.from('profiles').delete().eq('id', state.session.user.id);
+           if (error) {
+             showBanner('MotoLink', 'Could not delete account. Try again.', 'error');
+           } else {
+             showBanner('MotoLink', t.notif_deleteOk, 'success');
+             await clearSession(); setProfileModal(false); dispatch({ type: 'LOGOUT' });
+           }
+         }}]
       );
     };
 
@@ -3107,20 +3062,19 @@ const NotificationBanner = ({
         state.session.user.id);
       setRideLoading(false);
       if (!error) {
-        setProfileModal(false); Alert.alert('✓', t.save);
+        setProfileModal(false);
+        showBanner('✓ MotoLink', t.notif_profileSaved, 'success');
       }
     };
 
-    const savePaymentInfo = async(payData)=> {
-      const {
-        error
-      } = await supabase.from('profiles').update(payData).eq('id', state.session.user.id);
+    const savePaymentInfo = async (payData) => {
+      const { error } = await supabase.from('profiles').update(payData).eq('id', state.session.user.id);
       if (!error) {
-        dispatch( {
-          type: 'SET_PROFILE', p: {
-            ...state.profile, ...payData
-          }});
-        showBanner(t.paymentSetup, '✓ '+t.savePayment, 'payment');
+        dispatch({ type: 'SET_PROFILE', p: { ...state.profile, ...payData } });
+        setPaySetupModal(false);
+        showBanner('💳 MotoLink', t.notif_paySetupDone, 'success');
+      } else {
+        showBanner('MotoLink', error.message, 'error');
       }
     };
 
@@ -3143,32 +3097,30 @@ const NotificationBanner = ({
 
       if (error || !promo) {
         setPromoLoading(false);
-        Alert.alert('❌', t.promoInvalid);
+        showBanner('❌ MotoLink', t.notif_promoInvalid, 'error');
         return;
       }
 
       // Check expiry
       if (promo.expires_at && new Date(promo.expires_at) < new Date()) {
         setPromoLoading(false);
-        Alert.alert('❌', t.promoInvalid);
+        showBanner('❌ MotoLink', t.notif_promoInvalid, 'error');
         return;
       }
 
       // Check max uses
       if (promo.used_count >= promo.max_uses) {
         setPromoLoading(false);
-        Alert.alert('❌', t.promoInvalid);
+        showBanner('❌ MotoLink', t.notif_promoInvalid, 'error');
         return;
       }
 
       // Check if this user already used this code
-      const {
-        data: used
-      } = await supabase.from('promo_usage')
-      .select('id').eq('code', code).eq('user_id', state.session.user.id).single();
+      const { data: used } = await supabase.from('promo_usage')
+        .select('id').eq('code', code).eq('user_id', state.session.user.id).single();
       if (used) {
         setPromoLoading(false);
-        Alert.alert('❌', t.promoUsed);
+        showBanner('⚠️ MotoLink', t.notif_promoUsed, 'warning');
         return;
       }
 
@@ -3258,7 +3210,7 @@ const NotificationBanner = ({
         Linking.openURL(`tel:${SOS_SAFETY_NUMBER}`).catch(() => {});
       }, 1500);
 
-      showBanner('🚨 ' + t.sosActivated, t.sosSent, 'sos');
+      showBanner(t.notif_sosTitle, t.notif_sosSent, 'sos');
     };
     const submitRating = async(stars, review)=> {
       if (!tripToRate||!state.session) return;
@@ -3297,29 +3249,49 @@ const NotificationBanner = ({
     // ══════════════════════════════════════════
     // LOCATION
     // ══════════════════════════════════════════
-    useEffect(()=> {
+    useEffect(() => {
       if (state.step !== 'app') return;
       let sub;
-      (async()=> {
-        const {
-          status
-        } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') return;
-        sub = await Location.watchPositionAsync({
-          accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5, timeInterval: 3000
-        }, async(loc)=> {
-          const coords = {
-            latitude: loc.coords.latitude, longitude: loc.coords.longitude
-          };
-          dispatch( {
-            type: 'SET_LOCATION', p: coords
-          });
-          if (state.role === 'driver' && state.session) await supabase.from('profiles').update({
-            current_lat: coords.latitude, current_lng: coords.longitude
-          }).eq('id', state.session.user.id);
-        });
+      let gpsOkShown = false;
+      (async () => {
+        // Check network first
+        try {
+          const net = await Network.getNetworkStateAsync();
+          if (!net.isConnected) showBanner(t.offlineMode, t.notif_noInternet, 'offline');
+        } catch {}
+
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          showBanner('📍 MotoLink', t.notif_locDenied, 'error');
+          return;
+        }
+
+        // Check if GPS hardware is enabled
+        const enabled = await Location.hasServicesEnabledAsync().catch(() => true);
+        if (!enabled) {
+          showBanner('📍 GPS', t.notif_locOff, 'warning');
+          return;
+        }
+
+        sub = await Location.watchPositionAsync(
+          { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5, timeInterval: 3000 },
+          async (loc) => {
+            const coords = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
+            dispatch({ type: 'SET_LOCATION', p: coords });
+            // Show success banner once on first fix
+            if (!gpsOkShown) {
+              gpsOkShown = true;
+              showBanner('📍 MotoLink', t.notif_locGranted, 'location');
+            }
+            if (state.role === 'driver' && state.session) {
+              await supabase.from('profiles').update({
+                current_lat: coords.latitude, current_lng: coords.longitude,
+              }).eq('id', state.session.user.id);
+            }
+          }
+        );
       })();
-      return ()=>sub?.remove();
+      return () => sub?.remove();
     }, [state.step, state.session, state.role]);
 
     // ══════════════════════════════════════════
@@ -3342,22 +3314,13 @@ const NotificationBanner = ({
         dispatch( {
           type: 'SET_MY_TRIPS', p: data || []});
       } else {
-        // Drivers see both live searching trips AND scheduled trips
         const {
-          data: liveTrips
+          data
         } = await supabase.from('trips').select('*').eq('status', 'searching').order('created_at', {
             ascending: false
           });
-        const {
-          data: scheduledTrips
-        } = await supabase.from('trips').select('*').eq('status', 'scheduled').order('scheduled_for', {
-            ascending: true
-          });
-        const combined = [...(liveTrips || []),
-          ...(scheduledTrips || [])];
         dispatch( {
-          type: 'SET_AVAILABLE_TRIPS', p: combined
-        });
+          type: 'SET_AVAILABLE_TRIPS', p: data || []});
       }
     },
       [state.session,
@@ -3456,12 +3419,10 @@ const NotificationBanner = ({
     // B2B — Join Company
     // ══════════════════════════════════════════
     const joinCompany = async () => {
-      if (!companyCode.trim()) return Alert.alert('Error', t.companyCode + ' required');
-      const {
-        data: company
-      } = await supabase.from('companies')
-      .select('*').eq('id', companyCode.trim()).eq('status', 'approved').single();
-      if (!company) return Alert.alert('Error', 'Invalid or pending company code.');
+      if (!companyCode.trim()) return showBanner('MotoLink', t.companyCode + ' required', 'warning');
+      const { data: company } = await supabase.from('companies')
+        .select('*').eq('id', companyCode.trim()).eq('status', 'approved').single();
+      if (!company) return showBanner('MotoLink', 'Invalid or pending company code.', 'error');
       await supabase.from('profiles').update({
         company_id: company.id, is_company_account: true
       })
@@ -3483,7 +3444,7 @@ const NotificationBanner = ({
         status
       } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Error', 'Camera permission required.'); return;
+        showBanner('📷 MotoLink', t.notif_cameraOff, 'error'); return;
       }
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -3543,16 +3504,26 @@ const NotificationBanner = ({
     // ══════════════════════════════════════════
     // REQUEST RIDE — enhanced with all modes
     // ══════════════════════════════════════════
-    const requestRide = async()=> {
-      if (!state.myLocation) return Alert.alert('GPS', t.loading);
-      if (!destCoords) return Alert.alert('', t.searchHint);
-      if (!state.session) return Alert.alert('', t.signIn);
+    const requestRide = async () => {
+      if (!state.myLocation) return showBanner('📍 GPS', t.notif_noGPS, 'location');
+      if (!destCoords) return showBanner('MotoLink', t.searchHint, 'warning');
+      if (!state.session) return showBanner('MotoLink', t.signIn, 'warning');
+      if (!isOnline) return showBanner(t.offlineMode, t.notif_noInternet, 'offline');
+
+      // Scheduled trip validation
+      if (tripMode === 'later') {
+        if (!scheduledFor) return showBanner('📅 MotoLink', t.notif_scheduleNoTime, 'warning');
+        if (scheduledFor <= new Date()) return showBanner('⏰ MotoLink', t.notif_schedulePast, 'warning');
+        const minAdvance = 10;
+        if ((scheduledFor - new Date()) < minAdvance * 60 * 1000)
+          return showBanner('⏰ MotoLink', t.notif_schedulePast, 'warning');
+      }
 
       // Delivery mode validation
       if (serviceMode === 'delivery') {
-        if (!packageDesc.trim()) return Alert.alert('Error', t.packageDesc + ' required');
-        if (!recipientName.trim()) return Alert.alert('Error', t.recipientName + ' required');
-        if (!recipientPhone.trim()) return Alert.alert('Error', t.recipientPhone + ' required');
+        if (!packageDesc.trim()) return showBanner('MotoLink', t.packageDesc + ' required', 'warning');
+        if (!recipientName.trim()) return showBanner('MotoLink', t.recipientName + ' required', 'warning');
+        if (!recipientPhone.trim()) return showBanner('MotoLink', t.recipientPhone + ' required', 'warning');
       }
 
       const snapDest = {
@@ -3635,7 +3606,7 @@ const NotificationBanner = ({
       setRideLoading(false);
 
       if (error) {
-        Alert.alert('Error', error.message);
+        showBanner('MotoLink', error.message, 'error');
       } else {
         // Promo usage tracking
         if (promoData?.code && tripRow?.id) {
@@ -3687,10 +3658,8 @@ const NotificationBanner = ({
     const acceptTrip = async(job)=> {
       // Check driver has payment info
       if (!state.profile?.momo_number&&!state.profile?.momo_merchant_code) {
-        Alert.alert('⚠️ '+t.paymentSetup, t.noPaymentWarning, [{
-          text: t.paymentSetup, onPress: ()=>setPaySetupModal(true)}, {
-          text: t.cancel, style: 'cancel'
-        }]);
+        showBanner('⚠️ ' + t.paymentSetup, t.noPaymentWarning, 'warning');
+        setTimeout(() => setPaySetupModal(true), 600);
         return;
       }
       const {
@@ -4019,122 +3988,120 @@ const NotificationBanner = ({
           onSave={savePaymentInfo} onClose={()=>setPaySetupModal(false)} />
 
         {/* Profile modal */}
-        <Modal visible={profileModal} animationType="fade" transparent onRequestClose={()=>setProfileModal(false)}>
+        <Modal visible={profileModal} animationType="fade" transparent>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios'?'padding': 'height'} style={ { flex: 1 }}>
-            <TouchableOpacity style={styles.modalBg} activeOpacity={1} onPress={()=>setProfileModal(false)}>
-              <TouchableOpacity activeOpacity={1} onPress={()=> {}} style={ { width: '100%' }}>
-                <ScrollView contentContainerStyle={styles.glassModal} keyboardShouldPersistTaps="handled">
-                  <View style={ { alignItems: 'center', marginBottom: 16 }}>
-                    <View style={styles.splashLogoRing}><Text style={styles.splashLogoTxt}>ML</Text></View>
-                    <Text style={[styles.splashTitle, { fontSize: 20, marginBottom: 4 }]}>{t.settings}</Text>
+            <View style={styles.modalBg}>
+              <ScrollView contentContainerStyle={styles.glassModal} keyboardShouldPersistTaps="handled">
+                <View style={ { alignItems: 'center', marginBottom: 16 }}>
+                  <View style={styles.splashLogoRing}><Text style={styles.splashLogoTxt}>ML</Text></View>
+                  <Text style={[styles.splashTitle, { fontSize: 20, marginBottom: 4 }]}>{t.settings}</Text>
+                </View>
+                <View style={ { alignItems: 'center', marginBottom: 20 }}>
+                  <View style={[styles.avatarWrap, { width: 72, height: 72, borderRadius: 36 }]}>
+                    <Text style={[styles.avatarTxt, { fontSize: 26 }]}>{state.profile?.name?.substring(0, 2).toUpperCase() || 'ME'}</Text>
                   </View>
-                  <View style={ { alignItems: 'center', marginBottom: 20 }}>
-                    <View style={[styles.avatarWrap, { width: 72, height: 72, borderRadius: 36 }]}>
-                      <Text style={[styles.avatarTxt, { fontSize: 26 }]}>{state.profile?.name?.substring(0, 2).toUpperCase() || 'ME'}</Text>
-                    </View>
-                    <View style={ { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 }}>
-                      <StarRow rating={state.profile?.rating || 5.0} size={18} />
-                      <Text style={ { color: C.gold, fontWeight: '800', fontSize: 15 }}>{(state.profile?.rating || 5.0).toFixed(1)}</Text>
-                      <Text style={ { color: C.gray, fontSize: 11 }}>({state.profile?.total_ratings || 0})</Text>
-                    </View>
+                  <View style={ { flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 6 }}>
+                    <StarRow rating={state.profile?.rating || 5.0} size={18} />
+                    <Text style={ { color: C.gold, fontWeight: '800', fontSize: 15 }}>{(state.profile?.rating || 5.0).toFixed(1)}</Text>
+                    <Text style={ { color: C.gray, fontSize: 11 }}>({state.profile?.total_ratings || 0})</Text>
                   </View>
-                  <View style={styles.inputWrap}>
-                    <Text style={styles.inputLabel}>{t.name}</Text>
-                    <TextInput style={styles.input} placeholderTextColor={C.grayDark} value={state.profile?.name} onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, name: txt }})} />
-                  </View>
-                  {state.role === 'driver' && (
-                    <>
-                      <View style={styles.inputWrap}>
-                        <Text style={styles.inputLabel}>{t.fareLabel} — Plate</Text>
-                        <TextInput style={styles.input} placeholder="RE 123 A" placeholderTextColor={C.grayDark} value={state.profile?.plate} onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, plate: txt }})} />
-                      </View>
-                      {/* Driver payment info summary */}
-                      <View style={styles.driverPayInfo}>
-                        <Text style={styles.driverPayLabel}>{t.paymentSetup}</Text>
-                        {state.profile?.momo_name?(
-                          <View style={ { marginTop: 6 }}>
-                            <Text style={ { color: C.white, fontWeight: '700', fontSize: 13 }}>{state.profile.momo_name}</Text>
-                            <Text style={ { color: C.gray, fontSize: 12, marginTop: 2 }}>
-                              {state.profile.momo_type === 'merchant'?`${t.merchantCode}: ${state.profile.momo_merchant_code}`: `${t.momoNumber}: ${state.profile.momo_number}`}
-                            </Text>
-                          </View>
-                        ): (
-                          <Text style={ { color: C.orange, fontSize: 12, marginTop: 6 }}>⚠️ {t.noPaymentWarning}</Text>
-                        )}
-                        <TouchableOpacity style={[styles.outlineBtn, { marginTop: 10 }]} onPress={()=>setPaySetupModal(true)}>
-                          <Text style={styles.outlineBtnTxt}>✏️ {t.paymentSetup}</Text>
-                        </TouchableOpacity>
-                      </View>
-                      {/* Earnings Dashboard — driver only */}
-                      <EarningsDashboard
-                        driverId={state.session?.user?.id}
-                        t={t}
-                        />
-                    </>
-                  )}
-                  {/* Emergency Contact — shown for both passenger and driver */}
-                  <View style={styles.sosContactBox}>
-                    <Text style={styles.sosContactLabel}>🚨 {t.emergencyContact}</Text>
+                </View>
+                <View style={styles.inputWrap}>
+                  <Text style={styles.inputLabel}>{t.name}</Text>
+                  <TextInput style={styles.input} placeholderTextColor={C.grayDark} value={state.profile?.name} onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, name: txt }})} />
+                </View>
+                {state.role === 'driver' && (
+                  <>
                     <View style={styles.inputWrap}>
-                      <Text style={styles.inputLabel}>{t.emergencyName}</Text>
-                      <TextInput style={styles.input}
-                        placeholder="e.g. Marie Claire"
-                        placeholderTextColor={C.grayDark}
-                        value={state.profile?.emergency_name}
-                        onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, emergency_name: txt } })} />
+                      <Text style={styles.inputLabel}>{t.fareLabel} — Plate</Text>
+                      <TextInput style={styles.input} placeholder="RE 123 A" placeholderTextColor={C.grayDark} value={state.profile?.plate} onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, plate: txt }})} />
                     </View>
-                    <View style={styles.inputWrap}>
-                      <Text style={styles.inputLabel}>{t.emergencyPhone}</Text>
-                      <TextInput style={styles.input}
-                        placeholder="+250 7XX XXX XXX"
-                        placeholderTextColor={C.grayDark}
-                        keyboardType="phone-pad"
-                        value={state.profile?.emergency_phone}
-                        onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, emergency_phone: txt } })} />
-                    </View>
-                  </View>
-
-                  {/* Referral Code Section */}
-                  <View style={styles.referralBox}>
-                    <Text style={styles.referralLabel}>🎁 {t.referralCode}</Text>
-                    <View style={styles.referralCodeRow}>
-                      <Text style={styles.referralCodeTxt}>{state.profile?.referral_code || '—'}</Text>
-                      <TouchableOpacity
-                        style={styles.referralShareBtn}
-                        onPress={()=> {
-                          const msg = encodeURIComponent(
-                            `🛵 *Join MotoLink!*\n\nUse my referral code: *${state.profile?.referral_code || ''}*\n\nDownload MotoLink — The Future of Ride-Hailing in Rwanda.\n\n_Powered by MotoLink_`
-                          );
-                          Linking.openURL(`whatsapp://send?text=${msg}`).catch(()=> {});
-                        }}>
-                        <Text style={styles.referralShareTxt}>📲 {t.referralShare}</Text>
+                    {/* Driver payment info summary */}
+                    <View style={styles.driverPayInfo}>
+                      <Text style={styles.driverPayLabel}>{t.paymentSetup}</Text>
+                      {state.profile?.momo_name?(
+                        <View style={ { marginTop: 6 }}>
+                          <Text style={ { color: C.white, fontWeight: '700', fontSize: 13 }}>{state.profile.momo_name}</Text>
+                          <Text style={ { color: C.gray, fontSize: 12, marginTop: 2 }}>
+                            {state.profile.momo_type === 'merchant'?`${t.merchantCode}: ${state.profile.momo_merchant_code}`: `${t.momoNumber}: ${state.profile.momo_number}`}
+                          </Text>
+                        </View>
+                      ): (
+                        <Text style={ { color: C.orange, fontSize: 12, marginTop: 6 }}>⚠️ {t.noPaymentWarning}</Text>
+                      )}
+                      <TouchableOpacity style={[styles.outlineBtn, { marginTop: 10 }]} onPress={()=>setPaySetupModal(true)}>
+                        <Text style={styles.outlineBtnTxt}>✏️ {t.paymentSetup}</Text>
                       </TouchableOpacity>
                     </View>
-                    <Text style={ { color: C.gray, fontSize: 11, marginTop: 6, lineHeight: 16 }}>{t.referralInfo}</Text>
-                    {(state.profile?.referral_earnings || 0) > 0 && (
-                      <View style={styles.referralEarnedRow}>
-                        <Text style={ { color: C.gray, fontSize: 12 }}>{t.referralEarned}</Text>
-                        <Text style={ { color: C.green, fontWeight: '900', fontSize: 14 }}>{fmtFRW(state.profile?.referral_earnings || 0)}</Text>
-                      </View>
-                    )}
+                    {/* Earnings Dashboard — driver only */}
+                    <EarningsDashboard
+                      driverId={state.session?.user?.id}
+                      t={t}
+                      />
+                  </>
+                )}
+                {/* Emergency Contact — shown for both passenger and driver */}
+                <View style={styles.sosContactBox}>
+                  <Text style={styles.sosContactLabel}>🚨 {t.emergencyContact}</Text>
+                  <View style={styles.inputWrap}>
+                    <Text style={styles.inputLabel}>{t.emergencyName}</Text>
+                    <TextInput style={styles.input}
+                      placeholder="e.g. Marie Claire"
+                      placeholderTextColor={C.grayDark}
+                      value={state.profile?.emergency_name}
+                      onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, emergency_name: txt } })} />
                   </View>
+                  <View style={styles.inputWrap}>
+                    <Text style={styles.inputLabel}>{t.emergencyPhone}</Text>
+                    <TextInput style={styles.input}
+                      placeholder="+250 7XX XXX XXX"
+                      placeholderTextColor={C.grayDark}
+                      keyboardType="phone-pad"
+                      value={state.profile?.emergency_phone}
+                      onChangeText={txt=>dispatch( { type: 'SET_PROFILE', p: { ...state.profile, emergency_phone: txt } })} />
+                  </View>
+                </View>
 
-                  <TouchableOpacity style={styles.mainBtn} onPress={updateProfile} disabled={rideLoading}>
-                    {rideLoading?<ActivityIndicator color={C.black} />: <Text style={styles.mainBtnTxt}>{t.save.toUpperCase()}</Text>}
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=> { clearSession(); setProfileModal(false); dispatch( { type: 'LOGOUT' }); }}
-                    style={[styles.outlineBtn, { marginTop: 12 }]}>
-                    <Text style={styles.outlineBtnTxt}>🚪 {t.signOut}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handleDeleteAccount} style={[styles.outlineBtn, { borderColor: C.red, marginTop: 10 }]}>
-                    <Text style={[styles.outlineBtnTxt, { color: C.red }]}>🗑️ {t.deleteAcc}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>setProfileModal(false)} style={ { marginTop: 18 }}>
-                    <Text style={ { color: C.gray, textAlign: 'center', fontSize: 13 }}>{t.close}</Text>
-                  </TouchableOpacity>
-                </ScrollView>
-              </TouchableOpacity>
-            </TouchableOpacity>
+                {/* Referral Code Section */}
+                <View style={styles.referralBox}>
+                  <Text style={styles.referralLabel}>🎁 {t.referralCode}</Text>
+                  <View style={styles.referralCodeRow}>
+                    <Text style={styles.referralCodeTxt}>{state.profile?.referral_code || '—'}</Text>
+                    <TouchableOpacity
+                      style={styles.referralShareBtn}
+                      onPress={()=> {
+                        const msg = encodeURIComponent(
+                          `🛵 *Join MotoLink!*\n\nUse my referral code: *${state.profile?.referral_code || ''}*\n\nDownload MotoLink — The Future of Ride-Hailing in Rwanda.\n\n_Powered by MotoLink_`
+                        );
+                        Linking.openURL(`whatsapp://send?text=${msg}`).catch(()=> {});
+                      }}>
+                      <Text style={styles.referralShareTxt}>📲 {t.referralShare}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={ { color: C.gray, fontSize: 11, marginTop: 6, lineHeight: 16 }}>{t.referralInfo}</Text>
+                  {(state.profile?.referral_earnings || 0) > 0 && (
+                    <View style={styles.referralEarnedRow}>
+                      <Text style={ { color: C.gray, fontSize: 12 }}>{t.referralEarned}</Text>
+                      <Text style={ { color: C.green, fontWeight: '900', fontSize: 14 }}>{fmtFRW(state.profile?.referral_earnings || 0)}</Text>
+                    </View>
+                  )}
+                </View>
+
+                <TouchableOpacity style={styles.mainBtn} onPress={updateProfile} disabled={rideLoading}>
+                  {rideLoading?<ActivityIndicator color={C.black} />: <Text style={styles.mainBtnTxt}>{t.save.toUpperCase()}</Text>}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=> { clearSession(); setProfileModal(false); dispatch( { type: 'LOGOUT' }); }}
+                  style={[styles.outlineBtn, { marginTop: 12 }]}>
+                  <Text style={styles.outlineBtnTxt}>🚪 {t.signOut}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleDeleteAccount} style={[styles.outlineBtn, { borderColor: C.red, marginTop: 10 }]}>
+                  <Text style={[styles.outlineBtnTxt, { color: C.red }]}>🗑️ {t.deleteAcc}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>setProfileModal(false)} style={ { marginTop: 18 }}>
+                  <Text style={ { color: C.gray, textAlign: 'center', fontSize: 13 }}>{t.close}</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
           </KeyboardAvoidingView>
         </Modal>
 
@@ -4149,7 +4116,7 @@ const NotificationBanner = ({
         )}
 
         {/* Leaderboard Modal */}
-        <Modal visible={showLeaderboard} transparent animationType="slide" onRequestClose={()=>setShowLeaderboard(false)}>
+        <Modal visible={showLeaderboard} transparent animationType="slide">
           <View style={styles.modalBg}>
             <View style={styles.glassModal}>
               <View style={ { flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
@@ -4179,7 +4146,7 @@ const NotificationBanner = ({
         </Modal>
 
         {/* SOS Confirmation Modal */}
-        <Modal visible={sosModal} transparent animationType="fade" onRequestClose={()=>setSosModal(false)}>
+        <Modal visible={sosModal} transparent animationType="fade">
           <View style={styles.modalBg}>
             <View style={[styles.glassModal, { alignItems: 'center' }]}>
               <Text style={ { fontSize: 48, marginBottom: 8 }}>🚨</Text>
@@ -4227,17 +4194,6 @@ const NotificationBanner = ({
           }}
           />
 
-        {/* Scheduled Trips Modal */}
-        <ScheduledTripsModal
-          visible={scheduledModal}
-          onClose={()=>setScheduledModal(false)}
-          userId={state.session?.user?.id}
-          role={state.role}
-          t={t}
-          onPreAccept={state.role === 'driver' ? preAcceptScheduledTrip: null}
-          onCancel={state.role === 'passenger' ? (id, otherId) => cancelTrip(id, otherId): null}
-          />
-
         {/* Header */}
         <SafeAreaView edges={['top']} style={styles.header}>
           <View style={styles.headerRow}>
@@ -4255,13 +4211,6 @@ const NotificationBanner = ({
                 { marginLeft: state.role === 'driver' ? 'auto': 6 }]}
               onPress={()=>setHistoryModal(true)}>
               <Text style={ { fontSize: 18 }}>🕐</Text>
-            </TouchableOpacity>
-            {/* Scheduled trips button */}
-            <TouchableOpacity
-              style={[styles.historyBtn,
-                { marginLeft: 6 }]}
-              onPress={()=>setScheduledModal(true)}>
-              <Text style={ { fontSize: 18 }}>📅</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.avatarWrap,
               { marginLeft: 8 }]} onPress={()=>setProfileModal(true)}>
@@ -4303,12 +4252,6 @@ const NotificationBanner = ({
           <View style={styles.panelHeader}>
             <View style={styles.splashLogoRingSmall}><Text style={styles.splashLogoTxtSmall}>ML</Text></View>
             <Text style={styles.panelTitle}>{t.myRequests}</Text>
-            <TouchableOpacity onPress={()=>dispatch( { type: 'TOGGLE_MENU' })} style={[styles.closeBtn,
-              { marginLeft: 'auto' }]}>
-              <Text style={ { color: C.gray,
-                fontSize: 18,
-                fontWeight: '700' }}>✕</Text>
-            </TouchableOpacity>
           </View>
           <ScrollView style={ { maxHeight: 340 }} showsVerticalScrollIndicator={false}>
             {state.myTrips.length === 0 && <Text style={styles.emptyText}>{t.noRequests}</Text>}
@@ -4362,20 +4305,9 @@ const NotificationBanner = ({
 
         {/* Bottom Sheet */}
         <SafeAreaView edges={['bottom']} style={styles.bottomSheet}>
-          {/* Drag handle — tap or swipe down to collapse destination */}
-          {state.role === 'passenger' && !AT && destCoords && (
-            <TouchableOpacity
-              onPress={() => { setDestCoords(null); setTargetLocation(null); setSearchQuery(''); setDestName(''); setSuggestions([]); }}
-              style={ { alignItems: 'center', paddingVertical: 10, paddingBottom: 2 }}>
-              <View style={ { width: 44, height: 4, borderRadius: 2, backgroundColor: C.grayDark }} />
-            </TouchableOpacity>
-          )}
           {state.role === 'passenger'?(
             AT?(
               <View>
-                <View style={ { alignItems: 'center', paddingBottom: 6 }}>
-                  <View style={ { width: 44, height: 4, borderRadius: 2, backgroundColor: C.grayDark }} />
-                </View>
                 <Text style={styles.jobTitle}>{t.activeJob}</Text>
                 <View style={styles.timestampRow}>
                   <Text style={styles.timestampTxt}>🕐 {t.requestedAt}: {fmtDateTime(AT.created_at)}</Text>
@@ -4645,9 +4577,7 @@ const NotificationBanner = ({
 
                   <TouchableOpacity style={styles.mainBtn} onPress={requestRide} disabled={rideLoading}>
                     {rideLoading
-                    ?<ActivityIndicator color={C.black} />: <Text style={styles.mainBtnTxt}>
-                      🛵 {tripMode === 'later' ? (t.scheduleLater || 'SCHEDULE RIDE').toUpperCase(): (t.scheduleNow || 'REQUEST MOTO').toUpperCase()}
-                    </Text>
+                    ?<ActivityIndicator color={C.black} />: <Text style={styles.mainBtnTxt}>🛵 {t.req?.toUpperCase() || 'REQUEST MOTO'}</Text>
                     }
                   </TouchableOpacity>
                 </ScrollView>
@@ -4997,30 +4927,49 @@ const NotificationBanner = ({
       color: C.gray, fontSize: 11, marginTop: 2
     },
     notifyBanner: {
-      position: 'absolute', top: 0, left: 12, right: 12, zIndex: 999, backgroundColor: C.card, borderRadius: 20, flexDirection: 'row', alignItems: 'center', overflow: 'hidden', borderWidth: 1, borderColor: C.border, elevation: 20, shadowColor: C.gold, shadowOffset: {
-        width: 0, height: 4
-      }, shadowOpacity: 0.3, shadowRadius: 12, paddingRight: 12
+      position: 'absolute', top: 52, left: 10, right: 10, zIndex: 9999,
+      backgroundColor: C.card,
+      borderRadius: 20, flexDirection: 'row', alignItems: 'center',
+      overflow: 'hidden', borderWidth: 1.5, borderColor: C.border,
+      elevation: 28,
+      shadowColor: '#000', shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.5, shadowRadius: 20,
+      paddingRight: 10, minHeight: 72,
     },
     notifyAccent: {
-      width: 5, alignSelf: 'stretch', backgroundColor: C.gold
+      width: 4, alignSelf: 'stretch',
     },
     notifyLogoWrap: {
-      width: 38, height: 38, borderRadius: 19, backgroundColor: C.goldDim, borderWidth: 1, borderColor: C.border, justifyContent: 'center', alignItems: 'center', marginLeft: 10, marginVertical: 12
+      width: 40, height: 40, borderRadius: 20,
+      borderWidth: 1.5, justifyContent: 'center', alignItems: 'center',
+      marginLeft: 10, marginVertical: 12,
     },
     notifyLogoTxt: {
-      color: C.gold, fontWeight: '900', fontSize: 11, letterSpacing: 1
+      fontWeight: '900', fontSize: 11, letterSpacing: 1,
     },
     notifyContent: {
-      flex: 1, paddingLeft: 10, paddingVertical: 12
+      flex: 1, paddingLeft: 10, paddingVertical: 10,
     },
     notifyTitle: {
-      color: C.white, fontWeight: '900', fontSize: 13, letterSpacing: 0.5
+      color: C.white, fontWeight: '900', fontSize: 13, letterSpacing: 0.4,
     },
     notifyBody: {
-      color: C.gray, fontSize: 11, marginTop: 2
+      color: C.gray, fontSize: 11, marginTop: 3, lineHeight: 15,
     },
     notifyIcon: {
-      fontSize: 20, marginLeft: 6
+      fontSize: 22, marginLeft: 4,
+    },
+    notifyProgressTrack: {
+      position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5,
+      backgroundColor: 'rgba(255,255,255,0.06)',
+    },
+    notifyProgressBar: {
+      height: 2.5, borderRadius: 2,
+    },
+    notifyDragHandle: {
+      position: 'absolute', top: 5, left: '50%', marginLeft: -16,
+      width: 32, height: 3, borderRadius: 2,
+      backgroundColor: 'rgba(255,255,255,0.12)',
     },
     modalBg: {
       flex: 1, backgroundColor: 'rgba(0,0,0,0.88)', justifyContent: 'center', padding: 20

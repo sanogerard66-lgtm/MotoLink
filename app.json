@@ -10,23 +10,19 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#0A0A0A"
     },
-
     "assetBundlePatterns": [
       "**/*"
     ],
-
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#0A0A0A",
       "translucent": true
     },
-
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gerarddev.motolink",
@@ -47,7 +43,6 @@
         "aps-environment": "production"
       }
     },
-
     "android": {
       "package": "com.gerarddev.motolink",
       "versionCode": 2,
@@ -76,7 +71,6 @@
       ],
       "googleServicesFile": "./google-services.json"
     },
-
     "web": {
       "bundler": "metro",
       "output": "single",
@@ -96,7 +90,6 @@
         "disableServiceWorker": false
       }
     },
-
     "plugins": [
       [
         "expo-notifications",
@@ -104,7 +97,9 @@
           "icon": "./assets/notification-icon.png",
           "color": "#D4AF37",
           "defaultChannel": "motolink-default",
-          "sounds": ["./assets/sounds/notification.wav"],
+          "sounds": [
+            "./assets/sounds/notification.wav"
+          ],
           "enableBackgroundRemoteNotifications": true
         }
       ],
@@ -189,16 +184,15 @@
       [
         "expo-secure-store",
         {}
-      ]
+      ],
+      "react-native-quick-crypto"
     ],
-
     "updates": {
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 3000,
       "url": "https://u.expo.dev/876ad48e-7a98-47a9-be9f-58430b2c7577"
     },
-
     "extra": {
       "eas": {
         "projectId": "876ad48e-7a98-47a9-be9f-58430b2c7577"
@@ -207,9 +201,7 @@
         "origin": false
       }
     },
-
     "owner": "gerarddev",
-
     "experiments": {
       "typedRoutes": false,
       "baseUrl": ""
