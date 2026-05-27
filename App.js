@@ -144,11 +144,13 @@ if (!IS_EXPO_GO) {
   Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK).catch(() => {});
 }
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: !IS_EXPO_GO,
-  }),
-});
+if (Platform.OS !== 'web') {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: !IS_EXPO_GO,
+    }),
+  });
+}
 
 // ══════════════════════════════════════════════
 // 2. DESIGN TOKENS
@@ -2748,8 +2750,9 @@ const NotificationBanner = ({ data, onHide }) => {
         }
         return false;
       };
-      const h = BackHandler.addEventListener('hardwareBackPress', onBack);
-      return ()=>h.remove();
+     if (Platform.OS === 'web') return;
+const h = BackHandler.addEventListener('hardwareBackPress', onBack);
+return () => h.remove();
     },
       [sosModal,
         paymentModal,
@@ -3251,6 +3254,7 @@ const NotificationBanner = ({ data, onHide }) => {
     // ══════════════════════════════════════════
     useEffect(() => {
       if (state.step !== 'app') return;
+       if (Platform.OS === 'web') return;
       let sub;
       let gpsOkShown = false;
       (async () => {

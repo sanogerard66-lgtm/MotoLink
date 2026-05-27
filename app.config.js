@@ -1,0 +1,219 @@
+const IS_WEB = process.env.EXPO_PUBLIC_PLATFORM === 'web';
+
+module.exports = {
+  expo: {
+    name: "MotoLink",
+    slug: "motolink",
+    scheme: "motolink",
+    version: "2.0.0",
+    runtimeVersion: {
+      policy: "sdkVersion"
+    },
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    userInterfaceStyle: "dark",
+    splash: {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#0A0A0A"
+    },
+    assetBundlePatterns: ["**/*"],
+    androidStatusBar: {
+      barStyle: "light-content",
+      backgroundColor: "#0A0A0A",
+      translucent: true
+    },
+    ios: {
+      supportsTablet: false,
+      bundleIdentifier: "com.gerarddev.motolink",
+      buildNumber: "1",
+      infoPlist: {
+        NSLocationWhenInUseUsageDescription:
+          "MotoLink needs your location to show nearby drivers and track your ride.",
+        NSLocationAlwaysAndWhenInUseUsageDescription:
+          "MotoLink needs background location so drivers can track the route during an active trip.",
+        NSLocationAlwaysUsageDescription:
+          "MotoLink needs background location so drivers can track the route during an active trip.",
+        NSCameraUsageDescription:
+          "MotoLink uses your camera to capture delivery confirmation photos.",
+        NSPhotoLibraryUsageDescription:
+          "MotoLink accesses your photos to update your profile picture.",
+        UIBackgroundModes: ["location", "fetch", "remote-notification"]
+      },
+      entitlements: {
+        "aps-environment": "production"
+      }
+    },
+    android: {
+      package: "com.gerarddev.motolink",
+      versionCode: 2,
+      adaptiveIcon: {
+        foregroundImage: "./assets/adaptive-icon.png",
+        monochromeImage: "./assets/adaptive-icon.png",
+        backgroundColor: "#0A0A0A"
+      },
+      softwareKeyboardLayoutMode: "pan",
+      allowBackup: false,
+      permissions: [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.INTERNET",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.VIBRATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ],
+      googleServicesFile: "./google-services.json"
+    },
+    web: {
+      bundler: "metro",
+      output: "single",
+      favicon: "./assets/favicon.png",
+      name: "MotoLink",
+      shortName: "MotoLink",
+      description: "The Future of Ride-Hailing in Rwanda",
+      themeColor: "#D4AF37",
+      backgroundColor: "#0A0A0A",
+      lang: "en",
+      scope: "/",
+      orientation: "portrait",
+      display: "standalone",
+      startUrl: "/",
+      preferRelatedApplications: false,
+      dangerous: {
+        disableServiceWorker: false
+      }
+    },
+    plugins: [
+      [
+        "expo-notifications",
+        {
+          icon: "./assets/notification-icon.png",
+          color: "#D4AF37",
+          defaultChannel: "motolink-default",
+          sounds: ["./assets/sounds/notification.wav"],
+          enableBackgroundRemoteNotifications: true
+        }
+      ],
+      [
+        "expo-location",
+        {
+          locationAlwaysAndWhenInUsePermission:
+            "MotoLink needs location access to show nearby drivers and track your active ride.",
+          locationAlwaysPermission:
+            "MotoLink needs background location so your driver can navigate to you during an active trip.",
+          locationWhenInUsePermission:
+            "MotoLink needs location access to find you and connect you with drivers.",
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
+          isAndroidForegroundServiceEnabled: true
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          cameraPermission:
+            "MotoLink uses your camera to take delivery confirmation photos.",
+          microphonePermission: false,
+          recordAudioAndroid: false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          photosPermission:
+            "MotoLink accesses your photos so you can update your profile picture.",
+          cameraPermission:
+            "MotoLink uses your camera to capture delivery confirmation photos."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          ios: {
+            deploymentTarget: "16.4",
+            useFrameworks: "static",
+            newArchEnabled: true
+          },
+          android: {
+            minSdkVersion: 24,
+            targetSdkVersion: 34,
+            compileSdkVersion: 34,
+            buildToolsVersion: "34.0.0",
+            kotlinVersion: "1.9.24",
+            newArchEnabled: true,
+            enableProguardInReleaseBuilds: true,
+            enableShrinkResourcesInReleaseBuilds: true
+          }
+        }
+      ],
+      "expo-font",
+      ["expo-secure-store", {}],
+
+      // ── Native-only plugins — skipped on web build ──────────────────────
+      ...(!IS_WEB
+        ? [
+            [
+              "react-native-android-widget",
+              {
+                widgets: [
+                  {
+                    name: "PassengerWidget",
+                    label: "MotoLink Passenger",
+                    description: "Active trip status and wallet balance",
+                    minWidth: "180dp",
+                    minHeight: "110dp",
+                    targetCellWidth: 3,
+                    targetCellHeight: 2,
+                    updatePeriodMillis: 1800000,
+                    previewImage: "./assets/icon.png",
+                    resizeMode: "horizontal|vertical"
+                  },
+                  {
+                    name: "DriverWidget",
+                    label: "MotoLink Driver",
+                    description: "Earnings today and active job status",
+                    minWidth: "180dp",
+                    minHeight: "110dp",
+                    targetCellWidth: 3,
+                    targetCellHeight: 2,
+                    updatePeriodMillis: 1800000,
+                    previewImage: "./assets/icon.png",
+                    resizeMode: "horizontal|vertical"
+                  }
+                ]
+              }
+            ],
+            "react-native-quick-crypto"
+          ]
+        : [])
+    ],
+    updates: {
+      enabled: true,
+      checkAutomatically: "ON_LOAD",
+      fallbackToCacheTimeout: 3000,
+      url: "https://u.expo.dev/876ad48e-7a98-47a9-be9f-58430b2c7577"
+    },
+    extra: {
+      eas: {
+        projectId: "876ad48e-7a98-47a9-be9f-58430b2c7577"
+      },
+      router: {
+        origin: false
+      }
+    },
+    owner: "gerarddev",
+    experiments: {
+      typedRoutes: false,
+      baseUrl: ""
+    }
+  }
+};
+
