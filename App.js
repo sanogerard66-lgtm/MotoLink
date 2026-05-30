@@ -43,24 +43,81 @@ import {
   SafeAreaProvider,
   SafeAreaView
 } from 'react-native-safe-area-context';
-import {
-  WebView
-} from 'react-native-webview';
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
-import * as TaskManager from 'expo-task-manager';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
-import * as ImagePicker from 'expo-image-picker';
-import * as Network from 'expo-network';
-import {
-  ErrorBoundary
-} from 'react-error-boundary';
-import {
-  supabase
-} from './supabase';
+import { supabase } from './supabase';
+
+// ── Web-safe conditional imports ──────────────────────────────────────────────
+// These modules are native-only and will crash on web if imported at the top level.
+// We stub them on web and only use real implementations on native.
+
+let WebView = null;
+if (Platform.OS !== 'web') {
+  try {
+    WebView = require('react-native-webview').WebView;
+  } catch {}
+}
+
+let TaskManager = null;
+if (Platform.OS !== 'web') {
+  try {
+    TaskManager = require('expo-task-manager');
+  } catch {}
+}
+
+let Print = null;
+if (Platform.OS !== 'web') {
+  try {
+    Print = require('expo-print');
+  } catch {}
+}
+
+let Sharing = null;
+if (Platform.OS !== 'web') {
+  try {
+    Sharing = require('expo-sharing');
+  } catch {}
+}
+
+let ImagePicker = null;
+if (Platform.OS !== 'web') {
+  try {
+    ImagePicker = require('expo-image-picker');
+  } catch {}
+}
+
+let Network = null;
+if (Platform.OS !== 'web') {
+  try {
+    Network = require('expo-network');
+  } catch {}
+}
+
+// ErrorBoundary — inline implementation to avoid react-error-boundary dep issues on web
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props); this.state = {
+      error: null
+    };
+  }
+  static getDerivedStateFromError(error) {
+    return {
+      error
+    };
+  }
+  componentDidCatch() {}
+  render() {
+    if (this.state.error) {
+      return this.props.fallbackRender
+      ? this.props.fallbackRender({
+        error: this.state.error
+      }): null;
+    }
+    return this.props.children;
+  }
+}
 
 const {
   width,
@@ -133,7 +190,7 @@ const IS_EXPO_GO = Constants.appOwnership === 'expo';
 
 const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
 
-if (!IS_EXPO_GO) {
+if (!IS_EXPO_GO && Platform.OS !== 'web' && TaskManager) {
   TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, ({
     data, error
   }) => {
@@ -156,17 +213,31 @@ if (Platform.OS !== 'web') {
 // 2. DESIGN TOKENS
 // ══════════════════════════════════════════════
 const C = {
-  black: '#0A0A0A', charcoal: '#121212', card: '#1A1A1A', card2: '#222222',
-  gold: '#D4AF37', goldDim: 'rgba(212,175,55,0.15)', goldBright: '#F0D060',
-  white: '#FFFFFF', offWhite: '#E8E8E8',
-  glass: 'rgba(18,18,18,0.93)', glassLight: 'rgba(255,255,255,0.06)',
-  border: 'rgba(212,175,55,0.25)', borderFaint: 'rgba(255,255,255,0.08)',
-  red: '#FF4C4C', redDim: 'rgba(255,76,76,0.15)',
-  green: '#2ECC71', greenDim: 'rgba(46,204,113,0.15)',
-  blue: '#3498DB', blueDim: 'rgba(52,152,219,0.15)',
-  orange: '#F39C12', orangeDim: 'rgba(243,156,18,0.15)',
-  gray: '#A0A0A0', grayDark: '#555',
-  mtn: '#FFCC00', airtel: '#FF4444',
+  black: '#0A0A0A',
+  charcoal: '#121212',
+  card: '#1A1A1A',
+  card2: '#222222',
+  gold: '#D4AF37',
+  goldDim: 'rgba(212,175,55,0.15)',
+  goldBright: '#F0D060',
+  white: '#FFFFFF',
+  offWhite: '#E8E8E8',
+  glass: 'rgba(18,18,18,0.93)',
+  glassLight: 'rgba(255,255,255,0.06)',
+  border: 'rgba(212,175,55,0.25)',
+  borderFaint: 'rgba(255,255,255,0.08)',
+  red: '#FF4C4C',
+  redDim: 'rgba(255,76,76,0.15)',
+  green: '#2ECC71',
+  greenDim: 'rgba(46,204,113,0.15)',
+  blue: '#3498DB',
+  blueDim: 'rgba(52,152,219,0.15)',
+  orange: '#F39C12',
+  orangeDim: 'rgba(243,156,18,0.15)',
+  gray: '#A0A0A0',
+  grayDark: '#555',
+  mtn: '#FFCC00',
+  airtel: '#FF4444',
 };
 
 // ══════════════════════════════════════════════
@@ -176,25 +247,41 @@ const C = {
 const LANG = {
   en: {
     // Auth
-    welcome: 'Welcome to MotoLink', slogan: 'The Future of Ride-Hailing',
-    signIn: 'Sign In', signUp: 'Sign Up', phone: 'Phone Number',
-    pass: 'Password', confirmPass: 'Confirm Password',
-    name: 'Full Name', driver: 'Driver', pax: 'Passenger',
-    newAcc: 'New user? Join MotoLink', hasAcc: 'Already a member? Sign in',
-    passMatch: '✓ Passwords match', passMismatch: '✗ Passwords do not match',
+    welcome: 'Welcome to MotoLink',
+    slogan: 'The Future of Ride-Hailing',
+    signIn: 'Sign In',
+    signUp: 'Sign Up',
+    phone: 'Phone Number',
+    pass: 'Password',
+    confirmPass: 'Confirm Password',
+    name: 'Full Name',
+    driver: 'Driver',
+    pax: 'Passenger',
+    newAcc: 'New user? Join MotoLink',
+    hasAcc: 'Already a member? Sign in',
+    passMatch: '✓ Passwords match',
+    passMismatch: '✗ Passwords do not match',
     // App
-    driverDash: 'DRIVER DASH', myRequests: 'Your Requests',
+    driverDash: 'DRIVER DASH',
+    myRequests: 'Your Requests',
     noRequests: 'No active requests yet.',
     searchWhere: 'Where to? (e.g. Remera, Bus Park)',
     searchHint: 'Search your destination above to begin.',
     scanJobs: 'Scanning for nearby requests...',
     availJobs: 'Available Jobs',
     // Trip status
-    pending: '⏳ PENDING DRIVER', accepted: '✅ ACCEPTED',
-    sentAt: 'Sent', acceptedAt: 'Accepted', cancelledAt: 'Cancelled',
-    requestedAt: 'Requested', from: 'From', to: 'To',
+    pending: '⏳ PENDING DRIVER',
+    accepted: '✅ ACCEPTED',
+    sentAt: 'Sent',
+    acceptedAt: 'Accepted',
+    cancelledAt: 'Cancelled',
+    requestedAt: 'Requested',
+    from: 'From',
+    to: 'To',
     // Payment
-    payWith: 'Pay with', cash: '💵 Cash', momoTap: '📲 MoMo Tap',
+    payWith: 'Pay with',
+    cash: '💵 Cash',
+    momoTap: '📲 MoMo Tap',
     walletPay: '💳 Wallet',
     choosePayment: 'Choose Payment Method',
     paymentInfo: 'Driver Payment Info',
@@ -223,23 +310,37 @@ const LANG = {
     awaitingPayment: 'Awaiting passenger payment...',
     awaitingDriverConfirm: 'Awaiting driver confirmation...',
     // Profile
-    settings: 'Profile Setup', save: 'Save Profile',
-    signOut: 'Sign Out', deleteAcc: 'Delete Account',
+    settings: 'Profile Setup',
+    save: 'Save Profile',
+    signOut: 'Sign Out',
+    deleteAcc: 'Delete Account',
     // Wallet
-    wallet: 'My Wallet', topUp: 'Top Up', txHistory: 'History',
+    wallet: 'My Wallet',
+    topUp: 'Top Up',
+    txHistory: 'History',
     walletHidden: 'Wallet payments coming soon via MTN/Airtel API.',
     // Rating
-    rateTrip: 'Rate Your Trip', skipRating: 'Skip for now',
+    rateTrip: 'Rate Your Trip',
+    skipRating: 'Skip for now',
     submitRating: 'Submit Rating',
     // Misc
-    loading: 'Loading...', retry: 'Retry', close: 'Close',
-    cancel: 'Cancel', km: 'km away',
-    callDriver: '📞 Call Driver', callPassenger: '📞 Call Passenger',
-    fareLabel: 'Fare', activeJob: '🚦 Active Mission',
+    loading: 'Loading...',
+    retry: 'Retry',
+    close: 'Close',
+    cancel: 'Cancel',
+    km: 'km away',
+    callDriver: '📞 Call Driver',
+    callPassenger: '📞 Call Passenger',
+    fareLabel: 'Fare',
+    activeJob: '🚦 Active Mission',
     pickupAt: 'Pick up at',
-    cancelTrip: 'CANCEL', completeTrip: 'COMPLETE',
-    poor: '😞 Poor', fair: '😐 Fair', good: '🙂 Good',
-    great: '😊 Great', excellent: '🤩 Excellent!',
+    cancelTrip: 'CANCEL',
+    completeTrip: 'COMPLETE',
+    poor: '😞 Poor',
+    fair: '😐 Fair',
+    good: '🙂 Good',
+    great: '😊 Great',
+    excellent: '🤩 Excellent!',
     tapStar: 'Tap a star to rate',
     reviewPlaceholder: 'Leave a comment (optional)...',
     // SOS
@@ -360,6 +461,7 @@ const LANG = {
     notif_locDenied: 'Location access denied. Enable it in Settings to use MotoLink.',
     notif_locOff: 'Location services are off. Please turn on GPS.',
     notif_locGranted: '📍 Location found. Welcome to MotoLink!',
+    notif_mapPin: '📌 Destination pinned on map. Long-press anywhere to change it.',
     notif_searchFail: 'Could not find that place. Try a different search term.',
     notif_noGPS: 'Waiting for your GPS location...',
     notif_profileSaved: 'Profile saved successfully.',
@@ -379,22 +481,38 @@ const LANG = {
   },
 
   rw: {
-    welcome: 'Ikaze kuri MotoLink', slogan: 'Ikoranabuhanga mu gutwara abantu',
-    signIn: 'Injira', signUp: 'Iyandikishe', phone: 'Nomero yawe',
-    pass: 'Ijambo banga', confirmPass: 'Emeza ijambo banga',
-    name: 'Amazina yombi', driver: 'Umushoferi', pax: 'Umugenzi',
-    newAcc: 'Ntiwiyandikishije? Kora Konti', hasAcc: 'Usanzwe ufite konti? Injira',
-    passMatch: '✓ Amagambo banga ahuye', passMismatch: '✗ Ntahuye',
-    driverDash: 'IKIBAHO CY\'UMUSHOFERI', myRequests: 'Ibimurikwa byawe',
+    welcome: 'Ikaze kuri MotoLink',
+    slogan: 'Ikoranabuhanga mu gutwara abantu',
+    signIn: 'Injira',
+    signUp: 'Iyandikishe',
+    phone: 'Nomero yawe',
+    pass: 'Ijambo banga',
+    confirmPass: 'Emeza ijambo banga',
+    name: 'Amazina yombi',
+    driver: 'Umushoferi',
+    pax: 'Umugenzi',
+    newAcc: 'Ntiwiyandikishije? Kora Konti',
+    hasAcc: 'Usanzwe ufite konti? Injira',
+    passMatch: '✓ Amagambo banga ahuye',
+    passMismatch: '✗ Ntahuye',
+    driverDash: 'IKIBAHO CY\'UMUSHOFERI',
+    myRequests: 'Ibimurikwa byawe',
     noRequests: 'Nta bimurikwa bihari.',
     searchWhere: 'Urajya he? (urugero: Remera, Bus Park)',
     searchHint: 'Shakisha aho ujya hejuru gutangira.',
     scanJobs: 'Gushakisha ibikorwa...',
     availJobs: 'Imirimo Iboneka',
-    pending: '⏳ GUTEGEREZA UMUSHOFERI', accepted: '✅ BYEMEJWE',
-    sentAt: 'Itumwa', acceptedAt: 'Byemejwe', cancelledAt: 'Byahagaritswe',
-    requestedAt: 'Byasabwe', from: 'Uvuye', to: 'Ujya',
-    payWith: 'Ishura ukoresheje', cash: '💵 Amafaranga', momoTap: '📲 MoMo',
+    pending: '⏳ GUTEGEREZA UMUSHOFERI',
+    accepted: '✅ BYEMEJWE',
+    sentAt: 'Itumwa',
+    acceptedAt: 'Byemejwe',
+    cancelledAt: 'Byahagaritswe',
+    requestedAt: 'Byasabwe',
+    from: 'Uvuye',
+    to: 'Ujya',
+    payWith: 'Ishura ukoresheje',
+    cash: '💵 Amafaranga',
+    momoTap: '📲 MoMo',
     walletPay: '💳 Portofeuille',
     choosePayment: 'Hitamo Uburyo bwo Kwishura',
     paymentInfo: 'Amakuru y\'Ubwishyu bw\'Umushoferi',
@@ -420,21 +538,34 @@ const LANG = {
     driverConfirm: 'Emeza ko Wahawe Amafaranga',
     awaitingPayment: 'Gutegereza ubwishyu bw\'umugenzi...',
     awaitingDriverConfirm: 'Gutegereza kwemeza kw\'umushoferi...',
-    settings: 'Umwirondoro', save: 'Bika Umwirondoro',
-    signOut: 'Sohoka', deleteAcc: 'Siba Konti',
-    wallet: 'Imari yanjye', topUp: 'Shyiramo Amafaranga',
-    txHistory: 'Amateka', walletHidden: 'Ubwishyu bw\'imbaho buza vuba.',
-    rateTrip: 'Shyiraho Amanota', skipRating: 'Salaza',
+    settings: 'Umwirondoro',
+    save: 'Bika Umwirondoro',
+    signOut: 'Sohoka',
+    deleteAcc: 'Siba Konti',
+    wallet: 'Imari yanjye',
+    topUp: 'Shyiramo Amafaranga',
+    txHistory: 'Amateka',
+    walletHidden: 'Ubwishyu bw\'imbaho buza vuba.',
+    rateTrip: 'Shyiraho Amanota',
+    skipRating: 'Salaza',
     submitRating: 'Ohereza Amanota',
-    loading: 'Gutegereza...', retry: 'Ongera ugerageze', close: 'Funga',
-    cancel: 'Hagarika', km: 'km intera',
+    loading: 'Gutegereza...',
+    retry: 'Ongera ugerageze',
+    close: 'Funga',
+    cancel: 'Hagarika',
+    km: 'km intera',
     callDriver: '📞 Hamagara Umushoferi',
     callPassenger: '📞 Hamagara Umugenzi',
-    fareLabel: 'Igiciro', activeJob: '🚦 Akazi Gakora',
+    fareLabel: 'Igiciro',
+    activeJob: '🚦 Akazi Gakora',
     pickupAt: 'Gufata umugenzi',
-    cancelTrip: 'HAGARIKA', completeTrip: 'SOZA',
-    poor: '😞 Nabi cyane', fair: '😐 Nabi', good: '🙂 Byiza',
-    great: '😊 Byiza cyane', excellent: '🤩 Birahebeje!',
+    cancelTrip: 'HAGARIKA',
+    completeTrip: 'SOZA',
+    poor: '😞 Nabi cyane',
+    fair: '😐 Nabi',
+    good: '🙂 Byiza',
+    great: '😊 Byiza cyane',
+    excellent: '🤩 Birahebeje!',
     tapStar: 'Kanda inyenyeri gusuzuma',
     reviewPlaceholder: 'Siga igitekerezo (ntibisabwa)...',
     // SOS
@@ -492,28 +623,48 @@ const LANG = {
     referralInfo: 'Sangira kode yawe. Unguke 200 FRW buri mushoferi wiyandikisha nazo.',
     referralEarned: 'Amafaranga y\'Abakoherejwe',
     enterRefCode: 'Ufite kode yo kohereza? (si ngombwa)',
-    scheduleRide: 'Teganya Urugendo', scheduledFor: 'Teganyirijwe',
-    scheduleDate: 'Hitamo Itariki na Saa', upcomingRides: 'Inzira Ziteganyirijwe',
-    scheduleNow: 'Saba Nonaha', scheduleLater: 'Teganya Gukurikira',
-    inMinutes: 'mu', scheduledTrip: '📅 Urugendo Ruteganyirijwe',
+    scheduleRide: 'Teganya Urugendo',
+    scheduledFor: 'Teganyirijwe',
+    scheduleDate: 'Hitamo Itariki na Saa',
+    upcomingRides: 'Inzira Ziteganyirijwe',
+    scheduleNow: 'Saba Nonaha',
+    scheduleLater: 'Teganya Gukurikira',
+    inMinutes: 'mu',
+    scheduledTrip: '📅 Urugendo Ruteganyirijwe',
     preAccept: 'Emeza Urugendo Uru Mbere',
-    addStop: '+ Ongeraho Ahantu', removeStop: 'Siba', stop: 'Ahantu', stops: 'Aho Hatumiwe',
-    markReached: 'Emeza ko Wageze ✓', nextStop: 'Ahantu Hakurikira',
+    addStop: '+ Ongeraho Ahantu',
+    removeStop: 'Siba',
+    stop: 'Ahantu',
+    stops: 'Aho Hatumiwe',
+    markReached: 'Emeza ko Wageze ✓',
+    nextStop: 'Ahantu Hakurikira',
     allStopsReached: 'Wasize ahose!',
-    deliveryMode: 'Kohereza Impahurwa', rideMode: 'Urugendo',
-    packageDesc: 'Ibisobanuro by\'Impahurwa', recipientName: 'Izina ry\'Uwakiriye',
-    recipientPhone: 'Telefone y\'Uwakiriye', pickedUp: 'Emeza ko Wafashe 📦',
-    delivered: 'Emeza ko Wahaye ✓', takePhoto: 'Fata Ifoto y\'Ibikenewe',
-    deliveryStatus: 'Uko Kohereza Bigenda', pending_del: '⏳ Gutegereza Gufatwa',
-    pickedUp_del: '📦 Byafashwe', delivered_del: '✅ Byahawe',
-    business: 'Konti ya Sosiyete', joinCompany: 'Injira muri Sosiyete',
-    companyCode: 'Kode ya Sosiyete', companyName: 'Izina rya Sosiyete',
-    rdbNumber: 'Numero ya RDB', billingInvoice: 'Fagitire ya Buri Kwezi',
-    billingWallet: 'Imari ya Sosiyete', employeeRides: 'Inzira z\'Abakozi',
+    deliveryMode: 'Kohereza Impahurwa',
+    rideMode: 'Urugendo',
+    packageDesc: 'Ibisobanuro by\'Impahurwa',
+    recipientName: 'Izina ry\'Uwakiriye',
+    recipientPhone: 'Telefone y\'Uwakiriye',
+    pickedUp: 'Emeza ko Wafashe 📦',
+    delivered: 'Emeza ko Wahaye ✓',
+    takePhoto: 'Fata Ifoto y\'Ibikenewe',
+    deliveryStatus: 'Uko Kohereza Bigenda',
+    pending_del: '⏳ Gutegereza Gufatwa',
+    pickedUp_del: '📦 Byafashwe',
+    delivered_del: '✅ Byahawe',
+    business: 'Konti ya Sosiyete',
+    joinCompany: 'Injira muri Sosiyete',
+    companyCode: 'Kode ya Sosiyete',
+    companyName: 'Izina rya Sosiyete',
+    rdbNumber: 'Numero ya RDB',
+    billingInvoice: 'Fagitire ya Buri Kwezi',
+    billingWallet: 'Imari ya Sosiyete',
+    employeeRides: 'Inzira z\'Abakozi',
     monthlySpend: 'Amafaranga y\'Ukwezi',
-    leaderboard: '🏆 Urutonde rw\'Abakomeye', topDrivers: 'Abashofer Bakomeye Iki Cyumweru',
+    leaderboard: '🏆 Urutonde rw\'Abakomeye',
+    topDrivers: 'Abashofer Bakomeye Iki Cyumweru',
     yourRank: 'Aho Uri mu Rutonde',
-    offlineMode: '📡 Nta Murandasi', offlineMsg: 'Nta murandasi. Ukoresha amakuru yabitswe.',
+    offlineMode: '📡 Nta Murandasi',
+    offlineMsg: 'Nta murandasi. Ukoresha amakuru yabitswe.',
     queuedRequest: 'Isaba ryategerejwe — rizohererezwa mugihe murandasi uboneka.',
     // ── In-app notification strings ──
     notif_wrongCreds: 'Nomero ya telefone cyangwa ijambo banga si ryo. Ongera ugerageze.',
@@ -529,6 +680,7 @@ const LANG = {
     notif_locDenied: 'Kwemera aho uri byanze. Shyiraho muri Igenamiterere.',
     notif_locOff: 'Serivisi za GPS zifunze. Fungura GPS yawe.',
     notif_locGranted: '📍 Aho uri babonye. Murakaza neza kuri MotoLink!',
+    notif_mapPin: '📌 Intego yahagijwe ku ikarita. Fata igihe kirekire guhindura.',
     notif_searchFail: 'Aho washakaga ntiboneka. Gerageza amagambo ahindutse.',
     notif_noGPS: 'Gutegereza GPS yawe...',
     notif_profileSaved: 'Umwirondoro wabitswe neza.',
@@ -548,22 +700,38 @@ const LANG = {
   },
 
   fr: {
-    welcome: 'Bienvenue sur MotoLink', slogan: "L'avenir du transport",
-    signIn: 'Se Connecter', signUp: "S'inscrire", phone: 'Numéro de téléphone',
-    pass: 'Mot de passe', confirmPass: 'Confirmer le mot de passe',
-    name: 'Nom complet', driver: 'Chauffeur', pax: 'Passager',
-    newAcc: 'Nouveau? Rejoignez-nous', hasAcc: 'Déjà membre? Connectez-vous',
-    passMatch: '✓ Mots de passe identiques', passMismatch: '✗ Ne correspondent pas',
-    driverDash: 'TABLEAU DE BORD', myRequests: 'Vos Demandes',
+    welcome: 'Bienvenue sur MotoLink',
+    slogan: "L'avenir du transport",
+    signIn: 'Se Connecter',
+    signUp: "S'inscrire",
+    phone: 'Numéro de téléphone',
+    pass: 'Mot de passe',
+    confirmPass: 'Confirmer le mot de passe',
+    name: 'Nom complet',
+    driver: 'Chauffeur',
+    pax: 'Passager',
+    newAcc: 'Nouveau? Rejoignez-nous',
+    hasAcc: 'Déjà membre? Connectez-vous',
+    passMatch: '✓ Mots de passe identiques',
+    passMismatch: '✗ Ne correspondent pas',
+    driverDash: 'TABLEAU DE BORD',
+    myRequests: 'Vos Demandes',
     noRequests: 'Aucune demande active.',
     searchWhere: 'Où allez-vous? (ex: Remera, Bus Park)',
     searchHint: 'Recherchez votre destination ci-dessus.',
     scanJobs: 'Recherche de trajets...',
     availJobs: 'Trajets Disponibles',
-    pending: '⏳ EN ATTENTE', accepted: '✅ ACCEPTÉ',
-    sentAt: 'Envoyé', acceptedAt: 'Accepté', cancelledAt: 'Annulé',
-    requestedAt: 'Demandé', from: 'De', to: 'À',
-    payWith: 'Payer avec', cash: '💵 Espèces', momoTap: '📲 MoMo',
+    pending: '⏳ EN ATTENTE',
+    accepted: '✅ ACCEPTÉ',
+    sentAt: 'Envoyé',
+    acceptedAt: 'Accepté',
+    cancelledAt: 'Annulé',
+    requestedAt: 'Demandé',
+    from: 'De',
+    to: 'À',
+    payWith: 'Payer avec',
+    cash: '💵 Espèces',
+    momoTap: '📲 MoMo',
     walletPay: '💳 Portefeuille',
     choosePayment: 'Choisir le mode de paiement',
     paymentInfo: 'Infos de paiement du chauffeur',
@@ -589,21 +757,34 @@ const LANG = {
     driverConfirm: 'Confirmer la réception du paiement',
     awaitingPayment: 'En attente du paiement du passager...',
     awaitingDriverConfirm: 'En attente de confirmation du chauffeur...',
-    settings: 'Profil', save: 'Enregistrer',
-    signOut: 'Se déconnecter', deleteAcc: 'Supprimer le compte',
-    wallet: 'Mon Portefeuille', topUp: 'Recharger',
-    txHistory: 'Historique', walletHidden: 'Paiements par portefeuille bientôt disponibles.',
-    rateTrip: 'Évaluer le trajet', skipRating: 'Passer',
+    settings: 'Profil',
+    save: 'Enregistrer',
+    signOut: 'Se déconnecter',
+    deleteAcc: 'Supprimer le compte',
+    wallet: 'Mon Portefeuille',
+    topUp: 'Recharger',
+    txHistory: 'Historique',
+    walletHidden: 'Paiements par portefeuille bientôt disponibles.',
+    rateTrip: 'Évaluer le trajet',
+    skipRating: 'Passer',
     submitRating: 'Soumettre',
-    loading: 'Chargement...', retry: 'Réessayer', close: 'Fermer',
-    cancel: 'Annuler', km: 'km de distance',
+    loading: 'Chargement...',
+    retry: 'Réessayer',
+    close: 'Fermer',
+    cancel: 'Annuler',
+    km: 'km de distance',
     callDriver: '📞 Appeler le chauffeur',
     callPassenger: '📞 Appeler le passager',
-    fareLabel: 'Tarif', activeJob: '🚦 Mission Active',
+    fareLabel: 'Tarif',
+    activeJob: '🚦 Mission Active',
     pickupAt: 'Prise en charge à',
-    cancelTrip: 'ANNULER', completeTrip: 'TERMINER',
-    poor: '😞 Mauvais', fair: '😐 Passable', good: '🙂 Bien',
-    great: '😊 Très bien', excellent: '🤩 Excellent!',
+    cancelTrip: 'ANNULER',
+    completeTrip: 'TERMINER',
+    poor: '😞 Mauvais',
+    fair: '😐 Passable',
+    good: '🙂 Bien',
+    great: '😊 Très bien',
+    excellent: '🤩 Excellent!',
     tapStar: 'Appuyez sur une étoile',
     reviewPlaceholder: 'Laisser un commentaire (optionnel)...',
     // SOS
@@ -661,28 +842,48 @@ const LANG = {
     referralInfo: 'Partagez votre code. Gagnez 200 FRW pour chaque chauffeur qui s\'inscrit.',
     referralEarned: 'Gains de Parrainage',
     enterRefCode: 'Avez-vous un code de parrainage? (optionnel)',
-    scheduleRide: 'Planifier un trajet', scheduledFor: 'Prévu pour',
-    scheduleDate: 'Choisir date et heure', upcomingRides: 'Trajets à venir',
-    scheduleNow: 'Réserver maintenant', scheduleLater: 'Planifier pour plus tard',
-    inMinutes: 'dans', scheduledTrip: '📅 Trajet planifié',
+    scheduleRide: 'Planifier un trajet',
+    scheduledFor: 'Prévu pour',
+    scheduleDate: 'Choisir date et heure',
+    upcomingRides: 'Trajets à venir',
+    scheduleNow: 'Réserver maintenant',
+    scheduleLater: 'Planifier pour plus tard',
+    inMinutes: 'dans',
+    scheduledTrip: '📅 Trajet planifié',
     preAccept: 'Pré-accepter ce trajet',
-    addStop: '+ Ajouter un arrêt', removeStop: 'Supprimer', stop: 'Arrêt', stops: 'Arrêts',
-    markReached: 'Marquer comme atteint ✓', nextStop: 'Prochain arrêt',
+    addStop: '+ Ajouter un arrêt',
+    removeStop: 'Supprimer',
+    stop: 'Arrêt',
+    stops: 'Arrêts',
+    markReached: 'Marquer comme atteint ✓',
+    nextStop: 'Prochain arrêt',
     allStopsReached: 'Tous les arrêts atteints!',
-    deliveryMode: 'Livraison de colis', rideMode: 'Trajet',
-    packageDesc: 'Description du colis', recipientName: 'Nom du destinataire',
-    recipientPhone: 'Téléphone du destinataire', pickedUp: 'Marquer comme récupéré 📦',
-    delivered: 'Marquer comme livré ✓', takePhoto: 'Prendre photo de livraison',
-    deliveryStatus: 'Statut de livraison', pending_del: '⏳ En attente',
-    pickedUp_del: '📦 Récupéré', delivered_del: '✅ Livré',
-    business: 'Compte Entreprise', joinCompany: 'Rejoindre une entreprise',
-    companyCode: 'Code entreprise', companyName: 'Nom de l\'entreprise',
-    rdbNumber: 'Numéro RDB', billingInvoice: 'Facture mensuelle',
-    billingWallet: 'Portefeuille entreprise', employeeRides: 'Trajets employés',
+    deliveryMode: 'Livraison de colis',
+    rideMode: 'Trajet',
+    packageDesc: 'Description du colis',
+    recipientName: 'Nom du destinataire',
+    recipientPhone: 'Téléphone du destinataire',
+    pickedUp: 'Marquer comme récupéré 📦',
+    delivered: 'Marquer comme livré ✓',
+    takePhoto: 'Prendre photo de livraison',
+    deliveryStatus: 'Statut de livraison',
+    pending_del: '⏳ En attente',
+    pickedUp_del: '📦 Récupéré',
+    delivered_del: '✅ Livré',
+    business: 'Compte Entreprise',
+    joinCompany: 'Rejoindre une entreprise',
+    companyCode: 'Code entreprise',
+    companyName: 'Nom de l\'entreprise',
+    rdbNumber: 'Numéro RDB',
+    billingInvoice: 'Facture mensuelle',
+    billingWallet: 'Portefeuille entreprise',
+    employeeRides: 'Trajets employés',
     monthlySpend: 'Dépenses mensuelles',
-    leaderboard: '🏆 Classement hebdomadaire', topDrivers: 'Meilleurs chauffeurs cette semaine',
+    leaderboard: '🏆 Classement hebdomadaire',
+    topDrivers: 'Meilleurs chauffeurs cette semaine',
     yourRank: 'Votre classement',
-    offlineMode: '📡 Mode hors ligne', offlineMsg: 'Pas de connexion. Utilisation des données en cache.',
+    offlineMode: '📡 Mode hors ligne',
+    offlineMsg: 'Pas de connexion. Utilisation des données en cache.',
     queuedRequest: 'Demande mise en file — sera envoyée dès la reconnexion.',
     // ── In-app notification strings ──
     notif_wrongCreds: 'Numéro ou mot de passe incorrect. Veuillez réessayer.',
@@ -698,6 +899,7 @@ const LANG = {
     notif_locDenied: 'Localisation refusée. Activez-la dans les Paramètres.',
     notif_locOff: 'Services de localisation désactivés. Activez le GPS.',
     notif_locGranted: '📍 Position trouvée. Bienvenue sur MotoLink!',
+    notif_mapPin: '📌 Destination épinglée sur la carte. Appui long pour changer.',
     notif_searchFail: 'Lieu introuvable. Essayez un autre terme.',
     notif_noGPS: 'En attente de votre position GPS...',
     notif_profileSaved: 'Profil enregistré avec succès.',
@@ -858,40 +1060,101 @@ const buildUSSD = (momoType, momoNumber, merchantCode, amount) => {
 };
 
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
 // 8. SMART SEARCH ENGINE
 // ══════════════════════════════════════════════
-const searchCache = {};
+
+// AI-powered query interpreter — expands vague/local queries before geocoding
+const aiExpandQuery = async (query) => {
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 150,
+        messages: [{
+          role: 'user',
+          content: `You are a location assistant for Kigali, Rwanda. The user typed: "${query}". 
+Return ONLY a JSON object like: {"queries":["query1","query2","query3"]} 
+Generate 2-3 Nominatim-friendly search variants for this location in Kigali/Rwanda. 
+Examples: "kk15" → ["KK 15 Ave Kigali","KK 15 Avenue Kigali Rwanda"], "kbc" → ["KBC Kigali","Rwanda Broadcasting Corporation Kigali"], "remera mosque" → ["Mosque Remera Kigali","Remera Mosque Rwanda Kigali"].
+Handle: street codes (KK, KG, KN, RN numbers), landmarks, neighborhoods, short names, Kinyarwanda place names.
+Return ONLY the JSON, no other text.`
+        }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '{}';
+    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    return Array.isArray(parsed.queries) ? parsed.queries : [];
+  } catch {
+    return [];
+  }
+};
+
+const nominatimFetch = async (q, extra = '') => {
+  try {
+    const r = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + extra)}&countrycodes=rw&addressdetails=1&limit=5&dedupe=1`,
+      { headers: { 'User-Agent': 'MotoLink/1.0' } }
+    );
+    return await r.json();
+  } catch { return []; }
+};
+
 const smartSearch = async (query) => {
   const q = query.trim();
   if (q.length < 2) return [];
   const ck = q.toLowerCase();
   if (searchCache[ck]) return searchCache[ck];
+
   try {
-    const [r1,
-      r2] = await Promise.all([
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&countrycodes=rw&addressdetails=1&limit=5&dedupe=1`, {
-          headers: {
-            'User-Agent': 'MotoLink/1.0'
-          }}),
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q+', Rwanda')}&addressdetails=1&limit=6&dedupe=1`, {
-          headers: {
-            'User-Agent': 'MotoLink/1.0'
-          }}),
-      ]);
-    const [d1,
-      d2] = await Promise.all([r1.json(), r2.json()]);
+    // Round 1: standard Nominatim searches in parallel
+    const [r1, r2] = await Promise.all([
+      nominatimFetch(q),
+      nominatimFetch(q, ', Rwanda'),
+    ]);
+
     const seen = new Set();
-    const merged = [...d1,
-      ...d2].filter(p => {
-        if (seen.has(p.place_id))return false; seen.add(p.place_id); return true;
-      });
-    merged.sort((a, b)=> {
-      const al = a.display_name.toLowerCase(),
-      bl = b.display_name.toLowerCase(),
-      ql = ck; return (al.startsWith(ql)?0: 1)-(bl.startsWith(ql)?0: 1);
+    const merge = (arr) => arr.forEach(p => { if (!seen.has(p.place_id)) { seen.add(p.place_id); merged.push(p); } });
+    const merged = [];
+    merge(r1); merge(r2);
+
+    // Round 2: if fewer than 2 results, try AI-expanded queries
+    if (merged.length < 2) {
+      const aiQueries = await aiExpandQuery(q);
+      const aiResults = await Promise.all(aiQueries.map(aq => nominatimFetch(aq)));
+      aiResults.forEach(arr => merge(arr));
+    }
+
+    // Round 3: if still empty, do a free-text fallback with Kigali context
+    if (merged.length === 0) {
+      const fallback = await nominatimFetch(q + ' Kigali');
+      merge(fallback);
+    }
+
+    // Sort: exact prefix matches first
+    merged.sort((a, b) => {
+      const al = a.display_name.toLowerCase(), bl = b.display_name.toLowerCase();
+      return (al.startsWith(ck) ? 0 : 1) - (bl.startsWith(ck) ? 0 : 1);
     });
-    const results = merged.slice(0,
-      7);
+
+    // If STILL no results, return a manual entry option the user can confirm
+    if (merged.length === 0) {
+      const fallbackEntry = [{
+        place_id: 'manual_' + ck,
+        display_name: q + ', Kigali, Rwanda',
+        lat: '-1.9441',
+        lon: '30.0619',
+        address: { city: 'Kigali', country: 'Rwanda' },
+        _isManual: true,
+      }];
+      searchCache[ck] = fallbackEntry;
+      return fallbackEntry;
+    }
+
+    const results = merged.slice(0, 8);
     searchCache[ck] = results;
     return results;
   } catch {
@@ -900,9 +1163,14 @@ const smartSearch = async (query) => {
 };
 
 const buildLabel = (place) => {
+  if (place._isManual) return place.display_name;
   const a = place.address || {};
-  return a.road?`${a.road}${a.suburb?', '+a.suburb: a.city?', '+a.city: ''}`: a.neighbourhood?`${a.neighbourhood}${a.suburb?', '+a.suburb: ''}`: a.suburb?`${a.suburb}${a.city?', '+a.city: ''}`: a.village?`${a.village}${a.county?', '+a.county: ''}`: a.town?`${a.town}${a.county?', '+a.county: ''}`: a.city_district || place.display_name.split(',').slice(0,
-    2).join(',').trim();
+  return a.road ? `${a.road}${a.house_number ? ' ' + a.house_number : ''}${a.suburb ? ', ' + a.suburb : a.city ? ', ' + a.city : ''}`
+    : a.neighbourhood ? `${a.neighbourhood}${a.suburb ? ', ' + a.suburb : ''}`
+    : a.suburb ? `${a.suburb}${a.city ? ', ' + a.city : ''}`
+    : a.village ? `${a.village}${a.county ? ', ' + a.county : ''}`
+    : a.town ? `${a.town}${a.county ? ', ' + a.county : ''}`
+    : a.city_district || place.display_name.split(',').slice(0, 2).join(',').trim();
 };
 
 // ══════════════════════════════════════════════
@@ -910,7 +1178,8 @@ const buildLabel = (place) => {
 // ══════════════════════════════════════════════
 const MapComponent = ({
   myLoc,
-  targetLoc
+  targetLoc,
+  onLongPress
 }) => {
   const webViewRef = useRef(null);
   const mapReady = useRef(false);
@@ -971,8 +1240,21 @@ const MapComponent = ({
   tl.on('tileerror',function(){if(ti<tileUrls.length-1){ti++;map.removeLayer(tl);tl=mkTile(tileUrls[ti]);tl.addTo(map);}});
   var myIcon=L.divIcon({className:'',html:'<div style="position:relative;width:14px;height:14px;"><div class="pr"></div><div style="background:#D4AF37;width:14px;height:14px;border-radius:50%;border:2.5px solid #0A0A0A;box-shadow:0 0 10px rgba(212,175,55,0.9);position:relative;z-index:2;"></div></div>',iconSize:[14,14],iconAnchor:[7,7]});
   var tgIcon=L.divIcon({className:'',html:'<div style="background:#2ECC71;width:18px;height:18px;border-radius:50%;border:2.5px solid #0A0A0A;box-shadow:0 0 12px rgba(46,204,113,0.9);"></div>',iconSize:[18,18],iconAnchor:[9,9]});
+  var lpIcon=L.divIcon({className:'',html:'<div style="display:flex;flex-direction:column;align-items:center;"><div style="background:#FF4C4C;width:22px;height:22px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 14px rgba(255,76,76,0.9);display:flex;align-items:center;justify-content:center;"><span style="font-size:12px;">📌</span></div><div style="width:2px;height:10px;background:#FF4C4C;margin-top:-1px;"></div></div>',iconSize:[22,32],iconAnchor:[11,32]});
   var myMk=L.marker([${myLoc?.latitude||-1.9441},${myLoc?.longitude || 30.0619}],{icon:myIcon,zIndexOffset:1000}).addTo(map);
-  var tgMk=null,rl=null,rls=null;var init=false;
+  var tgMk=null,lpMk=null,rl=null,rls=null;var init=false;
+  // Long-press to set destination
+  var lpTimer=null;
+  map.on('mousedown touchstart',function(e){
+    var ll=e.latlng;
+    lpTimer=setTimeout(function(){
+      if(lpMk){map.removeLayer(lpMk);}
+      lpMk=L.marker([ll.lat,ll.lng],{icon:lpIcon,zIndexOffset:800}).addTo(map);
+      lpMk.bindPopup('<b style="color:#FF4C4C">📌 Long-press destination</b><br><small>'+ll.lat.toFixed(5)+', '+ll.lng.toFixed(5)+'</small>').openPopup();
+      window.ReactNativeWebView&&window.ReactNativeWebView.postMessage(JSON.stringify({type:'LONG_PRESS',lat:ll.lat,lng:ll.lng}));
+    },600);
+  });
+  map.on('mouseup touchend mousemove',function(){if(lpTimer){clearTimeout(lpTimer);lpTimer=null;}});
   function drawRoute(mla,mln,tla,tln){
   if(rls){map.removeLayer(rls);rls=null;}if(rl){map.removeLayer(rl);rl=null;}
   rls=L.polyline([[mla,mln],[tla,tln]],{color:'rgba(212,175,55,0.2)',weight:7,lineCap:'round',lineJoin:'round',interactive:false}).addTo(map);
@@ -990,6 +1272,24 @@ const MapComponent = ({
   setTimeout(function(){window.ReactNativeWebView&&window.ReactNativeWebView.postMessage(JSON.stringify({type:'MAP_READY'}));},800);
   </script></body></html>`;
 
+  // Web fallback — use OSM embed iframe since WebView is not available on web
+  if (Platform.OS === 'web') {
+    const lat = myLoc?.latitude || -1.9441;
+    const lng = myLoc?.longitude || 30.0619;
+    const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.02}%2C${lat-0.02}%2C${lng+0.02}%2C${lat+0.02}&layer=mapnik&marker=${lat}%2C${lng}`;
+    return (
+      <View style={styles.map}>
+        {React.createElement('iframe', {
+          src: mapSrc,
+          title: 'MotoLink Map',
+          style: {
+            width: '100%', height: '100%', border: 'none', backgroundColor: '#0A0A0A'
+          },
+        })}
+      </View>
+    );
+  }
+
   return (
     <WebView ref={webViewRef} originWhitelist={['*']} source={ { html }} style={styles.map}
       scrollEnabled={false} bounces={false} overScrollMode="never"
@@ -998,7 +1298,11 @@ const MapComponent = ({
         { backgroundColor: C.black }]} />}
       onMessage={e=> {
         try {
-          const m = JSON.parse(e.nativeEvent.data); if (m.type === 'MAP_READY')onReady();
+          const m = JSON.parse(e.nativeEvent.data);
+          if (m.type === 'MAP_READY') onReady();
+          if (m.type === 'LONG_PRESS' && onLongPress) {
+            onLongPress({ latitude: m.lat, longitude: m.lng });
+          }
         }catch {}
       }}
       onError={()=> {
@@ -1015,195 +1319,251 @@ const MapComponent = ({
 
 // Notification type configuration
 const NOTIF_CONFIG = {
-  ride:      { icon: '🛵', accent: C.gold,   label: 'RIDE'    },
-  accepted:  { icon: '✅', accent: C.green,  label: 'ACCEPTED' },
-  cancelled: { icon: '❌', accent: C.red,    label: 'ALERT'   },
-  completed: { icon: '🎉', accent: C.green,  label: 'DONE'    },
-  search:    { icon: '🔍', accent: C.blue,   label: 'INFO'    },
-  rated:     { icon: '⭐', accent: C.gold,   label: 'RATING'  },
-  payment:   { icon: '💰', accent: C.blue,   label: 'PAYMENT' },
-  sos:       { icon: '🚨', accent: C.red,    label: 'SOS'     },
-  error:     { icon: '⚠️', accent: C.red,    label: 'ERROR'   },
-  warning:   { icon: '⚠️', accent: C.orange, label: 'WARNING' },
-  success:   { icon: '✓',  accent: C.green,  label: 'SUCCESS' },
-  location:  { icon: '📍', accent: C.blue,   label: 'GPS'     },
-  offline:   { icon: '📡', accent: C.orange, label: 'OFFLINE' },
-  online:    { icon: '🌐', accent: C.green,  label: 'ONLINE'  },
-  wallet:    { icon: '💳', accent: C.gold,   label: 'WALLET'  },
-  default:   { icon: '🔔', accent: C.gold,   label: 'MOTOLINK'},
-};
+  ride: {
+    icon: '🛵', accent: C.gold, label: 'RIDE'
+  },
+  accepted: {
+    icon: '✅', accent: C.green, label: 'ACCEPTED'
+  },
+  cancelled: {
+    icon: '❌', accent: C.red, label: 'ALERT'
+  },
+  completed: {
+    icon: '🎉', accent: C.green, label: 'DONE'
+  },
+  search: {
+    icon: '🔍', accent: C.blue, label: 'INFO'
+  },
+  rated: {
+    icon: '⭐', accent: C.gold, label: 'RATING'
+  },
+  payment: {
+    icon: '💰', accent: C.blue, label: 'PAYMENT'
+  },
+  sos: {
+    icon: '🚨', accent: C.red, label: 'SOS'
+  },
+  error: {
+    icon: '⚠️', accent: C.red, label: 'ERROR'
+  },
+  warning: {
+    icon: '⚠️', accent: C.orange, label: 'WARNING'
+  },
+  success: {
+    icon: '✓', accent: C.green, label: 'SUCCESS'
+  },
+  location: {
+    icon: '📍', accent: C.blue, label: 'GPS'
+  },
+  offline: {
+    icon: '📡', accent: C.orange, label: 'OFFLINE'
+  },
+  online: {
+    icon: '🌐', accent: C.green, label: 'ONLINE'
+  },
+  wallet: {
+    icon: '💳', accent: C.gold, label: 'WALLET'
+  },
+  default: {
+    icon: '🔔', accent: C.gold, label: 'MOTOLINK'
+  },
+  };
 
-const NOTIF_DURATION = 4200; // ms before auto-dismiss
+  const NOTIF_DURATION = 4200; // ms before auto-dismiss
 
-const NotificationBanner = ({ data, onHide }) => {
-  const translateY = useRef(new Animated.Value(-160)).current;
-  const opacity    = useRef(new Animated.Value(0)).current;
-  const scale      = useRef(new Animated.Value(0.92)).current;
-  const progress   = useRef(new Animated.Value(1)).current;
-  const shimmerX   = useRef(new Animated.Value(-width)).current;
-  const dismissTimer = useRef(null);
-  const panY = useRef(new Animated.Value(0)).current;
+  const NotificationBanner = ({
+    data,
+    onHide
+  }) => {
+    const translateY = useRef(new Animated.Value(-160)).current;
+    const opacity = useRef(new Animated.Value(0)).current;
+    const scale = useRef(new Animated.Value(0.92)).current;
+    const progress = useRef(new Animated.Value(1)).current;
+    const shimmerX = useRef(new Animated.Value(-width)).current;
+    const dismissTimer = useRef(null);
+    const panY = useRef(new Animated.Value(0)).current;
 
-  // Swipe-up-to-dismiss pan responder
-  const pan = useRef(PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 4,
-    onPanResponderMove: (_, g) => {
-      if (g.dy < 0) panY.setValue(g.dy);
-    },
-    onPanResponderRelease: (_, g) => {
-      if (g.dy < -40 || g.vy < -0.5) {
-        // Fast swipe up — dismiss
-        clearTimeout(dismissTimer.current);
-        Animated.parallel([
-          Animated.timing(panY, { toValue: -200, duration: 220, useNativeDriver: true }),
-          Animated.timing(opacity, { toValue: 0, duration: 220, useNativeDriver: true }),
-        ]).start(() => onHide());
-      } else {
-        // Snap back
-        Animated.spring(panY, { toValue: 0, useNativeDriver: true, friction: 8 }).start();
-      }
-    },
-  })).current;
+    // Swipe-up-to-dismiss pan responder (native only)
+    const pan = useRef(Platform.OS !== 'web' ? PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 4,
+      onPanResponderMove: (_, g) => {
+        if (g.dy < 0) panY.setValue(g.dy);
+      },
+      onPanResponderRelease: (_, g) => {
+        if (g.dy < -40 || g.vy < -0.5) {
+          // Fast swipe up — dismiss
+          clearTimeout(dismissTimer.current);
+          Animated.parallel([
+            Animated.timing(panY, {
+              toValue: -200, duration: 220, useNativeDriver: true
+            }),
+            Animated.timing(opacity, {
+              toValue: 0, duration: 220, useNativeDriver: true
+            }),
+          ]).start(() => onHide());
+        } else {
+          // Snap back
+          Animated.spring(panY, {
+            toValue: 0, useNativeDriver: true, friction: 8
+          }).start();
+        }
+      },
+    }): {
+      panHandlers: {}
+    }).current;
 
-  useEffect(() => {
-    if (!data) return;
+    useEffect(() => {
+      if (!data) return;
 
-    // Reset
-    translateY.setValue(-160);
-    opacity.setValue(0);
-    scale.setValue(0.92);
-    progress.setValue(1);
-    shimmerX.setValue(-width);
-    panY.setValue(0);
-    clearTimeout(dismissTimer.current);
+      // Reset
+      translateY.setValue(-160);
+      opacity.setValue(0);
+      scale.setValue(0.92);
+      progress.setValue(1);
+      shimmerX.setValue(-width);
+      panY.setValue(0);
+      clearTimeout(dismissTimer.current);
 
-    // Entrance: spring slide-down + fade + scale
-    Animated.parallel([
-      Animated.spring(translateY, {
-        toValue: 0, useNativeDriver: true,
-        friction: 9, tension: 85,
-      }),
-      Animated.timing(opacity, {
-        toValue: 1, duration: 200, useNativeDriver: true,
-      }),
-      Animated.spring(scale, {
-        toValue: 1, useNativeDriver: true,
-        friction: 7, tension: 100,
-      }),
-    ]).start(() => {
-      // Shimmer sweep after entrance
-      Animated.timing(shimmerX, {
-        toValue: width * 2, duration: 700,
-        useNativeDriver: true,
-        easing: Easing.out(Easing.quad),
+      // Entrance: spring slide-down + fade + scale
+      Animated.parallel([
+        Animated.spring(translateY, {
+          toValue: 0, useNativeDriver: true,
+          friction: 9, tension: 85,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1, duration: 200, useNativeDriver: true,
+        }),
+        Animated.spring(scale, {
+          toValue: 1, useNativeDriver: true,
+          friction: 7, tension: 100,
+        }),
+      ]).start(() => {
+        // Shimmer sweep after entrance
+        Animated.timing(shimmerX, {
+          toValue: width * 2, duration: 700,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.quad),
+        }).start();
+      });
+
+      // Progress bar drains over NOTIF_DURATION
+      Animated.timing(progress, {
+        toValue: 0,
+        duration: NOTIF_DURATION,
+        useNativeDriver: false,
+        easing: Easing.linear,
       }).start();
+
+      // Auto-dismiss
+      dismissTimer.current = setTimeout(() => {
+        Animated.parallel([
+          Animated.timing(translateY, {
+            toValue: -160, duration: 320, useNativeDriver: true
+          }),
+          Animated.timing(opacity, {
+            toValue: 0, duration: 320, useNativeDriver: true
+          }),
+          Animated.timing(scale, {
+            toValue: 0.94, duration: 320, useNativeDriver: true
+          }),
+        ]).start(() => onHide());
+      }, NOTIF_DURATION);
+
+      return () => clearTimeout(dismissTimer.current);
+    },
+      [data]);
+
+    if (!data) return null;
+
+    const cfg = NOTIF_CONFIG[data.type] || NOTIF_CONFIG.default;
+    const accent = cfg.accent;
+
+    const progressWidth = progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0%', '100%'],
     });
 
-    // Progress bar drains over NOTIF_DURATION
-    Animated.timing(progress, {
-      toValue: 0,
-      duration: NOTIF_DURATION,
-      useNativeDriver: false,
-      easing: Easing.linear,
-    }).start();
-
-    // Auto-dismiss
-    dismissTimer.current = setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(translateY, { toValue: -160, duration: 320, useNativeDriver: true }),
-        Animated.timing(opacity, { toValue: 0, duration: 320, useNativeDriver: true }),
-        Animated.timing(scale, { toValue: 0.94, duration: 320, useNativeDriver: true }),
-      ]).start(() => onHide());
-    }, NOTIF_DURATION);
-
-    return () => clearTimeout(dismissTimer.current);
-  }, [data]);
-
-  if (!data) return null;
-
-  const cfg = NOTIF_CONFIG[data.type] || NOTIF_CONFIG.default;
-  const accent = cfg.accent;
-
-  const progressWidth = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0%', '100%'],
-  });
-
-  return (
-    <Animated.View
-      style={[
-        styles.notifyBanner,
-        {
-          transform: [
-            { translateY: Animated.add(translateY, panY) },
-            { scale },
-          ],
-          opacity,
-          borderColor: accent + '40',
-          shadowColor: accent,
-        },
-      ]}
-      {...pan.panHandlers}
-    >
-      {/* Left accent stripe */}
-      <View style={[styles.notifyAccent, { backgroundColor: accent }]} />
-
-      {/* ML Logo mark */}
-      <View style={[styles.notifyLogoWrap, { backgroundColor: accent + '20', borderColor: accent + '50' }]}>
-        <Text style={[styles.notifyLogoTxt, { color: accent }]}>ML</Text>
-      </View>
-
-      {/* Content */}
-      <View style={styles.notifyContent}>
-        {/* Type label + title row */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-          <View style={{ backgroundColor: accent + '22', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1 }}>
-            <Text style={{ color: accent, fontSize: 8, fontWeight: '900', letterSpacing: 1 }}>{cfg.label}</Text>
-          </View>
-          <Text style={styles.notifyTitle} numberOfLines={1}>{data.title}</Text>
-        </View>
-        <Text style={styles.notifyBody} numberOfLines={2}>{data.body}</Text>
-      </View>
-
-      {/* Icon */}
-      <View style={{ paddingRight: 4, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ fontSize: 22 }}>{cfg.icon}</Text>
-      </View>
-
-      {/* Shimmer overlay */}
+    return (
       <Animated.View
-        pointerEvents="none"
-        style={{
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          borderRadius: 20, overflow: 'hidden',
-        }}
+        style={[
+          styles.notifyBanner,
+          {
+            transform: [{ translateY: Animated.add(translateY, panY) }, { scale }],
+            opacity,
+            borderColor: accent + '40',
+            shadowColor: accent,
+          },
+        ]}
+        {...pan.panHandlers}
       >
+        {/* Tap-to-dismiss on web */}
+        {Platform.OS === 'web' && (
+          <TouchableOpacity
+            onPress={() => { clearTimeout(dismissTimer.current); onHide(); }}
+            style={{ position: 'absolute', top: 6, right: 10, zIndex: 2, padding: 4 }}
+          >
+            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>✕</Text>
+          </TouchableOpacity>
+        )}
+        {/* Left accent stripe */}
+        <View style={[styles.notifyAccent, { backgroundColor: accent }]} />
+
+        {/* ML Logo mark */}
+        <View style={[styles.notifyLogoWrap, { backgroundColor: accent + '20', borderColor: accent + '50' }]}>
+          <Text style={[styles.notifyLogoTxt, { color: accent }]}>ML</Text>
+        </View>
+
+        {/* Content */}
+        <View style={styles.notifyContent}>
+          {/* Type label + title row */}
+          <View style={ { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+            <View style={ { backgroundColor: accent + '22', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1 }}>
+              <Text style={ { color: accent, fontSize: 8, fontWeight: '900', letterSpacing: 1 }}>{cfg.label}</Text>
+            </View>
+            <Text style={styles.notifyTitle} numberOfLines={1}>{data.title}</Text>
+          </View>
+          <Text style={styles.notifyBody} numberOfLines={2}>{data.body}</Text>
+        </View>
+
+        {/* Icon */}
+        <View style={ { paddingRight: 4, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={ { fontSize: 22 }}>{cfg.icon}</Text>
+        </View>
+
+        {/* Shimmer overlay */}
         <Animated.View
-          style={{
-            position: 'absolute', top: 0, bottom: 0, width: 80,
-            transform: [{ translateX: shimmerX }],
-            backgroundColor: 'rgba(255,255,255,0.07)',
-            skewX: '-20deg',
+          pointerEvents="none"
+          style={ {
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+            borderRadius: 20, overflow: 'hidden',
           }}
-        />
+          >
+          <Animated.View
+            style={ {
+              position: 'absolute', top: 0, bottom: 0, width: 80,
+              transform: [{ translateX: shimmerX }],
+              backgroundColor: 'rgba(255,255,255,0.07)',
+              skewX: '-20deg',
+            }}
+            />
+        </Animated.View>
+
+        {/* Progress bar at bottom */}
+        <View style={styles.notifyProgressTrack}>
+          <Animated.View
+            style={[
+              styles.notifyProgressBar,
+              { width: progressWidth, backgroundColor: accent },
+            ]}
+            />
+        </View>
+
+        {/* Swipe hint */}
+        <View style={styles.notifyDragHandle} />
       </Animated.View>
-
-      {/* Progress bar at bottom */}
-      <View style={styles.notifyProgressTrack}>
-        <Animated.View
-          style={[
-            styles.notifyProgressBar,
-            { width: progressWidth, backgroundColor: accent },
-          ]}
-        />
-      </View>
-
-      {/* Swipe hint */}
-      <View style={styles.notifyDragHandle} />
-    </Animated.View>
-  );
-};
+    );
+  };
 
   // ══════════════════════════════════════════════
   // 11. RATING MODAL
@@ -1567,6 +1927,20 @@ const NotificationBanner = ({ data, onHide }) => {
   };
 
   const shareReceiptPDF = async (trip, role) => {
+    if (Platform.OS === 'web') {
+      // On web, open the receipt HTML in a new tab for printing
+      try {
+        const html = generateReceiptHTML(trip, role);
+        const blob = new Blob([html], {
+          type: 'text/html'
+        });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      } catch {
+        showBanner('MotoLink', 'Could not generate receipt.', 'error');
+      }
+      return;
+    }
     try {
       const html = generateReceiptHTML(trip, role);
       const {
@@ -1885,123 +2259,124 @@ const NotificationBanner = ({ data, onHide }) => {
                     <Text style={styles.emptyText}>{t.noHistory}</Text>
                   </View>
                 )}
-                const isExpanded   = expandedId === trip.id;
-                const commission   = trip.commission || Math.round((trip.price||0)*0.10);
-                const driverEarn   = trip.driver_earnings || ((trip.price||0)-commission);
-                const myRating     = role==='driver' ? trip.driver_rating : trip.passenger_rating;
-                const isCompleted  = trip.status === 'completed';
+                {trips.map(trip => {
+                  const isExpanded = expandedId === trip.id;
+                  const commission = trip.commission || Math.round((trip.price || 0)*0.10);
+                  const driverEarn = trip.driver_earnings || ((trip.price || 0)-commission);
+                  const myRating = role === 'driver' ? trip.driver_rating: trip.passenger_rating;
+                  const isCompleted = trip.status === 'completed';
 
-                return (
-                <TouchableOpacity key={trip.id} style={styles.historyCard}
-                  onPress={()=>setExpandedId(isExpanded ? null: trip.id)} activeOpacity={0.85}>
-                  {/* Card top row */}
-                  <View style={ { flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-                    <View style={[styles.statusPill, {
-                      backgroundColor: isCompleted?C.greenDim: C.redDim,
-                      marginTop: 0, paddingVertical: 3, paddingHorizontal: 8,
-                    }]}>
-                      <Text style={[styles.statusPillTxt, { color: isCompleted?C.green: C.red }]}>
-                        {isCompleted?'✓': '✕'}
-                      </Text>
-                    </View>
-                    <View style={ { flex: 1 }}>
-                      <Text style={ { color: C.gold, fontWeight: '900', fontSize: 16 }}>
-                        {fmtFRW(trip.price)}
-                      </Text>
-                      <Text style={ { color: C.gray, fontSize: 11, marginTop: 1 }}>
-                        {fmtDate(trip.created_at)} · {fmtTime(trip.created_at)}
-                      </Text>
-                    </View>
-                    {role === 'driver' && isCompleted && (
-                      <Text style={ { color: C.green, fontWeight: '800', fontSize: 13 }}>
-                        +{fmtFRW(driverEarn)}
-                      </Text>
-                    )}
-                    <Text style={ { color: C.grayDark, fontSize: 16 }}>{isExpanded?'▲': '▼'}</Text>
-                  </View>
-
-                  {/* Route */}
-                  <View style={[styles.routeBlock, { marginTop: 10 }]}>
-                    <View style={styles.routeDot} />
-                    <Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>
-                      {trip.pickup_address}
-                    </Text>
-                  </View>
-                  <View style={styles.routeLine_} />
-                  <View style={styles.routeBlock}>
-                    <View style={[styles.routeDot, { backgroundColor: C.green }]} />
-                    <Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>
-                      {trip.destination_address}
-                    </Text>
-                  </View>
-
-                  {/* Expanded receipt view */}
-                  {isExpanded && (
-                    <View style={styles.receiptExpanded}>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{t.tripId}</Text>
-                        <Text style={styles.receiptValue} numberOfLines={1}>
-                          {trip.id?.substring(0, 16)}...
-                        </Text>
-                      </View>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{role === 'passenger'?t.driver: t.pax}</Text>
-                        <Text style={styles.receiptValue}>
-                          {role === 'passenger'?(trip.driver_name || '—'): (trip.passenger_name || '—')}
-                        </Text>
-                      </View>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{t.payWith}</Text>
-                        <Text style={styles.receiptValue}>
-                          {trip.payment_method === 'momo'?'📲 MTN MoMo': '💵 Cash'}
-                        </Text>
-                      </View>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{t.fareLabel}</Text>
-                        <Text style={[styles.receiptValue, { color: C.gold, fontWeight: '900' }]}>
-                          {fmtFRW(trip.price)}
-                        </Text>
-                      </View>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{t.commission}</Text>
-                        <Text style={[styles.receiptValue, { color: C.red }]}>
-                          -{fmtFRW(commission)}
-                        </Text>
-                      </View>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{t.driverEarnings}</Text>
-                        <Text style={[styles.receiptValue, { color: C.green }]}>
-                          {fmtFRW(driverEarn)}
-                        </Text>
-                      </View>
-                      <View style={styles.receiptRow}>
-                        <Text style={styles.receiptLabel}>{t.ratingGiven}</Text>
-                        <Text style={styles.receiptValue}>
-                          {myRating ? '★'.repeat(myRating)+'☆'.repeat(5-myRating): t.notRated}
-                        </Text>
-                      </View>
-
-                      {/* Share buttons */}
-                      <View style={ { flexDirection: 'row', gap: 10, marginTop: 14 }}>
-                        <TouchableOpacity
-                          style={[styles.receiptShareBtn, { borderColor: C.green }]}
-                          onPress={()=>shareReceiptWhatsApp(trip, role)}>
-                          <Text style={[styles.receiptShareTxt, { color: C.green }]}>
-                            📲 {t.shareWhatsApp}
+                  return (
+                    <TouchableOpacity key={trip.id} style={styles.historyCard}
+                      onPress={()=>setExpandedId(isExpanded ? null: trip.id)} activeOpacity={0.85}>
+                      {/* Card top row */}
+                      <View style={ { flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
+                        <View style={[styles.statusPill, {
+                          backgroundColor: isCompleted?C.greenDim: C.redDim,
+                          marginTop: 0, paddingVertical: 3, paddingHorizontal: 8,
+                        }]}>
+                          <Text style={[styles.statusPillTxt, { color: isCompleted?C.green: C.red }]}>
+                            {isCompleted?'✓': '✕'}
                           </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={[styles.receiptShareBtn, { borderColor: C.gold }]}
-                          onPress={()=>shareReceiptPDF(trip, role)}>
-                          <Text style={[styles.receiptShareTxt, { color: C.gold }]}>
-                            📄 {t.downloadPDF}
+                        </View>
+                        <View style={ { flex: 1 }}>
+                          <Text style={ { color: C.gold, fontWeight: '900', fontSize: 16 }}>
+                            {fmtFRW(trip.price)}
                           </Text>
-                        </TouchableOpacity>
+                          <Text style={ { color: C.gray, fontSize: 11, marginTop: 1 }}>
+                            {fmtDate(trip.created_at)} · {fmtTime(trip.created_at)}
+                          </Text>
+                        </View>
+                        {role === 'driver' && isCompleted && (
+                          <Text style={ { color: C.green, fontWeight: '800', fontSize: 13 }}>
+                            +{fmtFRW(driverEarn)}
+                          </Text>
+                        )}
+                        <Text style={ { color: C.grayDark, fontSize: 16 }}>{isExpanded?'▲': '▼'}</Text>
                       </View>
-                    </View>
-                  )}
-                </TouchableOpacity>
-                );
+
+                      {/* Route */}
+                      <View style={[styles.routeBlock, { marginTop: 10 }]}>
+                        <View style={styles.routeDot} />
+                        <Text style={ { color: C.gray, fontSize: 12, flex: 1 }} numberOfLines={1}>
+                          {trip.pickup_address}
+                        </Text>
+                      </View>
+                      <View style={styles.routeLine_} />
+                      <View style={styles.routeBlock}>
+                        <View style={[styles.routeDot, { backgroundColor: C.green }]} />
+                        <Text style={ { color: C.offWhite, fontSize: 12, flex: 1 }} numberOfLines={1}>
+                          {trip.destination_address}
+                        </Text>
+                      </View>
+
+                      {/* Expanded receipt view */}
+                      {isExpanded && (
+                        <View style={styles.receiptExpanded}>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{t.tripId}</Text>
+                            <Text style={styles.receiptValue} numberOfLines={1}>
+                              {trip.id?.substring(0, 16)}...
+                            </Text>
+                          </View>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{role === 'passenger'?t.driver: t.pax}</Text>
+                            <Text style={styles.receiptValue}>
+                              {role === 'passenger'?(trip.driver_name || '—'): (trip.passenger_name || '—')}
+                            </Text>
+                          </View>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{t.payWith}</Text>
+                            <Text style={styles.receiptValue}>
+                              {trip.payment_method === 'momo'?'📲 MTN MoMo': '💵 Cash'}
+                            </Text>
+                          </View>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{t.fareLabel}</Text>
+                            <Text style={[styles.receiptValue, { color: C.gold, fontWeight: '900' }]}>
+                              {fmtFRW(trip.price)}
+                            </Text>
+                          </View>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{t.commission}</Text>
+                            <Text style={[styles.receiptValue, { color: C.red }]}>
+                              -{fmtFRW(commission)}
+                            </Text>
+                          </View>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{t.driverEarnings}</Text>
+                            <Text style={[styles.receiptValue, { color: C.green }]}>
+                              {fmtFRW(driverEarn)}
+                            </Text>
+                          </View>
+                          <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>{t.ratingGiven}</Text>
+                            <Text style={styles.receiptValue}>
+                              {myRating ? '★'.repeat(myRating)+'☆'.repeat(5-myRating): t.notRated}
+                            </Text>
+                          </View>
+
+                          {/* Share buttons */}
+                          <View style={ { flexDirection: 'row', gap: 10, marginTop: 14 }}>
+                            <TouchableOpacity
+                              style={[styles.receiptShareBtn, { borderColor: C.green }]}
+                              onPress={()=>shareReceiptWhatsApp(trip, role)}>
+                              <Text style={[styles.receiptShareTxt, { color: C.green }]}>
+                                📲 {t.shareWhatsApp}
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={[styles.receiptShareBtn, { borderColor: C.gold }]}
+                              onPress={()=>shareReceiptPDF(trip, role)}>
+                              <Text style={[styles.receiptShareTxt, { color: C.gold }]}>
+                                📄 {t.downloadPDF}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  );
                 })}
 
                 {/* Load more */}
@@ -2199,7 +2574,7 @@ const NotificationBanner = ({ data, onHide }) => {
   }) => {
     const pulse = useRef(new Animated.Value(1)).current;
     const pan = useRef(new Animated.ValueXY({
-      x: 20, y: height-210
+      x: width - 76, y: height * 0.45
     })).current;
     const isDrag = useRef(false);
     const lastTap = useRef(0);
@@ -2217,7 +2592,7 @@ const NotificationBanner = ({ data, onHide }) => {
       ).start();
     }, []);
 
-    const panResponder = useRef(PanResponder.create({
+    const panResponder = useRef(Platform.OS !== 'web' ? PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
@@ -2251,11 +2626,13 @@ const NotificationBanner = ({ data, onHide }) => {
         // Only fire onPress if it wasn't a drag
         if (!isDrag.current) onPress();
       },
-    })).current;
+    }): {
+      panHandlers: {}
+    }).current;
 
     return (
       <Animated.View
-        style={[styles.sosBtn, { left: pan.x, top: pan.y }]}
+        style={[styles.sosBtn, { left: pan.x, top: pan.y, zIndex: 8888, elevation: 30 }]}
         {...panResponder.panHandlers}
         >
         <Animated.View style={[styles.sosPulse, { transform: [{ scale: pulse }] }]} />
@@ -2571,7 +2948,7 @@ const NotificationBanner = ({ data, onHide }) => {
 
     const menuAnim = useRef(new Animated.Value(-900)).current;
     const searchTimer = useRef(null);
-    const appStateRef = useRef(AppState.currentState);
+    const appStateRef = useRef(Platform.OS !== 'web' ? AppState.currentState: 'active');
 
     // ─── Banner helper ───────────────────────
     const showBanner = useCallback((title, body, type = 'default')=> {
@@ -2712,6 +3089,7 @@ const NotificationBanner = ({ data, onHide }) => {
 
     // ─── App foreground refresh ──────────────
     useEffect(()=> {
+      if (Platform.OS === 'web') return;
       const sub = AppState.addEventListener('change',
         next=> {
           if (appStateRef.current.match(/inactive|background/) && next === 'active' && state.session) syncData();
@@ -2750,9 +3128,9 @@ const NotificationBanner = ({ data, onHide }) => {
         }
         return false;
       };
-     if (Platform.OS === 'web') return;
-const h = BackHandler.addEventListener('hardwareBackPress', onBack);
-return () => h.remove();
+      if (Platform.OS === 'web') return;
+      const h = BackHandler.addEventListener('hardwareBackPress', onBack);
+      return () => h.remove();
     },
       [sosModal,
         paymentModal,
@@ -2783,7 +3161,10 @@ return () => h.remove();
       let wasOffline = false;
       const checkNet = async () => {
         try {
-          const net = await Network.getNetworkStateAsync();
+          const net = Network ? await Network.getNetworkStateAsync(): {
+            isConnected: true,
+            isInternetReachable: true
+          };
           const online = !!(net.isConnected && net.isInternetReachable);
           const prevOnline = isOnline;
           setIsOnline(online);
@@ -2811,7 +3192,9 @@ return () => h.remove();
       checkNet();
       const interval = setInterval(checkNet, 10000);
       return () => clearInterval(interval);
-    }, [offlineQueue, t]);
+    },
+      [offlineQueue,
+        t]);
 
     // ─── Restore offline queue from storage ──
     useEffect(() => {
@@ -2932,14 +3315,27 @@ return () => h.remove();
       if (!isOnline) return showBanner(t.offlineMode, t.notif_noInternet, 'offline');
       setAuthLoading(true);
       const np = normalisePhone(phone);
-      const { data, error } = await supabase
-        .from('profiles').select('*').eq('phone', np).eq('password', password).single();
+      const {
+        data,
+        error
+      } = await supabase
+      .from('profiles').select('*').eq('phone', np).eq('password', password).single();
       setAuthLoading(false);
       if (error || !data) {
         showBanner(t.signIn, t.notif_wrongCreds, 'error');
       } else {
-        dispatch({ type: 'SET_SESSION', p: { session: { user: { id: data.id, phone: np } }, profile: data } });
-        dispatch({ type: 'SET_ROLE', p: data.role });
+        dispatch( {
+          type: 'SET_SESSION', p: {
+            session: {
+              user: {
+                id: data.id, phone: np
+              }
+            }, profile: data
+          }
+        });
+        dispatch( {
+          type: 'SET_ROLE', p: data.role
+        });
         showBanner('MotoLink 🛵', `${t.welcome}, ${data.name}!`, 'success');
       }
     };
@@ -2955,7 +3351,9 @@ return () => h.remove();
         return showBanner(t.offlineMode, t.notif_noInternet, 'offline');
       setAuthLoading(true);
       const np = normalisePhone(phone);
-      const { data: ex } = await supabase.from('profiles').select('id').eq('phone', np).single();
+      const {
+        data: ex
+      } = await supabase.from('profiles').select('id').eq('phone', np).single();
       if (ex) {
         setAuthLoading(false);
         return showBanner('MotoLink', t.notif_phoneExists, 'warning');
@@ -3009,24 +3407,40 @@ return () => h.remove();
       } else {
         // Credit referrer bonus
         if (referredById) {
-          const { data: referrer } = await supabase.from('profiles')
-            .select('wallet_balance, referral_earnings').eq('id', referredById).single();
+          const {
+            data: referrer
+          } = await supabase.from('profiles')
+          .select('wallet_balance, referral_earnings').eq('id', referredById).single();
           if (referrer) {
             const newBal = (referrer.wallet_balance || 0) + 200;
             const newRef = (referrer.referral_earnings || 0) + 200;
-            await supabase.from('profiles').update({ wallet_balance: newBal, referral_earnings: newRef }).eq('id', referredById);
+            await supabase.from('profiles').update({
+              wallet_balance: newBal, referral_earnings: newRef
+            }).eq('id', referredById);
             await supabase.from('transactions').insert([{
               user_id: referredById, type: 'referral', amount: 200,
               balance_after: newBal, description: `Referral bonus — ${nameVal} signed up`,
               status: 'completed', method: 'referral',
             }]);
             const tk = await getPushToken(referredById);
-            if (tk) await sendExpoPush(tk, '💰 Referral Bonus!', `${nameVal} used your code. 200 FRW added.`, { type: 'wallet' });
+            if (tk) await sendExpoPush(tk, '💰 Referral Bonus!', `${nameVal} used your code. 200 FRW added.`, {
+              type: 'wallet'
+            });
           }
         }
         showBanner('MotoLink 🛵', t.notif_signupOk + ` 🎁 ${refCode}`, 'success');
-        dispatch({ type: 'SET_SESSION', p: { session: { user: { id: newId, phone: np } }, profile: np2 } });
-        dispatch({ type: 'SET_ROLE', p: state.role });
+        dispatch( {
+          type: 'SET_SESSION', p: {
+            session: {
+              user: {
+                id: newId, phone: np
+              }
+            }, profile: np2
+          }
+        });
+        dispatch( {
+          type: 'SET_ROLE', p: state.role
+        });
       }
     };
 
@@ -3035,20 +3449,29 @@ return () => h.remove();
     const handleDeleteAccount = () => {
       // Use native Alert only for destructive confirm — no suitable showBanner alternative
       Alert.alert('⚠️ ' + t.deleteAcc, 'This permanently deletes your account.',
-        [{ text: t.cancel, style: 'cancel' },
-         { text: t.deleteAcc, style: 'destructive', onPress: async () => {
-           if (!state.session?.user?.id) return;
-           await supabase.from('trips').update({ status: 'cancelled' })
-             .eq(state.role === 'passenger' ? 'passenger_id' : 'driver_id', state.session.user.id)
-             .in('status', ['searching', 'accepted']);
-           const { error } = await supabase.from('profiles').delete().eq('id', state.session.user.id);
-           if (error) {
-             showBanner('MotoLink', 'Could not delete account. Try again.', 'error');
-           } else {
-             showBanner('MotoLink', t.notif_deleteOk, 'success');
-             await clearSession(); setProfileModal(false); dispatch({ type: 'LOGOUT' });
-           }
-         }}]
+        [{
+          text: t.cancel, style: 'cancel'
+        },
+          {
+            text: t.deleteAcc, style: 'destructive', onPress: async () => {
+              if (!state.session?.user?.id) return;
+              await supabase.from('trips').update({
+                status: 'cancelled'
+              })
+              .eq(state.role === 'passenger' ? 'passenger_id': 'driver_id', state.session.user.id)
+              .in('status', ['searching', 'accepted']);
+              const {
+                error
+              } = await supabase.from('profiles').delete().eq('id', state.session.user.id);
+              if (error) {
+                showBanner('MotoLink', 'Could not delete account. Try again.', 'error');
+              } else {
+                showBanner('MotoLink', t.notif_deleteOk, 'success');
+                await clearSession(); setProfileModal(false); dispatch( {
+                  type: 'LOGOUT'
+                });
+              }
+            }}]
       );
     };
 
@@ -3071,9 +3494,15 @@ return () => h.remove();
     };
 
     const savePaymentInfo = async (payData) => {
-      const { error } = await supabase.from('profiles').update(payData).eq('id', state.session.user.id);
+      const {
+        error
+      } = await supabase.from('profiles').update(payData).eq('id', state.session.user.id);
       if (!error) {
-        dispatch({ type: 'SET_PROFILE', p: { ...state.profile, ...payData } });
+        dispatch( {
+          type: 'SET_PROFILE', p: {
+            ...state.profile, ...payData
+          }
+        });
         setPaySetupModal(false);
         showBanner('💳 MotoLink', t.notif_paySetupDone, 'success');
       } else {
@@ -3119,8 +3548,10 @@ return () => h.remove();
       }
 
       // Check if this user already used this code
-      const { data: used } = await supabase.from('promo_usage')
-        .select('id').eq('code', code).eq('user_id', state.session.user.id).single();
+      const {
+        data: used
+      } = await supabase.from('promo_usage')
+      .select('id').eq('code', code).eq('user_id', state.session.user.id).single();
       if (used) {
         setPromoLoading(false);
         showBanner('⚠️ MotoLink', t.notif_promoUsed, 'warning');
@@ -3250,52 +3681,86 @@ return () => h.remove();
     };
 
     // ══════════════════════════════════════════
-    // LOCATION
+    // LOCATION — robust permission + GPS-on guard
     // ══════════════════════════════════════════
     useEffect(() => {
       if (state.step !== 'app') return;
-       if (Platform.OS === 'web') return;
+      if (Platform.OS === 'web') return;
       let sub;
       let gpsOkShown = false;
-      (async () => {
-        // Check network first
+      let gpsRetryTimer = null;
+
+      const startWatching = async () => {
         try {
-          const net = await Network.getNetworkStateAsync();
-          if (!net.isConnected) showBanner(t.offlineMode, t.notif_noInternet, 'offline');
-        } catch {}
-
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          showBanner('📍 MotoLink', t.notif_locDenied, 'error');
-          return;
-        }
-
-        // Check if GPS hardware is enabled
-        const enabled = await Location.hasServicesEnabledAsync().catch(() => true);
-        if (!enabled) {
-          showBanner('📍 GPS', t.notif_locOff, 'warning');
-          return;
-        }
-
-        sub = await Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5, timeInterval: 3000 },
-          async (loc) => {
-            const coords = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
-            dispatch({ type: 'SET_LOCATION', p: coords });
-            // Show success banner once on first fix
-            if (!gpsOkShown) {
-              gpsOkShown = true;
-              showBanner('📍 MotoLink', t.notif_locGranted, 'location');
-            }
-            if (state.role === 'driver' && state.session) {
-              await supabase.from('profiles').update({
-                current_lat: coords.latitude, current_lng: coords.longitude,
-              }).eq('id', state.session.user.id);
-            }
+          // ── 1. Check / request permission ──────────────
+          let { status } = await Location.getForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            const req = await Location.requestForegroundPermissionsAsync();
+            status = req.status;
           }
-        );
-      })();
-      return () => sub?.remove();
+          if (status !== 'granted') {
+            showBanner('📍 MotoLink', t.notif_locDenied, 'error');
+            // Show a persistent alert guiding user to Settings
+            Alert.alert(
+              '📍 ' + (t.notif_locDenied?.split('.')[0] || 'Location Required'),
+              t.notif_locDenied,
+              [
+                { text: t.close || 'Close', style: 'cancel' },
+                {
+                  text: 'Open Settings', onPress: () => {
+                    if (Platform.OS === 'ios') Linking.openURL('app-settings:');
+                    else Linking.openSettings?.().catch(() => Linking.openURL('package:com.motolink'));
+                  }
+                },
+              ]
+            );
+            return;
+          }
+
+          // ── 2. Check GPS hardware switch ───────────────
+          const enabled = await Location.hasServicesEnabledAsync().catch(() => true);
+          if (!enabled) {
+            showBanner('📍 GPS', t.notif_locOff, 'warning');
+            // Poll every 5 s until user turns GPS on
+            gpsRetryTimer = setInterval(async () => {
+              const nowEnabled = await Location.hasServicesEnabledAsync().catch(() => false);
+              if (nowEnabled) {
+                clearInterval(gpsRetryTimer);
+                gpsRetryTimer = null;
+                startWatching(); // restart
+              }
+            }, 5000);
+            return;
+          }
+
+          // ── 3. Start watching ──────────────────────────
+          sub = await Location.watchPositionAsync(
+            { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5, timeInterval: 3000 },
+            async (loc) => {
+              const coords = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
+              dispatch({ type: 'SET_LOCATION', p: coords });
+              if (!gpsOkShown) {
+                gpsOkShown = true;
+                showBanner('📍 MotoLink', t.notif_locGranted, 'location');
+              }
+              if (state.role === 'driver' && state.session) {
+                await supabase.from('profiles').update({
+                  current_lat: coords.latitude, current_lng: coords.longitude,
+                }).eq('id', state.session.user.id);
+              }
+            }
+          );
+        } catch (err) {
+          console.warn('[MotoLink] Location error:', err);
+          showBanner('📍 GPS', t.notif_locOff, 'warning');
+        }
+      };
+
+      startWatching();
+      return () => {
+        sub?.remove();
+        if (gpsRetryTimer) clearInterval(gpsRetryTimer);
+      };
     }, [state.step, state.session, state.role]);
 
     // ══════════════════════════════════════════
@@ -3388,22 +3853,31 @@ return () => h.remove();
     // ══════════════════════════════════════════
     // SEARCH
     // ══════════════════════════════════════════
-    const handleSearchInput = (text)=> {
+    const handleSearchInput = (text) => {
       setSearchQuery(text);
       if (searchTimer.current) clearTimeout(searchTimer.current);
-      if (text.length < 2) {
-        setSuggestions([]); return;
-      }
+      if (text.length < 2) { setSuggestions([]); return; }
       setSearchLoading(true);
-      searchTimer.current = setTimeout(async()=> {
+      searchTimer.current = setTimeout(async () => {
         const r = await smartSearch(text);
-        setSuggestions(r); setSearchLoading(false);
-      }, 280);
+        setSuggestions(r);
+        setSearchLoading(false);
+        // If still empty after all fallbacks, show banner
+        if (r.length === 0) {
+          showBanner('🔍 MotoLink', t.notif_searchFail, 'warning');
+        }
+      }, 320);
     };
 
-    const triggerSearch = async()=> {
+    const triggerSearch = async () => {
       if (searchQuery.length >= 2) {
-        setSearchLoading(true); const r = await smartSearch(searchQuery); setSuggestions(r); setSearchLoading(false);
+        setSearchLoading(true);
+        const r = await smartSearch(searchQuery);
+        setSuggestions(r);
+        setSearchLoading(false);
+        if (r.length === 0) {
+          showBanner('🔍 MotoLink', t.notif_searchFail, 'warning');
+        }
       }
     };
 
@@ -3424,8 +3898,10 @@ return () => h.remove();
     // ══════════════════════════════════════════
     const joinCompany = async () => {
       if (!companyCode.trim()) return showBanner('MotoLink', t.companyCode + ' required', 'warning');
-      const { data: company } = await supabase.from('companies')
-        .select('*').eq('id', companyCode.trim()).eq('status', 'approved').single();
+      const {
+        data: company
+      } = await supabase.from('companies')
+      .select('*').eq('id', companyCode.trim()).eq('status', 'approved').single();
       if (!company) return showBanner('MotoLink', 'Invalid or pending company code.', 'error');
       await supabase.from('profiles').update({
         company_id: company.id, is_company_account: true
@@ -3444,6 +3920,9 @@ return () => h.remove();
     // DELIVERY PHOTO CAPTURE
     // ══════════════════════════════════════════
     const captureDeliveryPhoto = async (tripId) => {
+      if (Platform.OS === 'web' || !ImagePicker) {
+        showBanner('📷 MotoLink', 'Camera not available on web.', 'error'); return;
+      }
       const {
         status
       } = await ImagePicker.requestCameraPermissionsAsync();
@@ -3976,7 +4455,18 @@ return () => h.remove();
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={C.black} translucent={false} />
-        <MapComponent myLoc={state.myLocation} targetLoc={targetLocation} />
+        <MapComponent myLoc={state.myLocation} targetLoc={targetLocation} onLongPress={(coords) => {
+          // Long press on map sets it as destination
+          if (state.role === 'passenger' && !AT) {
+            const label = `📌 ${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`;
+            setDestCoords(coords);
+            setTargetLocation(coords);
+            setDestName(label);
+            setSearchQuery(label);
+            setSuggestions([]);
+            showBanner('📌 MotoLink', t.notif_mapPin, 'location');
+          }
+        }} />
         <NotificationBanner data={state.banner} onHide={()=>dispatch( { type: 'HIDE_BANNER' })} />
 
         {/* Rating modal */}
@@ -4176,8 +4666,8 @@ return () => h.remove();
           </View>
         </Modal>
 
-        {/* Floating SOS Button — always visible on map */}
-        <SOSButton onPress={()=>setSosModal(true)} />
+        {/* Floating SOS Button — always on top, draggable */}
+        {state.step === 'app' && <SOSButton onPress={()=>setSosModal(true)} />}
 
         {/* Trip History Modal */}
         <TripHistoryModal
@@ -4221,7 +4711,7 @@ return () => h.remove();
               {state.profile?.avatar?<Image source={ { uri: state.profile.avatar }} style={styles.avatarImg} />: <Text style={styles.avatarTxt}>{state.profile?.name?.substring(0, 2).toUpperCase() || 'ME'}</Text>}
             </TouchableOpacity>
             {state.role === 'passenger'&&!state.menuOpen&&!AT && (
-              <View style={ { flex: 1, marginLeft: 10 }}>
+              <View style={ { flex: 1, marginLeft: 10, position: 'relative' }}>
                 <View style={styles.searchContainer}>
                   <TextInput style={styles.searchInput} placeholder={t.searchWhere} placeholderTextColor="#666"
                     value={searchQuery} onChangeText={handleSearchInput} onSubmitEditing={triggerSearch}
@@ -4231,19 +4721,28 @@ return () => h.remove();
                   </TouchableOpacity>
                 </View>
                 {suggestions.length > 0 && (
-                  <View style={styles.suggestionBox}>
-                    {suggestions.map((item, i)=> {
+                  <ScrollView
+                    style={styles.suggestionBox}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={true}
+                    nestedScrollEnabled={true}
+                  >
+                    {suggestions.map((item, i) => {
                       const label = buildLabel(item);
                       const a = item.address || {};
-                      const sub = [a.suburb, a.city_district, a.city || a.town || a.county].filter(Boolean).join(', ');
+                      const sub = item._isManual
+                        ? (t.notif_locGranted?.includes('map') ? '📌 Tap to use this as your destination' : '📌 Tap to use as destination')
+                        : [a.suburb, a.city_district, a.city || a.town || a.county].filter(Boolean).join(', ');
                       return (
-                        <TouchableOpacity key={item.place_id || i} style={styles.suggestionItem} onPress={()=>selectDestination(item)}>
-                          <Text style={styles.suggestionTitle}>📍 {label}</Text>
-                          {sub?<Text style={styles.suggestionSub}>{sub}</Text>: null}
+                        <TouchableOpacity key={item.place_id || i} style={[styles.suggestionItem, item._isManual && { borderColor: C.gold + '40', borderWidth: 1, borderRadius: 8, margin: 4 }]} onPress={() => selectDestination(item)}>
+                          <Text style={[styles.suggestionTitle, item._isManual && { color: C.orange }]} numberOfLines={1}>
+                            {item._isManual ? '🗺️ ' : '📍 '}{label}
+                          </Text>
+                          {sub ? <Text style={styles.suggestionSub} numberOfLines={1}>{sub}</Text> : null}
                         </TouchableOpacity>
                       );
                     })}
-                  </View>
+                  </ScrollView>
                 )}
               </View>
             )}
@@ -4440,47 +4939,105 @@ return () => h.remove();
                       ))}
                   </View>
 
-                  {/* Date/time picker for scheduled */}
+                  {/* Date/time picker for scheduled rides */}
                   {tripMode === 'later' && (
                     <View style={styles.datePickerBox}>
-                      <Text style={ { color: C.gray, fontSize: 12, marginBottom: 8 }}>{t.scheduleDate}</Text>
-                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {Array.from({
-                          length: MAX_SCHEDULE_DAYS*24
-                        }, (_, i)=> {
-                          const d = new Date(Date.now() + (i+1)*60*60*1000);
-                          const isSelected = scheduledFor && Math.abs(scheduledFor - d) < 30*60*1000;
-                          // Only show every 30 minutes
-                          if (d.getMinutes() !== 0 && d.getMinutes() !== 30) return null;
+                      <Text style={{ color: C.gold, fontSize: 13, fontWeight: '800', marginBottom: 12, letterSpacing: 0.5 }}>
+                        📅 {t.scheduleDate}
+                      </Text>
+
+                      {/* Day selector */}
+                      <Text style={{ color: C.gray, fontSize: 11, fontWeight: '600', marginBottom: 6, letterSpacing: 0.5 }}>DAY</Text>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 14 }}>
+                        {Array.from({ length: MAX_SCHEDULE_DAYS }, (_, i) => {
+                          const d = new Date();
+                          d.setDate(d.getDate() + i);
+                          d.setHours(0, 0, 0, 0);
+                          const sel = scheduledFor && scheduledFor.toDateString() === d.toDateString();
                           return (
                             <TouchableOpacity key={i}
-                              style={[styles.timeSlot, isSelected && styles.timeSlotActive]}
-                              onPress={()=>setScheduledFor(d)}>
-                              <Text style={[styles.timeSlotDay, isSelected && { color: C.gold }]}>
-                                {d.toLocaleDateString([], {
-                                  weekday: 'short', day: '2-digit'
-                                })}
+                              style={[styles.timeSlot, { minWidth: 60, marginRight: 8 }, sel && styles.timeSlotActive]}
+                              onPress={() => {
+                                const updated = scheduledFor ? new Date(scheduledFor) : new Date();
+                                updated.setFullYear(d.getFullYear(), d.getMonth(), d.getDate());
+                                if (updated <= new Date()) updated.setHours(new Date().getHours() + 1, 0, 0, 0);
+                                setScheduledFor(updated);
+                              }}>
+                              <Text style={[styles.timeSlotDay, sel && { color: C.gold }]}>
+                                {i === 0 ? 'Today' : i === 1 ? 'Tmrw' : d.toLocaleDateString([], { weekday: 'short' })}
                               </Text>
-                              <Text style={[styles.timeSlotTime, isSelected && { color: C.gold }]}>
-                                {d.toLocaleTimeString([], {
-                                  hour: '2-digit', minute: '2-digit'
-                                })}
+                              <Text style={[styles.timeSlotTime, { fontSize: 15 }, sel && { color: C.gold }]}>
+                                {d.getDate()}
                               </Text>
                             </TouchableOpacity>
                           );
                         })}
                       </ScrollView>
+
+                      {/* Hour selector */}
+                      <Text style={{ color: C.gray, fontSize: 11, fontWeight: '600', marginBottom: 6, letterSpacing: 0.5 }}>HOUR</Text>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 14 }}>
+                        {Array.from({ length: 24 }, (_, h) => {
+                          const sel = scheduledFor && scheduledFor.getHours() === h;
+                          const isPast = scheduledFor &&
+                            scheduledFor.toDateString() === new Date().toDateString() &&
+                            h <= new Date().getHours();
+                          return (
+                            <TouchableOpacity key={h}
+                              style={[styles.timeSlot, { minWidth: 52, marginRight: 8, opacity: isPast ? 0.35 : 1 }, sel && styles.timeSlotActive]}
+                              disabled={isPast}
+                              onPress={() => {
+                                const updated = scheduledFor ? new Date(scheduledFor) : new Date();
+                                updated.setHours(h, scheduledFor?.getMinutes() || 0, 0, 0);
+                                setScheduledFor(updated);
+                              }}>
+                              <Text style={[styles.timeSlotDay, sel && { color: C.gold }]}>hr</Text>
+                              <Text style={[styles.timeSlotTime, sel && { color: C.gold }]}>
+                                {h.toString().padStart(2, '0')}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </ScrollView>
+
+                      {/* Minute selector */}
+                      <Text style={{ color: C.gray, fontSize: 11, fontWeight: '600', marginBottom: 6, letterSpacing: 0.5 }}>MINUTE</Text>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 10 }}>
+                        {[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].map(m => {
+                          const sel = scheduledFor && scheduledFor.getMinutes() === m;
+                          return (
+                            <TouchableOpacity key={m}
+                              style={[styles.timeSlot, { minWidth: 52, marginRight: 8 }, sel && styles.timeSlotActive]}
+                              onPress={() => {
+                                const updated = scheduledFor ? new Date(scheduledFor) : new Date();
+                                updated.setMinutes(m, 0, 0);
+                                setScheduledFor(updated);
+                              }}>
+                              <Text style={[styles.timeSlotDay, sel && { color: C.gold }]}>min</Text>
+                              <Text style={[styles.timeSlotTime, sel && { color: C.gold }]}>
+                                :{m.toString().padStart(2, '0')}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </ScrollView>
+
+                      {/* Confirmation display */}
                       {scheduledFor && (
-                        <Text style={ { color: C.gold,
-                          fontSize: 12,
-                          marginTop: 8,
-                          fontWeight: '700' }}>
-                          📅 {scheduledFor.toLocaleDateString([], {
-                            weekday: 'long', day: '2-digit', month: 'short'
-                          })} · {scheduledFor.toLocaleTimeString([], {
-                            hour: '2-digit', minute: '2-digit'
-                          })}
-                        </Text>
+                        <View style={{ backgroundColor: C.goldDim, borderRadius: 10, padding: 10, borderWidth: 1, borderColor: C.gold, flexDirection: 'row', alignItems: 'center' }}>
+                          <Text style={{ fontSize: 18, marginRight: 8 }}>📅</Text>
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ color: C.gold, fontWeight: '900', fontSize: 13 }}>
+                              {scheduledFor.toLocaleDateString([], { weekday: 'long', day: '2-digit', month: 'short' })}
+                            </Text>
+                            <Text style={{ color: C.white, fontWeight: '700', fontSize: 16, marginTop: 2 }}>
+                              {scheduledFor.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </Text>
+                          </View>
+                          <TouchableOpacity onPress={() => setScheduledFor(null)} style={{ padding: 4 }}>
+                            <Text style={{ color: C.gray, fontSize: 18 }}>✕</Text>
+                          </TouchableOpacity>
+                        </View>
                       )}
                     </View>
                   )}
@@ -4586,9 +5143,12 @@ return () => h.remove();
                   </TouchableOpacity>
                 </ScrollView>
               ): (
-                <View style={ { alignItems: 'center' }}>
+                <View style={ { alignItems: 'center', paddingBottom: 8 }}>
                   <Text style={ { fontSize: 32, marginBottom: 8 }}>🛵</Text>
                   <Text style={styles.hintText}>{t.searchHint}</Text>
+                  <Text style={ { color: C.grayDark, fontSize: 11, marginTop: 6, textAlign: 'center' }}>
+                    {t.notif_mapPin || '📌 Or long-press on the map to pin a destination.'}
+                  </Text>
                 </View>
               )
             )
@@ -4803,7 +5363,7 @@ return () => h.remove();
   // ══════════════════════════════════════════════
   const styles = StyleSheet.create({
     container: {
-      flex: 1, backgroundColor: C.black
+      flex: 1, backgroundColor: C.black, overflow: 'visible',
     },
     map: {
       flex: 1, backgroundColor: C.black
@@ -4883,10 +5443,10 @@ return () => h.remove();
       color: C.white, textAlign: 'center', fontWeight: '700', fontSize: 15, letterSpacing: 0.5
     },
     header: {
-      position: 'absolute', top: 0, width: '100%', zIndex: 100, paddingHorizontal: 14, paddingVertical: 8
+      position: 'absolute', top: 0, width: '100%', zIndex: 100, paddingHorizontal: 12, paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 6 : 8, paddingBottom: 8,
     },
     headerRow: {
-      flexDirection: 'row', alignItems: 'center'
+      flexDirection: 'row', alignItems: 'center', flexWrap: 'nowrap',
     },
     hamburgerWrap: {
       width: 46, height: 46, backgroundColor: C.glass, borderRadius: 23, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: C.border
@@ -4919,10 +5479,11 @@ return () => h.remove();
       width: 38, height: 38, borderRadius: 19, backgroundColor: C.gold, justifyContent: 'center', alignItems: 'center', marginRight: 4
     },
     suggestionBox: {
-      backgroundColor: C.card, marginTop: 6, borderRadius: 16, padding: 6, borderWidth: 1, borderColor: C.border, elevation: 10, maxHeight: 260
+      position: 'absolute', top: 52, left: 0, right: 0, zIndex: 500,
+      backgroundColor: C.card, borderRadius: 16, padding: 6, borderWidth: 1, borderColor: C.border, elevation: 10, maxHeight: 240,
     },
     suggestionItem: {
-      paddingVertical: 10, paddingHorizontal: 8, borderBottomColor: C.borderFaint, borderBottomWidth: 1
+      paddingVertical: 11, paddingHorizontal: 12, borderBottomColor: C.borderFaint, borderBottomWidth: 1,
     },
     suggestionTitle: {
       color: C.gold, fontSize: 13, fontWeight: '700'
@@ -4931,11 +5492,12 @@ return () => h.remove();
       color: C.gray, fontSize: 11, marginTop: 2
     },
     notifyBanner: {
-      position: 'absolute', top: 52, left: 10, right: 10, zIndex: 9999,
+      position: 'absolute', top: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 8 : 52,
+      left: 10, right: 10, zIndex: 9999,
       backgroundColor: C.card,
       borderRadius: 20, flexDirection: 'row', alignItems: 'center',
       overflow: 'hidden', borderWidth: 1.5, borderColor: C.border,
-      elevation: 28,
+      elevation: 40,
       shadowColor: '#000', shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.5, shadowRadius: 20,
       paddingRight: 10, minHeight: 72,
@@ -5012,7 +5574,11 @@ return () => h.remove();
       color: C.gold, fontWeight: '900', fontSize: 11
     },
     statusPanel: {
-      position: 'absolute', top: 105, left: 14, right: 14, backgroundColor: C.glass, borderRadius: 22, padding: 18, zIndex: 90, borderWidth: 1, borderColor: C.border, elevation: 14
+      position: 'absolute',
+      top: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 80 : 105,
+      left: 14, right: 14, backgroundColor: C.glass, borderRadius: 22,
+      padding: 16, zIndex: 90, borderWidth: 1, borderColor: C.border, elevation: 14,
+      maxHeight: height * 0.38,
     },
     panelHeader: {
       flexDirection: 'row', alignItems: 'center', marginBottom: 14
@@ -5069,7 +5635,11 @@ return () => h.remove();
       color: C.grayDark, textAlign: 'center', padding: 20, fontStyle: 'italic'
     },
     bottomSheet: {
-      position: 'absolute', bottom: 0, width: '100%', backgroundColor: C.card, padding: 20, borderTopLeftRadius: 28, borderTopRightRadius: 28, elevation: 20, borderTopWidth: 1, borderColor: C.border
+      position: 'absolute', bottom: 0, width: '100%', backgroundColor: C.card,
+      paddingHorizontal: 20, paddingTop: 16, paddingBottom: Platform.OS === 'ios' ? 32 : 20,
+      borderTopLeftRadius: 28, borderTopRightRadius: 28, elevation: 20,
+      borderTopWidth: 1, borderColor: C.border,
+      maxHeight: height * 0.52,
     },
     fareRow: {
       flexDirection: 'row', alignItems: 'baseline', gap: 10, marginBottom: 12
@@ -5155,16 +5725,14 @@ return () => h.remove();
     },
     // SOS Button
     sosBtn: {
-      position: 'absolute', zIndex: 200,
-      width: 56, height: 56, borderRadius: 28,
+      position: 'absolute', zIndex: 8888,
+      width: 60, height: 60, borderRadius: 30,
       backgroundColor: C.red, justifyContent: 'center', alignItems: 'center',
-      elevation: 12, shadowColor: C.red, shadowOffset: {
-        width: 0, height: 4
-      },
-      shadowOpacity: 0.6, shadowRadius: 10,
+      elevation: 30, shadowColor: C.red, shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.7, shadowRadius: 12,
     },
     sosPulse: {
-      position: 'absolute', width: 56, height: 56, borderRadius: 28,
+      position: 'absolute', width: 60, height: 60, borderRadius: 30,
       backgroundColor: 'rgba(255,76,76,0.35)',
     },
     sosBtnTxt: {
@@ -5402,7 +5970,9 @@ return () => h.remove();
     },
     // Offline banner
     offlineBanner: {
-      position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1000,
+      position: 'absolute',
+      top: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0,
+      left: 0, right: 0, zIndex: 1500,
       backgroundColor: 'rgba(10,10,50,0.97)', paddingVertical: 8, paddingHorizontal: 16,
       borderBottomWidth: 1, borderColor: C.blue,
     },
