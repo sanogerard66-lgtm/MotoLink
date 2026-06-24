@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <title>MotoLink — Live Tracking</title>
+
+  <!-- Leaflet CSS only (JS loaded dynamically below with fallbacks) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css"/>
+
+  <!-- Supabase UMD — synchronous, must load before inline script -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --black:#080810;--card:#12121e;--card2:#1a1a2e;
+      --border:rgba(255,255,255,0.08);--gold:#D4AF37;--gold-dim:rgba(212,175,55,0.12);
+      --green:#00D97E;--red:#FF4560;--white:#fff;--offwhite:#E8E8EE;
+      --gray:#9898AA;--graydk:#333344
+    }
+    html,body{height:100%;background:var(--black);color:var(--white);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden}
+    #map{height:52vh;width:100%;background:#0c0c18}
+    .leaflet-container{background:#0c0c18!important}
+    .leaflet-control-zoom,.leaflet-control-attribution{display:none!important}
+
+    /* Driver marker */
+    .drv-dot{width:38px;height:38px;border-radius:50%;background:var(--gold);
+      border:3px solid #fff;display:flex;align-items:center;justify-content:center;
+      font-size:18px;position:relative;animation:ping 2s infinite}
+    .drv-ring{position:absolute;inset:-6px;border-radius:50%;
+      border:2px solid var(--gold);animation:ring 2s infinite;opacity:0}
+    @keyframes ping{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,.4)}
+      70%{box-shadow:0 0 0 12px rgba(212,175,55,0)}}
+    @keyframes ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.2);opacity:0}}
+
+    /* Panel */
+    #panel{background:var(--card);border-top:2px solid var(--gold);
+      padding:14px 16px 32px;overflow-y:auto}
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .brand-badge{width:36px;height:36px;border-radius:50%;background:var(--gold);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;font-size:13px;color:#000;flex-shrink:0}
+    .brand-name{font-size:17px;font-weight:900}
+    .brand-name span{color:var(--gold)}
+    #status-pill{display:inline-block;padding:4px 14px;border-radius:20px;
+      font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+      margin-bottom:12px;background:var(--gold-dim);color:var(--gold);
+      border:1px solid var(--gold);transition:all .3s}
+    #status-pill.completed{background:rgba(0,217,126,.1);color:var(--green);border-color:var(--green)}
+    #status-pill.cancelled{background:rgba(255,69,96,.1);color:var(--red);border-color:var(--red)}
+
+    .card{background:var(--card2);border-radius:14px;padding:14px;
+      border:1px solid var(--border);margin-bottom:10px}
+    .row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+    .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+    .addr{font-size:13px;color:var(--offwhite);flex:1;line-height:1.4}
+    .addr.b{font-weight:700;color:#fff}
+    .meta{display:flex;gap:14px;margin-top:8px;padding-top:8px;
+      border-top:1px solid var(--border)}
+    .meta-item{font-size:12px;color:var(--gray)}
+    .meta-item strong{color:var(--gold);font-weight:800}
+
+    .drv-card{background:var(--gold-dim);border-radius:14px;padding:13px;
+      border:1px solid rgba(212,175,55,.25);display:flex;align-items:center;
+      gap:12px;margin-bottom:10px}
+    .drv-av{width:42px;height:42px;border-radius:50%;background:var(--gold);
+      display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+
+    .eta{background:rgba(0,217,126,.1);border:1px solid var(--green);
+      border-radius:12px;padding:10px;text-align:center;margin-bottom:10px}
+    .eta-lbl{font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase}
+    .eta-val{font-size:20px;font-weight:900;color:var(--green);margin-top:2px}
+
+    /* SOS */
+    #sos-btn{width:100%;padding:14px;border-radius:14px;
+      background:rgba(255,69,96,.15);border:2px solid var(--red);
+      color:var(--red);font-size:15px;font-weight:900;cursor:pointer;
+      margin-bottom:10px;letter-spacing:.5px;transition:background .2s}
+    #sos-btn:active{background:rgba(255,69,96,.35)}
+    .sos-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);
+      display:none;align-items:flex-end;z-index:9999}
+    .sos-overlay.show{display:flex}
+    .sos-sheet{background:var(--card);border-radius:20px 20px 0 0;
+      padding:24px 20px 40px;width:100%;border-top:3px solid var(--red)}
+    .sos-inp{background:var(--card2);border:1px solid var(--border);border-radius:10px;
+      padding:12px;color:#fff;font-size:14px;width:100%;margin-bottom:10px;outline:none}
+    .sos-inp::placeholder{color:var(--gray)}
+    .sos-ok{width:100%;padding:14px;border-radius:12px;background:var(--red);
+      color:#fff;font-size:15px;font-weight:900;border:none;cursor:pointer;margin-bottom:10px}
+    .sos-cancel{width:100%;padding:12px;border-radius:12px;background:transparent;
+      border:1px solid var(--border);color:var(--gray);font-size:14px;cursor:pointer}
+    #sos-flash{position:fixed;inset:0;background:rgba(255,69,96,.96);
+      display:none;align-items:center;justify-content:center;flex-direction:column;
+      z-index:99999;animation:flsh .4s infinite alternate}
+    #sos-flash.show{display:flex}
+    @keyframes flsh{from{background:rgba(255,69,96,.96)}to{background:rgba(200,10,40,1)}}
+
+    /* EC */
+    .ec-add{display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;
+      border:1px dashed var(--gold);color:var(--gold);font-size:13px;cursor:pointer;
+      justify-content:center;margin-bottom:12px}
+    .ec-row{display:flex;align-items:center;gap:10px;padding:10px;
+      background:var(--card2);border-radius:10px;margin-bottom:8px;
+      border:1px solid var(--border)}
+
+    /* Loading */
+    #loading{position:fixed;inset:0;background:var(--black);display:flex;
+      flex-direction:column;align-items:center;justify-content:center;
+      gap:14px;z-index:9999;transition:opacity .3s}
+    #loading.fade{opacity:0;pointer-events:none}
+    .sp{width:40px;height:40px;border:3px solid var(--border);
+      border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #load-msg{color:var(--gray);font-size:13px;text-align:center}
+    .hidden{display:none!important}
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading">
+  <div style="width:52px;height:52px;border-radius:50%;background:var(--gold);
+    display:flex;align-items:center;justify-content:center;font-size:26px">🏍️</div>
+  <div class="sp"></div>
+  <p id="load-msg">Loading map...</p>
+</div>
+
+<!-- SOS sheet -->
+<div class="sos-overlay" id="sos-overlay">
+  <div class="sos-sheet">
+    <div style="color:var(--red);font-size:20px;font-weight:900;text-align:center;margin-bottom:6px" id="sos-title">
+      🚨 EMERGENCY SOS
+    </div>
+    <div style="color:var(--gray);font-size:13px;text-align:center;margin-bottom:18px;line-height:1.5" id="sos-desc">
+      Send an immediate emergency alert to the passenger and driver in the MotoLink app.
+      All emergency contacts will be notified via WhatsApp.
+    </div>
+    <input class="sos-inp" id="sos-name" placeholder="Your name"/>
+    <input class="sos-inp" id="sos-phone" placeholder="Your phone number" type="tel"/>
+    <input class="sos-inp" id="sos-msg"  placeholder="Describe the emergency (optional)..."/>
+    <button class="sos-ok"     id="sos-send-btn" onclick="sendSOS()">🚨 SEND SOS ALERT NOW</button>
+    <button class="sos-cancel" id="sos-cancel-btn" onclick="closeSOS()">Cancel — Everything Is Fine</button>
+  </div>
+</div>
+
+<!-- SOS flash -->
+<div id="sos-flash">
+  <div style="text-align:center;padding:30px">
+    <div style="font-size:70px;margin-bottom:12px">🚨</div>
+    <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px" id="sos-flash-title">SOS ALERT SENT</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:24px" id="sos-flash-txt"></div>
+    <button onclick="document.getElementById('sos-flash').classList.remove('show')" id="sos-dismiss-btn"
+      style="padding:14px 28px;border-radius:12px;background:#fff;color:var(--red);
+      font-weight:900;border:none;cursor:pointer;font-size:15px">OK — Dismiss</button>
+  </div>
+</div>
+
+<!-- Map -->
+<div id="map"></div>
+
+<!-- Info panel -->
+<div id="panel">
+  <div class="brand">
+    <div class="brand-badge">ML</div>
+    <div class="brand-name">Moto<span>Link</span></div>
+    <div style="flex:1"></div>
+    <button id="lang-toggle" onclick="cycleLang()" title="Change language"
+      style="width:36px;height:36px;border-radius:18px;background:var(--card2);
+      border:1.5px solid var(--gold);color:var(--gold);font-weight:900;font-size:11px;
+      letter-spacing:.5px;cursor:pointer;flex-shrink:0;margin-right:8px">EN</button>
+    <div id="conn-dot" style="width:8px;height:8px;border-radius:50%;
+      background:var(--gold);title='Connecting'" title="Connecting..."></div>
+  </div>
+  <div id="status-pill">LOADING...</div>
+
+  <!-- Error -->
+  <div id="err-card" class="card hidden"
+    style="border-color:rgba(255,69,96,.3);background:rgba(255,69,96,.06)">
+    <div style="color:var(--red);font-weight:800;font-size:14px;margin-bottom:6px" id="err-title">
+      ⚠️ Trip Not Found
+    </div>
+    <div style="color:var(--gray);font-size:12px;line-height:1.7" id="err-detail">
+      This tracking link may have expired or is invalid.
+    </div>
+  </div>
+
+  <!-- Completed -->
+  <div id="done-card" class="card hidden" style="border-color:rgba(0,217,126,.3)">
+    <div style="text-align:center;padding:8px 0">
+      <div style="font-size:32px;margin-bottom:6px">✅</div>
+      <div style="color:var(--green);font-weight:900;font-size:15px" id="done-title">Trip Completed</div>
+      <div style="color:var(--gray);font-size:12px;margin-top:4px" id="done-desc">
+        The ride has ended. Driver location is no longer shared for privacy.
+      </div>
+    </div>
+  </div>
+
+  <!-- Driver -->
+  <div class="drv-card hidden" id="drv-card">
+    <div class="drv-av">🏍️</div>
+    <div style="flex:1">
+      <div style="font-size:14px;font-weight:900;color:var(--gold)" id="drv-name">—</div>
+      <div style="font-size:11px;color:var(--gray);margin-top:2px" id="drv-plate">MotoLink Driver</div>
+    </div>
+    <div style="width:10px;height:10px;border-radius:50%;background:var(--green)"></div>
+  </div>
+
+  <!-- ETA -->
+  <div class="eta hidden" id="eta-box">
+    <div class="eta-lbl" id="eta-lbl">📍 Estimated Arrival</div>
+    <div class="eta-val" id="eta-val">—</div>
+  </div>
+
+  <!-- Trip route -->
+  <div class="card hidden" id="trip-card">
+    <div class="row">
+      <div class="dot" style="background:var(--gold)"></div>
+      <div class="addr" id="pickup-addr">—</div>
+    </div>
+    <div style="width:1px;height:14px;background:var(--border);margin:0 3.5px 4px"></div>
+    <div class="row">
+      <div class="dot" style="background:var(--green)"></div>
+      <div class="addr b" id="dest-addr">—</div>
+    </div>
+    <div class="meta">
+      <div class="meta-item"><span id="fare-label">Fare</span> <strong id="fare-val">—</strong></div>
+      <div class="meta-item"><span id="tripid-label">Trip ID</span> <strong id="trip-sid">—</strong></div>
+    </div>
+  </div>
+
+  <!-- Emergency contacts -->
+  <div id="ec-section" class="hidden">
+    <div style="color:var(--gray);font-size:10px;font-weight:700;
+      letter-spacing:1px;text-transform:uppercase;margin:12px 0 8px" id="ec-title">
+      🔐 Emergency Contacts for This Trip
+    </div>
+    <div id="ec-list"></div>
+    <div class="ec-add" id="ec-add-btn" onclick="addEC()">+ Add Emergency Contact</div>
+  </div>
+
+  <!-- SOS button -->
+  <button id="sos-btn" class="hidden"
+    onclick="document.getElementById('sos-overlay').classList.add('show')">
+    🚨 SOS — SEND EMERGENCY ALERT
+  </button>
+
+  <div id="last-upd" style="font-size:10px;color:var(--graydk);
+    text-align:center;margin-top:6px"></div>
+  <p style="text-align:center;color:#333344;font-size:10px;margin-top:16px">
+    <span id="footer-prefix">Powered by</span>
+    <a href="https://motolink.rw/" target="_blank" rel="noopener"
+      style="color:var(--gold);font-weight:700;text-decoration:none">MotoLink.rw</a>
+    <span id="footer-suffix">— Kigali's moto-taxi app</span>
+  </p>
+</div>
+
+<script>
+'use strict';
+
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://uysjqeiufmqfzbctvrmm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5c2pxZWl1Zm1xZnpiY3R2cm1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDc3NzAsImV4cCI6MjA5MzUyMzc3MH0.PeB0TRRZSorR5MrUaj_5R2X_OJ_DsgAIBU_PHQN9ftk';
+
+// Leaflet CDN fallback chain — tried in order until one loads
+const LEAFLET_CDNS = [
+  'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+const params    = new URLSearchParams(window.location.search);
+const tripId    = params.get('tripId');
+let db          = null;
+let map         = null;       // initialized after Leaflet loads
+let driverMkr   = null;
+let liveChannel = null;
+let statusCh    = null;
+let pollTimer   = null;
+let tripData    = null;
+let lastLat     = null, lastLng = null;
+let ec          = [];
+let audioCtx    = null;
+
+const KIGALI = [-1.9441, 30.0619];
+
+// ── i18n — English / Kinyarwanda / Français ────────────────────────────────
+const I18N = {
+  en: {
+    langCode: 'EN',
+    loadingMap: 'Loading map',
+    fetchingTripData: 'Fetching trip data...',
+    trackerHelp: 'Ask the passenger to tap <strong style="color:var(--gold)">🔗 SHARE LIVE TRIP</strong> in the MotoLink app during an active ride.',
+    noLinkDetected: 'No tracking link detected.',
+    tripNotFoundTitle: '⚠️ Trip Not Found',
+    tripNotFoundDetail: 'This tracking link may have expired or is invalid.',
+    couldNotLoad: '<strong>Could not load trip data.</strong>',
+    reason1: '• The trip may have already completed (links expire)',
+    reason2: '• The link may be invalid or miscopied',
+    reason3: '• Try refreshing the page',
+    mapLibFailed: 'Map library failed to load.',
+    checkConnection: 'Please check your internet connection and refresh the page.',
+    retry: '🔄 Retry',
+    status: {
+      searching: '🔍 Searching Driver', accepted: '🏍️ Driver On the Way',
+      picked_up: '🚦 Ride In Progress', completion_requested: '🏁 Arriving Shortly',
+      completed: '✅ Trip Completed', cancelled: '❌ Trip Cancelled'
+    },
+    doneTitle: 'Trip Completed',
+    doneDesc: 'The ride has ended. Driver location is no longer shared for privacy.',
+    yourDriver: 'Your Driver',
+    motoLinkDriver: 'MotoLink Driver',
+    estimatedArrival: '📍 Estimated Arrival',
+    fareLabel: 'Fare',
+    tripIdLabel: 'Trip ID',
+    ecTitle: '🔐 Emergency Contacts for This Trip',
+    addEC: '+ Add Emergency Contact',
+    sosBtn: '🚨 SOS — SEND EMERGENCY ALERT',
+    sosTitle: '🚨 EMERGENCY SOS',
+    sosDesc: 'Send an immediate emergency alert to the passenger and driver in the MotoLink app. All emergency contacts will be notified via WhatsApp.',
+    sosNamePh: 'Your name',
+    sosPhonePh: 'Your phone number',
+    sosMsgPh: 'Describe the emergency (optional)...',
+    sosSendBtn: '🚨 SEND SOS ALERT NOW',
+    sosSending: 'Sending...',
+    sosCancelBtn: 'Cancel — Everything Is Fine',
+    sosFlashTitle: 'SOS ALERT SENT',
+    sosDismissBtn: 'OK — Dismiss',
+    sosSentBy: name => 'SOS sent by ' + name + '.',
+    contactsNotified: n => n + ' contacts notified.',
+    sosFromOther: (name, msg) => 'SOS from ' + name + ': ' + msg,
+    lastUpdated: 'Last updated:',
+    footerPrefix: 'Powered by',
+    footerSuffix: "— Kigali's moto-taxi app",
+    waSosIntro: '🚨 SOS ALERT from MotoLink trip tracker!\n\n',
+    waTriggered: name => name + ' triggered an emergency.\n',
+    waTrip: 'Trip: ', waLocation: 'Location: ', waContact: '\nContact: ', waMessage: '\nMessage: ',
+  },
+  rw: {
+    langCode: 'RW',
+    loadingMap: 'Turimo gushaka ikarita',
+    fetchingTripData: 'Turimo gushakisha amakuru y\'urugendo...',
+    trackerHelp: 'Saba umugenzi gukanda <strong style="color:var(--gold)">🔗 SANGIRA URUGENDO</strong> muri MotoLink igihe urugendo rugikomeza.',
+    noLinkDetected: 'Nta murongo wo gukurikirana wabonetse.',
+    tripNotFoundTitle: '⚠️ Urugendo Ntirwabonetse',
+    tripNotFoundDetail: 'Uyu murongo wo gukurikirana warangiye igihe cyawo cyangwa ntiwemewe.',
+    couldNotLoad: '<strong>Ntibyashobotse gushaka amakuru y\'urugendo.</strong>',
+    reason1: '• Urugendo rushobora kuba rwarangiye (imirongo irangira igihe)',
+    reason2: '• Umurongo ushobora kuba utariwo cyangwa wanditse nabi',
+    reason3: '• Gerageza kongera gushyiramo paji',
+    mapLibFailed: 'Ikarita ntiyashoboye gukurwa.',
+    checkConnection: 'Reba murandasi yawe hanyuma ushyiremo paji bundi bushya.',
+    retry: '🔄 Ongera Ugerageze',
+    status: {
+      searching: '🔍 Dushaka Umushoferi', accepted: '🏍️ Umushoferi Araje',
+      picked_up: '🚦 Urugendo Rurakomeza', completion_requested: '🏁 Hafi Kugera',
+      completed: '✅ Urugendo Rwarangiye', cancelled: '❌ Urugendo Rwahagaritswe'
+    },
+    doneTitle: 'Urugendo Rwarangiye',
+    doneDesc: 'Urugendo rwarangiye. Aho umushoferi ari ntibikiboneka kugira ngo harindwe ibyibanga.',
+    yourDriver: 'Umushoferi Wawe',
+    motoLinkDriver: 'Umushoferi wa MotoLink',
+    estimatedArrival: '📍 Igihe Agereyeho',
+    fareLabel: 'Igiciro',
+    tripIdLabel: 'Nomero y\'Urugendo',
+    ecTitle: '🔐 Abo Mwegereye mu Bihe by\'Ingorane',
+    addEC: '+ Ongeraho Uwo Mwegereye',
+    sosBtn: '🚨 SOS — OHEREZA ITANGAZO RY\'IHUTIRWA',
+    sosTitle: '🚨 SOS Y\'IHUTIRWA',
+    sosDesc: 'Ohereza itangazo ry\'ihutirwa ako kanya ku mugenzi n\'umushoferi muri MotoLink. Abo mwegereye bose bazamenyeshwa kuri WhatsApp.',
+    sosNamePh: 'Amazina yawe',
+    sosPhonePh: 'Numero ya telefoni yawe',
+    sosMsgPh: 'Sobanura ikibazo (ntibisabwa)...',
+    sosSendBtn: '🚨 OHEREZA SOS NONAHA',
+    sosSending: 'Birimo koherezwa...',
+    sosCancelBtn: 'Hagarika — Nta Kibazo',
+    sosFlashTitle: 'ITANGAZO RYA SOS RYOHEREJWE',
+    sosDismissBtn: 'YEGO — Funga',
+    sosSentBy: name => 'SOS yoherejwe na ' + name + '.',
+    contactsNotified: n => 'Abantu ' + n + ' bamenyeshejwe.',
+    sosFromOther: (name, msg) => 'SOS yaturutse kuri ' + name + ': ' + msg,
+    lastUpdated: 'Byavuguruwe:',
+    footerPrefix: 'Bikorwa na',
+    footerSuffix: "— porogaramu y'amapikipiki yo Kigali",
+    waSosIntro: '🚨 ITANGAZO RYA SOS riturutse kuri MotoLink!\n\n',
+    waTriggered: name => name + ' yatangaje ikibazo cy\'ihutirwa.\n',
+    waTrip: 'Urugendo: ', waLocation: 'Aho ari: ', waContact: '\nUmuntu: ', waMessage: '\nUbutumwa: ',
+  },
+  fr: {
+    langCode: 'FR',
+    loadingMap: 'Chargement de la carte',
+    fetchingTripData: 'Récupération des données du trajet...',
+    trackerHelp: 'Demandez au passager d\'appuyer sur <strong style="color:var(--gold)">🔗 PARTAGER LE TRAJET</strong> dans l\'app MotoLink pendant une course active.',
+    noLinkDetected: 'Aucun lien de suivi détecté.',
+    tripNotFoundTitle: '⚠️ Trajet Introuvable',
+    tripNotFoundDetail: 'Ce lien de suivi a peut-être expiré ou est invalide.',
+    couldNotLoad: '<strong>Impossible de charger les données du trajet.</strong>',
+    reason1: '• Le trajet est peut-être déjà terminé (les liens expirent)',
+    reason2: '• Le lien est peut-être invalide ou mal copié',
+    reason3: '• Essayez de rafraîchir la page',
+    mapLibFailed: 'Le chargement de la carte a échoué.',
+    checkConnection: 'Vérifiez votre connexion internet et rafraîchissez la page.',
+    retry: '🔄 Réessayer',
+    status: {
+      searching: '🔍 Recherche du Chauffeur', accepted: '🏍️ Chauffeur en Route',
+      picked_up: '🚦 Trajet en Cours', completion_requested: '🏁 Arrivée Imminente',
+      completed: '✅ Trajet Terminé', cancelled: '❌ Trajet Annulé'
+    },
+    doneTitle: 'Trajet Terminé',
+    doneDesc: 'La course est terminée. La position du chauffeur n\'est plus partagée par souci de confidentialité.',
+    yourDriver: 'Votre Chauffeur',
+    motoLinkDriver: 'Chauffeur MotoLink',
+    estimatedArrival: '📍 Arrivée Estimée',
+    fareLabel: 'Tarif',
+    tripIdLabel: 'ID du trajet',
+    ecTitle: '🔐 Contacts d\'Urgence pour ce Trajet',
+    addEC: '+ Ajouter un Contact d\'Urgence',
+    sosBtn: '🚨 SOS — ENVOYER UNE ALERTE D\'URGENCE',
+    sosTitle: '🚨 SOS D\'URGENCE',
+    sosDesc: 'Envoyez immédiatement une alerte d\'urgence au passager et au chauffeur dans l\'app MotoLink. Tous les contacts d\'urgence seront notifiés via WhatsApp.',
+    sosNamePh: 'Votre nom',
+    sosPhonePh: 'Votre numéro de téléphone',
+    sosMsgPh: 'Décrivez l\'urgence (facultatif)...',
+    sosSendBtn: '🚨 ENVOYER SOS MAINTENANT',
+    sosSending: 'Envoi en cours...',
+    sosCancelBtn: 'Annuler — Tout Va Bien',
+    sosFlashTitle: 'ALERTE SOS ENVOYÉE',
+    sosDismissBtn: 'OK — Fermer',
+    sosSentBy: name => 'SOS envoyé par ' + name + '.',
+    contactsNotified: n => n + ' contacts notifiés.',
+    sosFromOther: (name, msg) => 'SOS de ' + name + ': ' + msg,
+    lastUpdated: 'Mis à jour:',
+    footerPrefix: 'Propulsé par',
+    footerSuffix: "— l'appli moto-taxi de Kigali",
+    waSosIntro: '🚨 ALERTE SOS du suivi de trajet MotoLink !\n\n',
+    waTriggered: name => name + ' a déclenché une urgence.\n',
+    waTrip: 'Trajet : ', waLocation: 'Position : ', waContact: '\nContact : ', waMessage: '\nMessage : ',
+  },
+};
+let currentLang = (() => {
+  try { return localStorage.getItem('ml_track_lang') || 'en'; } catch { return 'en'; }
+})();
+const t = key => (I18N[currentLang] && I18N[currentLang][key] !== undefined) ? I18N[currentLang][key] : I18N.en[key];
+
+let lastStatus = null;       // re-applied on language change
+let activeErrorKind = null;  // 'no-link' | 'fetch' | 'leaflet' — re-rendered on language change
+let activeErrorArgs = null;
+let lastUpdateAt = null;     // Date of last driver-position update
+
+function renderLastUpdate() {
+  const el = $('last-upd');
+  if (!el || !lastUpdateAt) return;
+  el.textContent = t('lastUpdated') + ' ' + lastUpdateAt.toLocaleTimeString();
+}
+
+function applyTranslations() {
+  $('lang-toggle').textContent = t('langCode');
+  $('footer-prefix').textContent = t('footerPrefix');
+  $('footer-suffix').textContent = t('footerSuffix');
+  $('eta-lbl').textContent = t('estimatedArrival');
+  $('fare-label').textContent = t('fareLabel');
+  $('tripid-label').textContent = t('tripIdLabel');
+  $('ec-title').textContent = t('ecTitle');
+  $('ec-add-btn').textContent = t('addEC');
+  $('sos-btn').textContent = t('sosBtn');
+  $('sos-title').textContent = t('sosTitle');
+  $('sos-desc').textContent = t('sosDesc');
+  $('sos-name').placeholder = t('sosNamePh');
+  $('sos-phone').placeholder = t('sosPhonePh');
+  $('sos-msg').placeholder = t('sosMsgPh');
+  $('sos-send-btn').textContent = t('sosSendBtn');
+  $('sos-cancel-btn').textContent = t('sosCancelBtn');
+  $('sos-flash-title').textContent = t('sosFlashTitle');
+  $('sos-dismiss-btn').textContent = t('sosDismissBtn');
+  $('done-title').textContent = t('doneTitle');
+  $('done-desc').textContent = t('doneDesc');
+  // Driver name/plate fallbacks — only overwrite if still showing a fallback (not real trip data)
+  if ($('drv-name').textContent === '—' || $('drv-name').textContent === I18N.en.yourDriver || $('drv-name').textContent === I18N.rw.yourDriver || $('drv-name').textContent === I18N.fr.yourDriver) {
+    $('drv-name').textContent = tripData ? (tripData.driver_name || t('yourDriver')) : '—';
+  }
+  if (!tripData?.driver_plate) {
+    $('drv-plate').textContent = t('motoLinkDriver');
+  }
+  renderLastUpdate();
+  if (lastStatus) applyStatus(lastStatus);
+  if (activeErrorKind === 'no-link') showNoLinkError();
+  else if (activeErrorKind === 'fetch') showFetchError(activeErrorArgs?.error, activeErrorArgs?.tripId);
+  else if (activeErrorKind === 'leaflet') showLeafletError();
+}
+
+function cycleLang() {
+  const ls = ['en', 'rw', 'fr'];
+  currentLang = ls[(ls.indexOf(currentLang) + 1) % ls.length];
+  try { localStorage.setItem('ml_track_lang', currentLang); } catch {}
+  applyTranslations();
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const show = id => { const el = $(id); if (el) el.classList.remove('hidden'); };
+const hide = id => { const el = $(id); if (el) el.classList.add('hidden'); };
+const fmtFRW = n => n ? Math.round(n).toLocaleString() + ' FRW' : '—';
+
+function setStatus(txt, cls) {
+  const el = $('status-pill');
+  el.textContent = (txt || 'LIVE').toUpperCase();
+  el.className   = cls || '';
+}
+
+function setLoad(msg) {
+  const el = $('load-msg');
+  if (el) el.textContent = msg;
+}
+
+function hideLoading() {
+  const el = $('loading');
+  if (!el) return;
+  el.classList.add('fade');
+  setTimeout(() => el.classList.add('hidden'), 320);
+}
+
+function showError(detail) {
+  hideLoading();
+  setStatus('NOT FOUND', 'cancelled');
+  show('err-card');
+  $('err-title').textContent = t('tripNotFoundTitle');
+  $('err-detail').innerHTML = detail;
+}
+
+function showNoLinkError() {
+  activeErrorKind = 'no-link'; activeErrorArgs = null;
+  setStatus('MOTOLINK TRACKER');
+  show('err-card');
+  $('err-title').textContent = t('tripNotFoundTitle');
+  $('err-detail').innerHTML = t('noLinkDetected') + '<br/><br/>' + t('trackerHelp');
+}
+
+function showFetchError(error, idVal) {
+  activeErrorKind = 'fetch'; activeErrorArgs = { error, tripId: idVal };
+  showError(
+    t('couldNotLoad') + '<br/><br/>' +
+    t('reason1') + '<br/>' + t('reason2') + '<br/>' + t('reason3') + '<br/><br/>' +
+    '<small style="color:#555566">Debug: ' + (error?.message || 'No data returned') +
+    ' | ID: ' + (idVal ? idVal.slice(0, 8) + '...' : 'none') + '</small>'
+  );
+}
+
+function showLeafletError() {
+  activeErrorKind = 'leaflet'; activeErrorArgs = null;
+  showError(
+    t('mapLibFailed') + '<br/><br/>' + t('checkConnection') + '<br/><br/>' +
+    '<button onclick="location.reload()" ' +
+      'style="margin-top:10px;background:var(--gold);color:#000;border:none;' +
+      'padding:10px 20px;border-radius:10px;font-weight:900;cursor:pointer">' + t('retry') + '</button>'
+  );
+}
+
+// Smooth position animation (anti-rubber-band lerp over 600 ms)
+function animateMarker(marker, toLat, toLng) {
+  const from  = marker.getLatLng();
+  const steps = 20;
+  let   step  = 0;
+  const iv = setInterval(() => {
+    step++;
+    const t = step / steps;
+    marker.setLatLng([
+      from.lat + (toLat - from.lat) * t,
+      from.lng + (toLng - from.lng) * t
+    ]);
+    if (step >= steps) clearInterval(iv);
+  }, 600 / steps);
+}
+
+// Haversine distance in metres
+function metresBetween(la1, lo1, la2, lo2) {
+  const R = 6371000;
+  const dLat = (la2 - la1) * Math.PI / 180;
+  const dLon = (lo2 - lo1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(la1 * Math.PI / 180) * Math.cos(la2 * Math.PI / 180) *
+            Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// ── MAP HELPERS (safe — only called after map is initialized) ─────────────────
+function updateDriverPos(lat, lng) {
+  if (!map || !lat || !lng) return;
+
+  if (!driverMkr) {
+    const icon = L.divIcon({
+      className: '',
+      html: '<div style="position:relative"><div class="drv-dot">🏍️</div><div class="drv-ring"></div></div>',
+      iconSize:   [38, 38],
+      iconAnchor: [19, 19]
+    });
+    driverMkr = L.marker([lat, lng], { icon }).addTo(map);
+  } else {
+    animateMarker(driverMkr, lat, lng);
+  }
+
+  if (!lastLat || Math.abs(lat - lastLat) > 0.00005) {
+    map.panTo([lat, lng], { animate: true, duration: 0.6 });
+  }
+  lastLat = lat; lastLng = lng;
+  lastUpdateAt = new Date();
+  renderLastUpdate();
+}
+
+function updateETA(dLat, dLng) {
+  if (!tripData?.destination_lat || !dLat) return;
+  const d    = metresBetween(dLat, dLng, tripData.destination_lat, tripData.destination_lng);
+  const mins = Math.max(1, Math.round(d / (25000 / 60))); // 25 km/h avg Kigali moto
+  $('eta-val').textContent = '~' + mins + ' min';
+}
+
+// ── PANEL POPULATION ──────────────────────────────────────────────────────────
+function applyStatus(status) {
+  lastStatus = status;
+  const labels = (I18N[currentLang] && I18N[currentLang].status) || I18N.en.status;
+  setStatus(labels[status] || status?.replace(/_/g, ' ') || 'LIVE', status || '');
+  if (status === 'completed' || status === 'cancelled') {
+    show('done-card');
+    hide('eta-box');
+    hide('drv-card');
+    if (driverMkr && map) { map.removeLayer(driverMkr); driverMkr = null; }
+  }
+}
+
+function populatePanel(trip) {
+  tripData = trip;
+  $('drv-name').textContent    = trip.driver_name  || t('yourDriver');
+  $('drv-plate').textContent   = trip.driver_plate ? '🏍️ ' + trip.driver_plate : t('motoLinkDriver');
+  $('pickup-addr').textContent = trip.pickup_address      || '—';
+  $('dest-addr').textContent   = trip.destination_address || '—';
+  $('fare-val').textContent    = fmtFRW(trip.price);
+  $('trip-sid').textContent    = (trip.id || '').slice(-6).toUpperCase();
+  show('drv-card'); show('trip-card'); show('eta-box');
+  show('sos-btn'); show('ec-section');
+  renderEC();
+
+  if (map && trip.pickup_lat) {
+    L.circleMarker([trip.pickup_lat, trip.pickup_lng], {
+      radius: 7, color: '#D4AF37', fillColor: '#D4AF37', fillOpacity: 1
+    }).addTo(map).bindPopup('📍 Pickup');
+  }
+  if (map && trip.destination_lat) {
+    L.circleMarker([trip.destination_lat, trip.destination_lng], {
+      radius: 7, color: '#00D97E', fillColor: '#00D97E', fillOpacity: 1
+    }).addTo(map).bindPopup('🏁 Destination');
+  }
+}
+
+// ── EMERGENCY CONTACTS ────────────────────────────────────────────────────────
+function loadEC() {
+  try { ec = JSON.parse(localStorage.getItem('ec_' + tripId) || '[]'); }
+  catch { ec = []; }
+}
+function saveEC() {
+  try { localStorage.setItem('ec_' + tripId, JSON.stringify(ec)); } catch {}
+}
+function renderEC() {
+  const list = $('ec-list');
+  if (!list) return;
+  list.innerHTML = '';
+  ec.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'ec-row';
+    el.innerHTML =
+      '<span style="font-size:18px">👤</span>' +
+      '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#E8E8EE">' + c.name + '</div>' +
+      '<div style="font-size:11px;color:#9898AA">' + c.phone + '</div></div>' +
+      '<a href="tel:' + c.phone + '" style="color:var(--green);font-size:20px;text-decoration:none;padding:4px">📞</a>' +
+      '<button onclick="removeEC(' + i + ')" style="background:none;border:none;' +
+        'color:var(--red);font-size:18px;cursor:pointer;padding:4px">✕</button>';
+    list.appendChild(el);
+  });
+}
+function addEC() {
+  const n = prompt('Emergency contact name:');   if (!n) return;
+  const p = prompt('Their phone number:');        if (!p) return;
+  ec.push({ name: n.trim(), phone: p.trim() });
+  saveEC(); renderEC();
+}
+function removeEC(i) { ec.splice(i, 1); saveEC(); renderEC(); }
+
+// ── SOS ────────────────────────────────────────────────────────────────────────
+function closeSOS() { $('sos-overlay').classList.remove('show'); }
+
+function playAlert() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.4, 0.8].forEach(offset => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      o.frequency.value = 880;
+      g.gain.setValueAtTime(0.5, audioCtx.currentTime + offset);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + offset + 0.35);
+      o.start(audioCtx.currentTime + offset);
+      o.stop(audioCtx.currentTime + offset + 0.35);
+    });
+  } catch (e) { /* audio not available */ }
+}
+
+async function sendSOS() {
+  const name  = $('sos-name').value.trim()  || 'Anonymous';
+  const phone = $('sos-phone').value.trim() || '';
+  const msg   = $('sos-msg').value.trim()   || 'Emergency reported via MotoLink tracking link.';
+  const btn   = $('sos-send-btn');
+  btn.textContent = t('sosSending'); btn.disabled = true;
+
+  try {
+    // Write to Supabase
+    if (db) {
+      await db.from('trip_sos').insert({
+        trip_id: tripId, sender_name: name, sender_phone: phone,
+        message: msg, lat: lastLat, lng: lastLng,
+        timestamp: new Date().toISOString()
+      });
+    }
+    // Broadcast on ride WebSocket channel
+    if (liveChannel) {
+      liveChannel.send({
+        type: 'broadcast', event: 'sos_alert',
+        payload: { name, phone, message: msg, lat: lastLat, lng: lastLng }
+      });
+    }
+    // WhatsApp each emergency contact
+    ec.forEach(c => {
+      const waMsg =
+        t('waSosIntro') +
+        t('waTriggered')(name) +
+        t('waTrip') + (tripData?.pickup_address || '') + ' → ' + (tripData?.destination_address || '') + '\n' +
+        (lastLat ? t('waLocation') + 'https://maps.google.com/?q=' + lastLat + ',' + lastLng + '\n' : '') +
+        t('waContact') + phone + t('waMessage') + msg;
+      window.open('https://wa.me/' + c.phone.replace(/\D/g, '') + '?text=' + encodeURIComponent(waMsg), '_blank');
+    });
+  } catch (e) { console.warn('SOS error', e); }
+
+  closeSOS();
+  $('sos-flash-txt').textContent = t('sosSentBy')(name) + ' ' + t('contactsNotified')(ec.length);
+  $('sos-flash').classList.add('show');
+  playAlert();
+  btn.textContent = t('sosSendBtn'); btn.disabled = false;
+}
+
+// ── FALLBACK POLLING (10 s safety net if WebSocket drops) ────────────────────
+function startPoll() {
+  if (pollTimer || !db) return;
+  pollTimer = setInterval(async () => {
+    try {
+      const { data: t } = await db.from('trips')
+        .select('status,driver_id').eq('id', tripId).single();
+      if (!t) return;
+      applyStatus(t.status);
+      if (['completed', 'cancelled'].includes(t.status)) { clearInterval(pollTimer); return; }
+      if (t.driver_id) {
+        const { data: d } = await db.from('profiles')
+          .select('current_lat,current_lng').eq('id', t.driver_id).single();
+        if (d?.current_lat) { updateDriverPos(d.current_lat, d.current_lng); updateETA(d.current_lat, d.current_lng); }
+      }
+    } catch { /* network blip — retry next tick */ }
+  }, 10000);
+}
+
+// ── LOAD LEAFLET WITH FALLBACKS ───────────────────────────────────────────────
+// Leaflet is loaded dynamically so we can chain CDN fallbacks.
+// The map is ONLY initialized after a CDN succeeds — this fixes "L is not defined".
+function loadLeaflet(cdns, index, callback) {
+  if (index >= cdns.length) {
+    callback(new Error('All Leaflet CDNs failed to load.'));
+    return;
+  }
+  setLoad(t('loadingMap') + ' (' + (index + 1) + '/' + cdns.length + ')...');
+  const script   = document.createElement('script');
+  script.src     = cdns[index];
+  script.onload  = () => callback(null);       // ✅ loaded
+  script.onerror = () => loadLeaflet(cdns, index + 1, callback); // try next
+  document.head.appendChild(script);
+}
+
+// ── MAIN INIT ─────────────────────────────────────────────────────────────────
+async function init() {
+  // 1. Supabase client
+  if (typeof supabase === 'undefined') {
+    showError('Supabase library failed to load. Please refresh the page.');
+    return;
+  }
+  db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // 2. Map (Leaflet guaranteed loaded at this point)
+  map = L.map('map', {
+    zoomControl: false, attributionControl: false,
+    dragging: true, touchZoom: true, scrollWheelZoom: false,
+    preferCanvas: true
+  }).setView(KIGALI, 14);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 20
+  }).addTo(map);
+
+  // 3. No tripId — show help state
+  if (!tripId) {
+    hideLoading();
+    showNoLinkError();
+    return;
+  }
+
+  // 4. Load emergency contacts from localStorage
+  loadEC();
+
+  // 5. Fetch trip from Supabase
+  setLoad(t('fetchingTripData'));
+  const { data: trip, error } = await db.from('trips')
+    .select('id,status,price,final_price,pickup_address,destination_address,' +
+            'pickup_lat,pickup_lng,destination_lat,destination_lng,' +
+            'driver_name,driver_plate,driver_id,passenger_id')
+    .eq('id', tripId)
+    .single();
+
+  hideLoading();
+
+  if (error || !trip) {
+    showFetchError(error, tripId);
+    return;
+  }
+
+  populatePanel(trip);
+  applyStatus(trip.status);
+
+  // 6. Fetch initial driver position
+  if (trip.driver_id) {
+    const { data: drv } = await db.from('profiles')
+      .select('current_lat,current_lng').eq('id', trip.driver_id).single();
+    if (drv?.current_lat) {
+      updateDriverPos(drv.current_lat, drv.current_lng);
+      updateETA(drv.current_lat, drv.current_lng);
+    }
+  }
+
+  if (['completed', 'cancelled'].includes(trip.status)) return;
+
+  // 7. Subscribe to driver WebSocket broadcast channel
+  liveChannel = db.channel('ride_session_' + tripId, {
+    config: { broadcast: { self: false } }
+  });
+  liveChannel
+    .on('broadcast', { event: 'location_update' }, ({ payload }) => {
+      if (payload?.lat && payload?.lng) {
+        updateDriverPos(payload.lat, payload.lng);
+        updateETA(payload.lat, payload.lng);
+      }
+    })
+    .on('broadcast', { event: 'sos_alert' }, ({ payload }) => {
+      $('sos-flash-txt').textContent = t('sosFromOther')(payload?.name || 'tracker', payload?.message || '');
+      $('sos-flash').classList.add('show');
+      playAlert();
+    })
+    .subscribe(status => {
+      $('conn-dot').style.background = status === 'SUBSCRIBED' ? 'var(--green)' : 'var(--gold)';
+      $('conn-dot').title = status;
+    });
+
+  // 8. Watch trip status changes via postgres_changes
+  statusCh = db.channel('trip_status_' + tripId)
+    .on('postgres_changes', {
+      event: 'UPDATE', schema: 'public', table: 'trips',
+      filter: 'id=eq.' + tripId
+    }, ({ new: row }) => {
+      applyStatus(row.status);
+      if (['completed', 'cancelled'].includes(row.status)) {
+        if (liveChannel) { db.removeChannel(liveChannel); liveChannel = null; }
+        if (pollTimer)   { clearInterval(pollTimer); pollTimer = null; }
+      }
+    })
+    .subscribe();
+
+  // 9. Start fallback polling as safety net
+  startPoll();
+}
+
+// ── ENTRY POINT ───────────────────────────────────────────────────────────────
+// Load Leaflet JS with fallback chain, THEN run init.
+// This guarantees L is defined before any map code runs.
+applyTranslations(); // localize static UI immediately (all helpers above are now defined)
+loadLeaflet(LEAFLET_CDNS, 0, function (err) {
+  if (err) {
+    showLeafletError();
+    return;
+  }
+  init().catch(e => {
+    showError('Unexpected error: ' + e.message);
+    console.error(e);
+  });
+});
+</script>
+</body>
+</html>

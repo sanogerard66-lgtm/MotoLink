@@ -1,0 +1,18 @@
+Starting Metro Bundler
+
+Web ./index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web ./index.js ▓░░░░░░░░░░░░░░░  9.0% (3/4)
+Web ./index.js ▓▓▓▓▓▓▓▓░░░░░░░░ 52.2% (39/54)
+Web ./index.js ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 78.7% (77/88)
+Web ./index.js ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 78.7% (86/97)
+Web Bundling failed 25659ms index.js (134 modules)
+
+SyntaxError: Error: /data/data/com.termux/files/home/moto_dev/motolink/App.js: Invalid regular expression flag. (1371:45)
+
+  1369 | <\/script></body></html>`;
+  1370 |
+> 1371 |   const blobHtml = webMapHtml.replace(/<\\/script>/g,'</script>').replace(/<\\/style>/g,'</style>');
+       |                                              ^
+  1372 |   const blob = new Blob([blobHtml], { type: 'text/html' });
+  1373 |   const blobUrl = URL.createObjectURL(blob);
+  1374 |
